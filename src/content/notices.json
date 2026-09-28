@@ -1,0 +1,22 @@
+[
+  {
+    "id": "exemplo-manutencao-agua",
+    "title": "[Exemplo] Aviso de manutenção programada na rede de água",
+    "summary": "Conteúdo de exemplo exibido enquanto o portal não recebe o primeiro comunicado oficial real. Substitua este item pelo texto do aviso publicado pela fonte oficial, sempre com link para o canal original.",
+    "date": "2026-09-27",
+    "sourceName": "Conteúdo de exemplo — substituir por comunicado oficial",
+    "sourceUrl": null,
+    "status": "publicado",
+    "kind": "informativo"
+  },
+  {
+    "id": "exemplo-coleta-seletiva",
+    "title": "[Exemplo] Alteração no horário de coleta seletiva",
+    "summary": "Exemplo de informativo de interesse público. O responsável pelo portal publica aqui avisos reais do SAAE, CPFL e demais fontes, preservando a identificação da fonte e o link para o canal oficial.",
+    "date": "2026-09-25",
+    "sourceName": "Conteúdo de exemplo — substituir por comunicado oficial",
+    "sourceUrl": null,
+    "status": "publicado",
+    "kind": "informativo"
+  }
+]
