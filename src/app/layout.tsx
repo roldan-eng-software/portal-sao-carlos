@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { env } from '@/config/env';
 import './globals.css';
 
-const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(env.siteUrl),
   title: {
     default: 'Portal São Carlos — informações úteis de São Carlos/SP',
     template: '%s | Portal São Carlos',
