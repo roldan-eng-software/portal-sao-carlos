@@ -13,6 +13,8 @@ export interface WeatherData {
   weatherCode: number;
   conditionText: string;
   windKmh: number | null;
+  /** Umidade relativa atual (%), quando a API a informa. */
+  humidityPercent?: number | null;
   daily: DailyForecast[];
 }
 
@@ -22,6 +24,7 @@ export interface OpenMeteoResponse {
     temperature_2m?: unknown;
     weather_code?: unknown;
     wind_speed_10m?: unknown;
+    relative_humidity_2m?: unknown;
   };
   daily?: {
     time?: unknown;

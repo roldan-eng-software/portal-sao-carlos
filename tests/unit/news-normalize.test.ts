@@ -82,5 +82,111 @@ describe('normalizeNewsItem', () => {
     expect(item!.title).not.toContain('<');
     expect(item!.title).toBe('Título limpo');
     expect(item!.summary).toBe('Resumo');
+    // src inválido não vira imagem
+    expect(item!.imageUrl).toBeUndefined();
+  });
+});
+
+describe('extractImageUrl', () => {
+  it('extrai imagem do enclosure RSS', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Com imagem',
+        link: 'https://exemplo.com/e1',
+        enclosure: { '@_url': 'https://cdn.exemplo.com/foto.jpg', '@_type': 'image/jpeg' },
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBe('https://cdn.exemplo.com/foto.jpg');
+  });
+
+  it('extrai imagem de media:content com type image', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Media RSS',
+        link: 'https://exemplo.com/e2',
+        'media:content': { '@_url': 'https://cdn.exemplo.com/m.jpg', '@_type': 'image/jpeg' },
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBe('https://cdn.exemplo.com/m.jpg');
+  });
+
+  it('extrai imagem de media:thumbnail mesmo sem type', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Thumbnail',
+        link: 'https://exemplo.com/e3',
+        'media:thumbnail': { '@_url': 'https://cdn.exemplo.com/thumb.png' },
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBe('https://cdn.exemplo.com/thumb.png');
+  });
+
+  it('extrai a primeira tag img do resumo em HTML', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Img no HTML',
+        link: 'https://exemplo.com/e4',
+        description:
+          '<p><img src="https://cdn.exemplo.com/inline.webp" alt=""> Resumo com imagem.</p>',
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBe('https://cdn.exemplo.com/inline.webp');
+  });
+
+  it('descarta imagem http:// (mixed content) e segue para a seguinte', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Só http',
+        link: 'https://exemplo.com/e5',
+        enclosure: { '@_url': 'http://cdn.exemplo.com/insegura.jpg', '@_type': 'image/jpeg' },
+        description: '<img src="https://cdn.exemplo.com/segura.jpg">',
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBe('https://cdn.exemplo.com/segura.jpg');
+  });
+
+  it('ignora enclosure que não é imagem (áudio/vídeo)', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Podcast',
+        link: 'https://exemplo.com/e6',
+        enclosure: { '@_url': 'https://cdn.exemplo.com/audio.mp3', '@_type': 'audio/mpeg' },
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBeUndefined();
+  });
+
+  it('fica undefined quando não há imagem', () => {
+    const item = normalizeNewsItem(
+      { title: 'Sem imagem', link: 'https://exemplo.com/e7' },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.imageUrl).toBeUndefined();
+  });
+
+  it('aceita link Atom com href (string ou objeto)', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Atom',
+        link: { '@_href': 'https://exemplo.com/atom', '@_rel': 'alternate' },
+        description: 'Resumo',
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.url).toBe('https://exemplo.com/atom');
   });
 });

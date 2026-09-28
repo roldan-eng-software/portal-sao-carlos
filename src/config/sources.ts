@@ -30,7 +30,7 @@ export function weatherUrl(): string {
     longitude: String(WEATHER_LOCATION.longitude),
     timezone: WEATHER_LOCATION.timezone,
     forecast_days: String(WEATHER_LOCATION.forecastDays),
-    current: 'temperature_2m,weather_code,wind_speed_10m',
+    current: 'temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min',
   });
   return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;

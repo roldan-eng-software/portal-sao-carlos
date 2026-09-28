@@ -13,13 +13,18 @@ export const CONTENT_LABELS: Record<ContentKind, string> = {
   'divulgacao-propria': 'Publicidade própria',
 };
 
+/*
+ * Chips do DESIGN.md §Components §2 — cor sempre acompanha texto (FR-008):
+ * notícia = cinza, informativo = azul, serviço público = verde,
+ * publicidade = âmbar.
+ */
 const KIND_STYLES: Record<ContentKind, string> = {
-  noticia: 'border-slate-300 bg-slate-100 text-slate-700',
-  informativo: 'border-sky-300 bg-sky-100 text-sky-800',
-  'servico-publico': 'border-emerald-300 bg-emerald-100 text-emerald-800',
-  'anuncio-gratuito': 'border-violet-300 bg-violet-100 text-violet-800',
-  'anuncio-patrocinado': 'border-amber-400 bg-amber-100 text-amber-900',
-  'divulgacao-propria': 'border-amber-400 bg-amber-100 text-amber-900',
+  noticia: 'border-[#cbd5e1] bg-[#f1f5f9] text-primary-container',
+  informativo: 'border-[#bfdbfe] bg-[#eff6ff] text-[#1d4ed8]',
+  'servico-publico': 'border-[#a7f3d0] bg-[#ecfdf5] text-[#047857]',
+  'anuncio-gratuito': 'border-[#a7f3d0] bg-[#ecfdf5] text-[#047857]',
+  'anuncio-patrocinado': 'border-[#fde68a] bg-[#fef3c7] text-[#b45309]',
+  'divulgacao-propria': 'border-[#fde68a] bg-[#fef3c7] text-[#b45309]',
 };
 
 export function contentLabel(kind: ContentKind): string {

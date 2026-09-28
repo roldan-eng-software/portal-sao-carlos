@@ -10,6 +10,7 @@
     "whatsapp": "5516000000000",
     "url": null,
     "hours": "Seg a sáb, 6h às 20h",
+    "imageUrl": null,
     "status": "publicado",
     "publishedAt": "2026-09-20",
     "expiresAt": null
@@ -25,6 +26,7 @@
     "whatsapp": null,
     "url": "https://exemplo.com.br",
     "hours": "Seg a sex, 9h às 18h",
+    "imageUrl": null,
     "status": "publicado",
     "publishedAt": "2026-09-22",
     "expiresAt": "2026-12-31"

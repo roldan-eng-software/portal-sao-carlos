@@ -27,6 +27,17 @@ describe('normalizeWeather', () => {
     });
   });
 
+  it('expõe umidade relativa quando presente e a ignora quando ausente', () => {
+    const withHumidity = normalizeWeather({
+      ...validPayload,
+      current: { ...validPayload.current, relative_humidity_2m: 20.4 },
+    });
+    expect(withHumidity.humidityPercent).toBe(20);
+
+    const withoutHumidity = normalizeWeather(validPayload);
+    expect(withoutHumidity.humidityPercent).toBeNull();
+  });
+
   it('lança erro quando os dados atuais estão ausentes', () => {
     expect(() => normalizeWeather({ current: {}, daily: validPayload.daily })).toThrow();
     expect(() => normalizeWeather(null)).toThrow();

@@ -86,6 +86,7 @@ export function normalizeWeather(raw: unknown): WeatherData {
   }
 
   const wind = asNumber(current?.wind_speed_10m);
+  const humidity = asNumber(current?.relative_humidity_2m);
 
   return {
     city: 'São Carlos/SP',
@@ -93,6 +94,7 @@ export function normalizeWeather(raw: unknown): WeatherData {
     weatherCode,
     conditionText: wmoToText(weatherCode),
     windKmh: wind === null ? null : Math.round(wind),
+    humidityPercent: humidity === null ? null : Math.round(humidity),
     daily: dailyForecasts,
   };
 }

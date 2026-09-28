@@ -19,6 +19,8 @@ export interface Ad {
   whatsapp: string | null;
   url: string | null;
   hours: string | null;
+  /** Foto do estabelecimento (https), quando o responsável a cadastra. */
+  imageUrl?: string | null;
   status: 'rascunho' | 'publicado' | 'suspenso' | 'removido';
   /** YYYY-MM-DD — obrigatório quando status = "publicado" */
   publishedAt: string | null;
@@ -66,6 +68,9 @@ export function isValidAd(value: unknown): value is Ad {
     isOptionalText(item.phone, 30) &&
     isOptionalText(item.whatsapp, 30) &&
     (item.url === null || isSafeHttpUrl(item.url)) &&
+    (item.imageUrl === undefined ||
+      item.imageUrl === null ||
+      isSafeHttpUrl(item.imageUrl)) &&
     isOptionalText(item.hours, 120) &&
     statusOk &&
     publishedAtOk &&

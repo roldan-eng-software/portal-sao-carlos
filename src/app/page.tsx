@@ -1,3 +1,4 @@
+import { HeroSection } from '@/components/sections/hero-section';
 import { WeatherSection } from '@/components/sections/weather-section';
 import { NewsSection } from '@/components/sections/news-section';
 import { NoticesSection } from '@/components/sections/notices-section';
@@ -44,19 +45,11 @@ export default async function Home() {
   const promo = settle<Promo[]>(promoRaw, errorResult('Divulgações do portal'));
 
   return (
-    <div className="space-y-10">
+    <div>
       <JsonLd />
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          Informações úteis de São Carlos/SP
-        </h1>
-        <p className="mt-1 text-slate-600">
-          Clima, notícias, informativos e contatos para moradores e comerciantes — portal
-          independente de utilidade pública.
-        </p>
-      </div>
 
       {/* Ordem de prioridade: conteúdo público antes de publicidade (FR-009/SC-001) */}
+      <HeroSection />
       <WeatherSection result={weather} />
       <NewsSection result={news} />
       <NoticesSection result={notices} />

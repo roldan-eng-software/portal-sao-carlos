@@ -10,6 +10,8 @@ export interface NewsItem {
   /** http/https obrigatório; item sem URL válida é descartado. */
   url: string;
   category?: string;
+  /** Imagem de destaque https quando o feed a publica (opcional). */
+  imageUrl?: string;
 }
 
 /** Item bruto de um feed RSS/Atom antes da normalização. */
@@ -23,4 +25,9 @@ export interface RawFeedItem {
   summary?: unknown;
   source?: unknown;
   category?: unknown;
+  /** RSS enclosure (imagem/anexo). */
+  enclosure?: unknown;
+  /** Media RSS (namespace `media:`). */
+  'media:content'?: unknown;
+  'media:thumbnail'?: unknown;
 }

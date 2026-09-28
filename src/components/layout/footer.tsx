@@ -1,46 +1,161 @@
 import Link from 'next/link';
-import { AnnounceCTA } from '@/components/layout/announce-cta';
+import { env } from '@/config/env';
+
+const EMERGENCY_LINES = [
+  { number: '193', label: 'Bombeiros Municipal', tone: 'text-badge-emergency' },
+  { number: '192', label: 'SAMU Urgência', tone: 'text-accent-amber' },
+  { number: '199', label: 'Defesa Civil', tone: 'text-surface-bright' },
+] as const;
+
+const INSTITUTIONAL_LINKS = [
+  { href: '#noticias', label: 'Notícias Regionais' },
+  { href: '#clima', label: 'Boletim Meteorológico' },
+  { href: '#informativos', label: 'Informativos Oficiais' },
+  { href: '#contatos', label: 'Telefones de Emergência' },
+  { href: '#anuncios', label: 'Guia Comercial' },
+] as const;
 
 export function Footer() {
   return (
-    <footer className="mt-8 border-t border-slate-200 bg-white">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-6">
-        <AnnounceCTA />
-      </div>
-      <div className="mx-auto grid w-full max-w-5xl gap-6 px-4 py-8 text-sm text-slate-600 sm:px-6 md:grid-cols-3">
-        <div>
-          <p className="font-semibold text-slate-900">Portal São Carlos</p>
-          <p className="mt-2">
-            Portal independente de utilidade pública. Não é órgão oficial da Prefeitura, do SAAE,
-            da CPFL nem de qualquer outro órgão público ou empresa.
-          </p>
+    <footer className="w-full bg-primary text-surface-bright">
+      <div className="mx-auto w-full max-w-[1200px] px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {/* Marca e expediente */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span
+                aria-hidden="true"
+                className="flex h-8 w-8 items-center justify-center rounded bg-secondary"
+              >
+                <span className="material-symbols-outlined text-[20px] text-on-secondary">
+                  newspaper
+                </span>
+              </span>
+              <span className="font-display text-headline-md text-surface-bright">
+                Portal São Carlos
+              </span>
+            </div>
+            <p className="text-body-sm text-surface-variant">
+              Portal independente de utilidade pública de São Carlos e região. Não é órgão
+              oficial da Prefeitura, do SAAE, da CPFL nem de qualquer outro órgão público ou
+              empresa.
+            </p>
+            <div>
+              <span className="mb-1 block text-label-sm uppercase text-accent-amber">
+                Expediente e Redação
+              </span>
+              <p className="text-body-sm text-surface-container-high">
+                São Carlos/SP — Brasil
+                <br />
+                <a href={`mailto:${env.contactEmail}`} className="hover:text-surface-bright">
+                  {env.contactEmail}
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Canais institucionais */}
+          <nav aria-label="Rodapé">
+            <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
+              Canais Institucionais
+            </span>
+            <ul className="space-y-2 text-body-md text-surface-variant">
+              {INSTITUTIONAL_LINKS.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} className="transition-colors hover:text-surface-bright">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/aviso-editorial"
+                  className="transition-colors hover:text-surface-bright"
+                >
+                  Aviso editorial
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/politica-de-privacidade"
+                  className="transition-colors hover:text-surface-bright"
+                >
+                  Política de privacidade
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Plantão emergencial */}
+          <div>
+            <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
+              Plantão Emergencial 24h
+            </span>
+            <div className="space-y-2 text-body-sm">
+              {EMERGENCY_LINES.map((line) => (
+                <div
+                  key={line.number}
+                  className="flex items-center justify-between rounded bg-primary-container p-2"
+                >
+                  <a
+                    href={`tel:${line.number}`}
+                    className={`font-display text-headline-sm ${line.tone} hover:underline`}
+                  >
+                    {line.number}
+                  </a>
+                  <span className="text-surface-variant">{line.label}</span>
+                </div>
+              ))}
+              <div className="flex items-center justify-between rounded bg-primary-container p-2">
+                <a
+                  href="#contatos"
+                  className="text-secondary-fixed transition-colors hover:text-surface-bright"
+                >
+                  Ver todos
+                </a>
+                <span className="text-surface-variant">Contatos úteis</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Chamada comercial */}
+          <div className="space-y-3">
+            <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
+              Cadastre seu Negócio
+            </span>
+            <p className="text-body-sm text-surface-variant">
+              Conecte sua marca a milhares de são-carlenses todos os dias. Planos sob medida
+              para comércio e serviços.
+            </p>
+            <a
+              href="#anuncie"
+              className="block w-full rounded-lg bg-accent-amber px-4 py-2.5 text-center text-label-lg text-primary shadow-sm transition-all hover:bg-accent-amber/90"
+            >
+              Quero Anunciar Agora
+            </a>
+          </div>
         </div>
-        <nav aria-label="Rodapé">
-          <p className="font-semibold text-slate-900">Transparência</p>
-          <ul className="mt-2 space-y-1">
-            <li>
-              <Link href="/aviso-editorial" className="hover:text-blue-700">
-                Aviso editorial
-              </Link>
-            </li>
-            <li>
-              <Link href="/politica-de-privacidade" className="hover:text-blue-700">
-                Política de privacidade
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <div id="contato-responsavel">
-          <p className="font-semibold text-slate-900">Contato do responsável</p>
-          <p className="mt-2">
-            Dúvidas, anúncios, correções ou remoção de dados: fale conosco pelos canais exibidos na
-            seção <a href="#anuncie" className="text-blue-700 hover:underline">Anuncie aqui</a>.
+
+        <div
+          id="contato-responsavel"
+          className="flex flex-col items-center justify-between gap-4 border-t border-surface-variant/20 pt-6 text-body-sm text-surface-variant md:flex-row"
+        >
+          <p>
+            © {new Date().getFullYear()} Portal São Carlos — São Carlos/SP. Informações de
+            terceiros podem mudar; confirme dados importantes na fonte oficial.
           </p>
+          <div className="flex flex-wrap items-center gap-6">
+            <Link href="/aviso-editorial" className="transition-colors hover:text-surface-bright">
+              Aviso editorial
+            </Link>
+            <Link
+              href="/politica-de-privacidade"
+              className="transition-colors hover:text-surface-bright"
+            >
+              Política de privacidade
+            </Link>
+          </div>
         </div>
-      </div>
-      <div className="border-t border-slate-100 py-4 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} Portal São Carlos — São Carlos/SP. Informações de terceiros
-        podem mudar; confirme dados importantes na fonte oficial.
       </div>
     </footer>
   );

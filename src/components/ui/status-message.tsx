@@ -28,7 +28,7 @@ export function StatusMessage({ result }: StatusMessageProps) {
     return (
       <p
         role="status"
-        className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+        className="rounded-lg border border-accent-amber/40 bg-accent-amber/10 px-3 py-2 text-body-sm text-[#92400e]"
       >
         {result.errorMessage ?? 'Informação temporariamente indisponível.'}
       </p>
@@ -40,14 +40,12 @@ export function StatusMessage({ result }: StatusMessageProps) {
       {result.status === 'stale' && (
         <p
           role="status"
-          className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+          className="rounded-lg border border-accent-amber/40 bg-accent-amber/10 px-3 py-2 text-body-sm text-[#92400e]"
         >
           {result.errorMessage}
         </p>
       )}
-      {updated && (
-        <p className="text-xs text-slate-500">Atualizado em {updated}</p>
-      )}
+      {updated && <p className="text-body-sm text-outline">Atualizado em {updated}</p>}
     </div>
   );
 }

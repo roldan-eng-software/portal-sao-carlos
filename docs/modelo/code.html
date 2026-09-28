@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#f8f9ff","surface-container":"#e6eeff","outline":"#74777e","surface-variant":"#d5e3fc","secondary-fixed-dim":"#b3c5ff","on-secondary":"#ffffff","surface-container-lowest":"#ffffff","on-error-container":"#93000a","background":"#f8f9ff","on-secondary-container":"#f9f7ff","on-tertiary-container":"#009cbe","primary-fixed":"#d1e4ff","surface":"#f8f9ff","on-tertiary-fixed":"#001f28","inverse-surface":"#233144","on-primary-container":"#7991af","badge-success":"#10B981","tertiary-container":"#002c38","on-surface":"#0d1c2e","surface-dim":"#ccdbf3","on-error":"#ffffff","secondary":"#0050cc","on-tertiary-fixed-variant":"#004e60","on-primary-fixed":"#011d35","surface-tint":"#49607c","accent-amber":"#F59E0B","primary":"#001428","on-secondary-fixed":"#001849","inverse-primary":"#b0c9e8","on-background":"#0d1c2e","border-subtle":"#E2E8F0","secondary-container":"#0266ff","secondary-fixed":"#dae1ff","surface-container-highest":"#d5e3fc","surface-container-high":"#dce9ff","tertiary-fixed":"#b6ebff","on-primary":"#ffffff","primary-container":"#0f2942","surface-canvas":"#F8FAFC","inverse-on-surface":"#eaf1ff","tertiary-fixed-dim":"#47d6ff","primary-fixed-dim":"#b0c9e8","surface-card":"#FFFFFF","badge-emergency":"#EF4444","on-primary-fixed-variant":"#314863","error":"#ba1a1a","on-secondary-fixed-variant":"#003fa4","outline-variant":"#c3c6ce","on-surface-variant":"#43474d","surface-container-low":"#eff4ff","tertiary":"#00161d","error-container":"#ffdad6","on-tertiary":"#ffffff"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-xs":"0.25rem","space-md":"1rem","space-lg":"1.5rem","space-xl":"2.5rem","gutter-mobile":"0.75rem",gutter:"1.25rem","margin-mobile":"1rem","space-sm":"0.5rem",margin:"2rem"},fontFamily:{"body-sm":["Inter"],"label-sm":["Plus Jakarta Sans"],display:["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-md":["Inter"],"body-lg":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-mobile":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"]},fontSize:{"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}],"label-sm":["10px",{lineHeight:"14px",letterSpacing:"0.06em",fontWeight:"700"}],display:["40px",{lineHeight:"48px",letterSpacing:"-0.02em",fontWeight:"800"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"700"}],"body-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"headline-lg-mobile":["22px",{lineHeight:"30px",letterSpacing:"-0.01em",fontWeight:"700"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.015em",fontWeight:"700"}],"headline-sm":["16px",{lineHeight:"24px",fontWeight:"600"}],"display-mobile":["30px",{lineHeight:"38px",letterSpacing:"-0.015em",fontWeight:"800"}],"label-lg":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-surface-canvas text-on-surface font-body-md"><header class="fixed top-0 w-full z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-primary text-on-primary py-space-xs px-margin"><div class="max-w-[1200px] mx-auto flex items-center justify-between text-body-sm"><div class="flex items-center gap-space-sm overflow-hidden"><span class="inline-flex items-center px-space-xs py-0.5 rounded bg-badge-emergency text-on-error font-label-sm uppercase">Alerta Oficial</span><span class="truncate font-body-sm text-surface-container-high">Defesa Civil: Alerta de chuvas intensas e ventos fortes na região central de São Carlos até as 22h.</span></div><div class="hidden md:flex items-center gap-space-md shrink-0 font-body-sm text-surface-variant"><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px]">partly_cloudy_day</span> São Carlos 24°C</span><span class="text-outline-variant">|</span><span>Plantão Municipal 24h</span></div></div></div><div class="h-20 bg-surface-card/95 backdrop-blur-xl"><div class="h-20 max-w-[1200px] mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm" data-path="portal-noticias" href="#"><img alt="Portal São Carlos Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcFrHf0IqbFtYXdW3kTBmaSsPncW7WeufYHBsm6TFA6TyblwEWI9i95FSZOYvh3z0DwV1YeO4JDT7xyKnkGmDz1p0RUZqBiUUc5rpCKt6Dbqhuq5OYnR2e0qwIauTGOFaAaFlgIHKo3cLwP-O5n0UsyXhOj8dePE-l9C0cnRh7RosMtxDBUTrl3Ln2PK6Etf7KuwMDdvemlRUwFOvfWgXSTVFQUDpVMRYxQmCqx8RX7TgQZ1Sj1emW"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none">Portal São Carlos</span><span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Notícias &amp; Serviços</span></div></a></div><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-secondary font-headline-sm"><a aria-current="page" class="transition-colors text-secondary font-headline-sm" data-path="portal-noticias" href="#">Notícias</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="previsao-do-tempo" href="#">Clima</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="avisos-e-utilidades" href="#">Avisos Úteis</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="telefones-de-emergencia" href="#">Telefones de Emergência</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="guia-comercial" href="#">Guia Comercial</a></nav><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center bg-surface-container-low rounded-lg px-space-sm py-1.5 focus-within:bg-surface-card focus-within:ring-2 focus-within:ring-secondary/20 transition-all"><span class="material-symbols-outlined text-outline text-[20px] mr-space-xs">search</span><input class="bg-transparent border-0 outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline w-44 lg:w-56" placeholder="Buscar notícias, comércios..." type="text"/></div><a class="shrink-0 inline-flex items-center gap-space-xs bg-secondary hover:bg-primary-container text-on-secondary hover:text-on-primary font-label-lg text-label-lg px-space-md py-2.5 rounded-full shadow-[0_2px_8px_rgba(2,102,255,0.25)] transition-all" data-path="anuncie-aqui" href="#"><span class="material-symbols-outlined text-[18px]">storefront</span><span>Anuncie Aqui</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-20 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- HERO & LIVE METRICS & LEAD MAGNET SECTION -->
+<section class="relative w-full bg-gradient-to-b from-surface-container-low via-surface to-surface-canvas overflow-hidden pb-space-xl">
+<!-- Atmospheric Ambient Circles (Visual Depth) -->
+<div class="absolute -top-32 -left-20 w-96 h-96 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/3 -right-24 w-80 h-80 rounded-full bg-accent-amber/10 blur-3xl pointer-events-none"></div>
+<div class="max-w-[1200px] mx-auto px-margin pt-space-xl">
+<!-- Breadcrumb & Realtime Synchronized Indicator -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-card shadow-sm text-on-surface-variant font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-badge-success animate-pulse"></span>
+<span>Atualizado em tempo real · São Carlos / SP</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">schedule</span>
+<span>Boletim das 16:40 · 28/09/2026</span>
+</div>
+</div>
+<!-- Main Headline Grid with Quick Lead Magnet -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start mb-space-xl">
+<!-- Editorial & Value Proposition Column (7 cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<div class="inline-flex items-center gap-space-xs px- space-xs py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wider">
+            Utilidade Pública &amp; Negócios
+          </div>
+<h1 class="font-display text-display text-primary leading-tight tracking-tight">
+            O Portal de Informação e Negócios de <span class="text-secondary underline decoration-secondary/30 decoration-wavy underline-offset-4">São Carlos</span> e Região
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+            Clima em tempo real, notícias atualizadas, comunicados de utilidade pública e o guia completo para conectar moradores aos melhores comércios locais.
+          </p>
+<!-- Core Stat Tickers -->
+<div class="grid grid-cols-3 gap-space-sm pt-space-xs">
+<div class="p-space-sm bg-surface-card rounded-xl shadow-sm">
+<span class="font-headline-lg text-headline-lg text-secondary block leading-none">+250k</span>
+<span class="font-label-sm text-label-sm text-outline uppercase block mt-1">Moradores na Região</span>
+</div>
+<div class="p-space-sm bg-surface-card rounded-xl shadow-sm">
+<span class="font-headline-lg text-headline-lg text-primary block leading-none">100%</span>
+<span class="font-label-sm text-label-sm text-outline uppercase block mt-1">Acesso Gratuito</span>
+</div>
+<div class="p-space-sm bg-surface-card rounded-xl shadow-sm">
+<span class="font-headline-lg text-headline-lg text-accent-amber block leading-none">24h</span>
+<span class="font-label-sm text-label-sm text-outline uppercase block mt-1">Plantão Cívico</span>
+</div>
+</div>
+</div>
+<!-- High-Converting Lead Magnet Card (5 cols) -->
+<div class="lg:col-span-5">
+<div class="bg-surface-card rounded-2xl p-space-lg shadow-xl relative overflow-hidden">
+<!-- Amber accent banner -->
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-accent-amber via-secondary to-accent-amber"></div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-space-xs font-label-sm text-label-sm uppercase text-accent-amber bg-surface-container px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">rocket_launch</span>
+                Empresas Locais
+              </span>
+<span class="font-label-sm text-label-sm text-badge-success flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Grátis p/ Pequenos
+              </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">
+              Divulgue sua empresa para milhares de são-carlenses
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Cadastre seu estabelecimento no guia comercial mais consultado da cidade. Conquiste novos clientes direto pelo WhatsApp.
+            </p>
+<form class="space-y-space-sm" onsubmit="event.preventDefault(); alert('Solicitação recebida com sucesso! Nossa equipe entrará em contato em instantes via WhatsApp.');">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Nome do Comércio / Negócio</label>
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2.5">
+<span class="material-symbols-outlined text-outline text-[18px] mr-2">store</span>
+<input class="bg-transparent text-on-surface font-body-sm text-body-sm w-full outline-none placeholder:text-outline" placeholder="Ex: Padaria Bela Vista, Oficina do Carlos..." required="" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">Categoria</label>
+<select class="w-full bg-surface-container-low text-on-surface rounded-lg px-3 py-2.5 font-body-sm text-body-sm outline-none">
+<option>Alimentação</option>
+<option>Varejo &amp; Compras</option>
+<option>Serviços Técnicos</option>
+<option>Saúde &amp; Bem-estar</option>
+<option>Educação</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1">WhatsApp de Contato</label>
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2.5">
+<input class="bg-transparent text-on-surface font-body-sm text-body-sm w-full outline-none placeholder:text-outline" placeholder="(16) 99999-9999" required="" type="tel"/>
+</div>
+</div>
+</div>
+<button class="w-full mt-space-sm flex items-center justify-center gap-space-xs bg-secondary hover:bg-primary-container text-on-secondary font-label-lg text-label-lg py-3 rounded-xl shadow-md transition-all" type="submit">
+<span>Quero Cadastrar Meu Comércio Grátis</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-badge-success">verified</span> Sem taxas ocultas</span>
+<span>Opção de Destaque Patrocinado</span>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- LIVE WEATHER WIDGET COMPONENT (Real Data From Source) -->
+<div class="w-full bg-surface-card rounded-2xl shadow-sm p-space-md lg:p-space-lg">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Current Weather Block -->
+<div class="flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-primary font-bold">30.3°C</span>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded text-secondary font-semibold">Predominantemente limpo</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2 mt-0.5">
+<span>São Carlos/SP</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">air</span> Vento: 2 km/h</span>
+<span>•</span>
+<span class="text-error font-medium">Umidade Crítica (20%)</span>
+</p>
+</div>
+</div>
+<!-- Forecast Segmented Badges Row -->
+<div class="grid grid-cols-2 sm:grid-cols-5 gap-space-xs w-full lg:w-auto">
+<!-- Seg -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-2.5 text-center flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase text-outline">Seg, 28/09</span>
+<span class="material-symbols-outlined text-secondary text-[20px] my-1">grain</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">18.9° / 32.1°</span>
+<span class="text-[10px] text-on-surface-variant truncate">Chuvisco fraco</span>
+</div>
+<!-- Ter -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-2.5 text-center flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase text-outline">Ter, 29/09</span>
+<span class="material-symbols-outlined text-secondary text-[20px] my-1">rainy</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">20.2° / 33°</span>
+<span class="text-[10px] text-on-surface-variant truncate">Chuvisco</span>
+</div>
+<!-- Qua -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-2.5 text-center flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase text-outline">Qua, 30/09</span>
+<span class="material-symbols-outlined text-secondary text-[20px] my-1">thunderstorm</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">19.9° / 32.2°</span>
+<span class="text-[10px] text-badge-emergency truncate">Tempestade</span>
+</div>
+<!-- Qui -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-2.5 text-center flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase text-outline">Qui, 01/10</span>
+<span class="material-symbols-outlined text-secondary text-[20px] my-1">thunderstorm</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">19.5° / 27.5°</span>
+<span class="text-[10px] text-badge-emergency truncate">Tempestade</span>
+</div>
+<!-- Sex -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl p-2.5 text-center flex flex-col items-center col-span-2 sm:col-span-1">
+<span class="font-label-sm text-label-sm uppercase text-outline">Sex, 02/10</span>
+<span class="material-symbols-outlined text-secondary text-[20px] my-1">rainy_light</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">17.8° / 22.7°</span>
+<span class="text-[10px] text-on-surface-variant truncate">Chuvisco</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- EDITORIAL & BREAKING NEWS SECTION -->
+<section class="max-w-[1200px] w-full mx-auto px-margin py-space-xl">
+<!-- Header with interactive category filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Jornalismo &amp; Atualizações</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">
+          Notícias de São Carlos e Região
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Cobertura em tempo real com apuração independente e curadoria das principais fontes oficiais.
+        </p>
+</div>
+<!-- Editorial Filter Pills -->
+<div class="flex flex-wrap gap-space-xs" id="news-filters">
+<button class="px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all" onclick="filterNews('todas', this)">Todas</button>
+<button class="px-space-md py-1.5 rounded-full bg-surface-card hover:bg-surface-container text-on-surface font-label-md text-label-md shadow-sm transition-all" onclick="filterNews('concursos', this)">Concursos</button>
+<button class="px-space-md py-1.5 rounded-full bg-surface-card hover:bg-surface-container text-on-surface font-label-md text-label-md shadow-sm transition-all" onclick="filterNews('clima', this)">Clima &amp; Defesa</button>
+<button class="px-space-md py-1.5 rounded-full bg-surface-card hover:bg-surface-container text-on-surface font-label-md text-label-md shadow-sm transition-all" onclick="filterNews('comunidade', this)">Comunidade</button>
+</div>
+</div>
+<!-- News Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+<!-- Featured Main News Card (Spans 8 cols) -->
+<article class="news-card md:col-span-8 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col justify-between" data-category="concursos">
+<div class="relative h-64 sm:h-72 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Modern municipal administrative building with Brazilian flag in São Carlos São Paulo under clear daylight, citizens walking near the entrance, clean architectural photography style with deep navy and vibrant blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuLCZfFpTOlQUOA5Y4LWkEfcqgj6Mryk25YVAzX51NTOlpfb0Y324dWvMa9k3bSZGY-6VNZ0rdA-3SEZB3i9GfRt6iasRbFHE7WXBxWwjaeM9GdcRXEdcZQQIi--ALyWTTQb9u-kPt7ROpFeEv86z0_gH2pD50dy4k9Dqe4uWNn7m4wXQ43EAGpehDUhIZ8NdGbDz998NlD8NbeSmGlACpH6_C4YmfEC6RzYgF5TCvIfAPC63mTvxu"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent"></div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-secondary text-on-secondary font-label-sm text-label-sm px-2.5 py-1 rounded-md uppercase font-bold tracking-wider">Destaque Regional</span>
+<span class="bg-surface-card/90 backdrop-blur-sm text-primary font-label-sm text-label-sm px-2.5 py-1 rounded-md">Concurso Público</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 text-surface-bright">
+<span class="text-surface-variant font-label-sm text-label-sm block mb-1">G1 São Carlos e Região · Atualizado às 14h20</span>
+<h3 class="font-headline-md text-headline-md text-surface-bright leading-tight font-bold">
+              45 vagas: prefeitura abre concurso público com salários de até R$ 9,8 mil no interior de SP
+            </h3>
+</div>
+</div>
+<div class="p-space-md flex flex-col justify-between flex-1">
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-space-md">
+            As oportunidades contemplam níveis fundamental, médio e superior completo para diversos órgãos da administração direta e indireta municipal. Inscrições abertas até a próxima semana.
+          </p>
+<div class="flex items-center justify-between pt-space-xs text-body-sm text-body-sm">
+<span class="text-outline flex items-center gap-1 font-label-sm"><span class="material-symbols-outlined text-[16px]">calendar_today</span> 28/09/2026</span>
+<a class="inline-flex items-center gap-1 text-secondary font-label-md text-label-md hover:underline" href="https://g1.globo.com" rel="noopener noreferrer" target="_blank">
+<span>Ler reportagem completa</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Side News: Meteorological Urgent Alert (Spans 4 cols) -->
+<article class="news-card md:col-span-4 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between bg-gradient-to-br from-surface-card to-error-container/20" data-category="clima">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="bg-error text-on-error font-label-sm text-label-sm px-2 py-0.5 rounded font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Alerta Inmet
+            </span>
+<span class="font-label-sm text-label-sm text-outline">otempo.com.br</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-sm leading-snug">
+            Alerta amarelo para tempo muito seco atinge São Carlos (SP) com umidade em 20%
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            O Instituto Nacional de Meteorologia emitiu aviso preventivo para a região central paulista. Recomendação expressa para reforço na hidratação e restrição de queimadas.
+          </p>
+</div>
+<div class="pt-space-xs flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-outline">28/09/2026</span>
+<a class="text-error font-bold flex items-center gap-1 hover:underline" href="#">Ver orientações <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+</article>
+<!-- News Item 3: ACidade ON Concurso -->
+<article class="news-card md:col-span-4 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between" data-category="concursos">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="text-secondary font-label-sm text-label-sm uppercase font-bold">Oportunidades</span>
+<span class="text-outline font-label-sm text-label-sm">ACidade ON</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-2 leading-snug">
+            Prefeitura no interior de SP abre concurso público com 45 vagas e salários de R$ 9 mil
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+            Cargos para procurador jurídico, médicos, analistas e técnicos administrativos. Edital detalhado publicado no Diário Oficial do Município.
+          </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="text-outline font-label-sm">28/09/2026</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">Ver na fonte <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</article>
+<!-- News Item 4: Intérprete Libras (Inclusão) -->
+<article class="news-card md:col-span-4 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between" data-category="comunidade">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="text-badge-success font-label-sm text-label-sm uppercase font-bold">Cidadania &amp; Inclusão</span>
+<span class="text-outline font-label-sm text-label-sm">G1</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-2 leading-snug">
+            Serviço com intérprete de Libras é inaugurado em cidade do interior de SP; veja funcionamento
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+            Iniciativa visa dar suporte e autonomia a pessoas surdas nos órgãos de atendimento e serviços essenciais de São Carlos.
+          </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="text-outline font-label-sm">28/09/2026</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">Ver na fonte <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</article>
+<!-- News Item 5: TCESP Ciclo de Debates -->
+<article class="news-card md:col-span-4 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between" data-category="comunidade">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="text-primary font-label-sm text-label-sm uppercase font-bold">Gestão Pública</span>
+<span class="text-outline font-label-sm text-label-sm">TCESP</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-2 leading-snug">
+            São Carlos recebe caravana do Ciclo de Debates do Tribunal de Contas de SP
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+            Encontro com gestores municipais e vereadores foca nas boas práticas de responsabilidade fiscal e planejamento orçamentário.
+          </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="text-outline font-label-sm">10/09/2026</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">Ver na fonte <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</article>
+<!-- News Item 6: Diocese Formação Secretárias -->
+<article class="news-card md:col-span-6 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between" data-category="comunidade">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="text-outline font-label-sm text-label-sm uppercase font-bold">Diocese São Carlos</span>
+<span class="text-outline font-label-sm text-label-sm">28/09/2026</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-2 leading-snug">
+            Formação diocesana para secretárias paroquiais reúne lideranças comunitárias
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Capacitação diocesana promove alinhamento de atendimento e registro canônico para dezenas de paróquias e comunidades do município.
+          </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="text-outline font-label-sm">Fonte Oficial Diocese</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">Ver na íntegra <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</article>
+<!-- News Item 7: Nota Falecimento Grupo Matriz -->
+<article class="news-card md:col-span-6 bg-surface-card rounded-2xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between" data-category="comunidade">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="text-outline font-label-sm text-label-sm uppercase font-bold">São Carlos Agora</span>
+<span class="text-outline font-label-sm text-label-sm">28/09/2026</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-2 leading-snug">
+            Grupo Matriz informa nota de falecimento e atos fúnebres na cidade
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Boletim de notas de falecimento, velórios e homenagens póstumas da comunidade são-carlense prestados pelas funerárias parceiras.
+          </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="text-outline font-label-sm">São Carlos Agora</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">Consultar necrologia <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</article>
+</div>
+</section>
+<!-- INFORMATIVOS & AVISOS OFICIAIS (UTILIDADE PÚBLICA) -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[1200px] mx-auto px-margin">
+<div class="bg-surface-card rounded-2xl p-space-lg shadow-sm mb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-accent-amber/20 flex items-center justify-center text-accent-amber shrink-0">
+<span class="material-symbols-outlined text-[28px]">notifications_active</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">Informativos e Avisos de Utilidade Pública</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Comunicação preventiva e avisos de interesse municipal. Informações de terceiros: confirme sempre no canal oficial.
+            </p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 font-label-sm text-label-sm px-3 py-1.5 rounded-full bg-surface-container text-on-surface font-semibold shrink-0">
+<span class="w-2 h-2 rounded-full bg-badge-success"></span>
+          Painel Atualizado: 27/09/2026, 09:00
+        </span>
+</div>
+<!-- Warning Callout Strip -->
+<div class="bg-primary text-on-primary rounded-xl p-space-md mb-space-md flex items-center justify-between flex-wrap gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-accent-amber text-[24px]">info</span>
+<span class="font-body-sm text-body-sm text-surface-container-high">
+            Atenção: Este portal independente agrega comunicados do SAAE, CPFL e Prefeitura. Sempre consulte o canal oficial antes de tomar ações operacionais.
+          </span>
+</div>
+<a class="text-accent-amber font-label-md text-label-md hover:underline flex items-center gap-1" href="https://www.saocarlos.sp.gov.br" target="_blank">
+          Acessar Prefeitura <span class="material-symbols-outlined text-[16px]">launch</span>
+</a>
+</div>
+<!-- Informative Bulletin Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Aviso SAAE -->
+<div class="bg-surface-card rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1 bg-surface-container text-secondary font-label-sm text-label-sm px-2.5 py-1 rounded font-bold uppercase">
+<span class="material-symbols-outlined text-[14px]">water_drop</span> SAAE São Carlos
+              </span>
+<span class="text-outline font-label-sm text-label-sm">27/09/2026</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">
+              Aviso de manutenção programada na rede de água
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Manutenção preventiva na estação de tratamento e na rede de distribuição nos bairros Centro, Vila Prado e Boa Vista. Recomendamos aos moradores o uso racional das caixas d'água durante o período de interrupção.
+            </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="font-label-sm text-label-sm text-outline">Protocolo Técnico Municipal</span>
+<span class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline cursor-pointer">Canal Oficial SAAE 0800</span>
+</div>
+</div>
+<!-- Aviso Coleta Seletiva CPFL / Cidade -->
+<div class="bg-surface-card rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1 bg-surface-container text-badge-success font-label-sm text-label-sm px-2.5 py-1 rounded font-bold uppercase">
+<span class="material-symbols-outlined text-[14px]">recycling</span> Meio Ambiente
+              </span>
+<span class="text-outline font-label-sm text-label-sm">25/09/2026</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">
+              Alteração no horário da coleta seletiva e resíduos
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Adequação das rotas de caminhões coletores nos bairros da zona leste e Cidade Aracy. O responsável publica aqui avisos reais do SAAE, CPFL e demais fontes preservando a identificação oficial e o cronograma semanal.
+            </p>
+</div>
+<div class="pt-space-md flex items-center justify-between text-body-sm">
+<span class="font-label-sm text-label-sm text-outline">Cronograma Unificado</span>
+<span class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline cursor-pointer">Ver calendário de rotas</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TELEFONES E LINKS DE EMERGÊNCIA (HIGH ACCESSIBILITY CLICK-TO-CALL) -->
+<section class="max-w-[1200px] w-full mx-auto px-margin py-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm mb-space-lg">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-badge-emergency animate-ping"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-badge-emergency font-bold">Central de Ajuda Cidadã</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Telefones e Links Úteis de Emergência</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Discagem rápida e canais de resposta imediata com funcionamento 24 horas por dia.
+        </p>
+</div>
+<p class="font-body-sm text-body-sm text-outline bg-surface-card px-3 py-1.5 rounded-lg shadow-sm">
+        Em emergências graves, disque direto pelo seu celular.
+      </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Bombeiros 193 -->
+<a class="group bg-surface-card hover:bg-surface-bright rounded-2xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between" href="tel:193">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-xl bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">local_fire_department</span>
+</div>
+<span class="font-label-sm text-label-sm bg-error-container text-error px-2 py-0.5 rounded font-bold">24 Horas</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-outline block mb-1">Serviço Público</span>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-1">Corpo de Bombeiros</h4>
+<span class="font-display text-display text-error leading-none block font-extrabold group-hover:scale-105 transition-transform">193</span>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-secondary font-label-md text-label-md">
+<span>Ligar agora</span>
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+</a>
+<!-- SAMU 192 -->
+<a class="group bg-surface-card hover:bg-surface-bright rounded-2xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between" href="tel:192">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-xl bg-accent-amber/20 text-accent-amber flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">medical_services</span>
+</div>
+<span class="font-label-sm text-label-sm bg-accent-amber/20 text-accent-amber px-2 py-0.5 rounded font-bold">24 Horas</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-outline block mb-1">Emergência Médica</span>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-1">SAMU Regional</h4>
+<span class="font-display text-display text-accent-amber leading-none block font-extrabold group-hover:scale-105 transition-transform">192</span>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-secondary font-label-md text-label-md">
+<span>Ligar agora</span>
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+</a>
+<!-- Defesa Civil 199 -->
+<a class="group bg-surface-card hover:bg-surface-bright rounded-2xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between" href="tel:199">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">shield</span>
+</div>
+<span class="font-label-sm text-label-sm bg-secondary/10 text-secondary px-2 py-0.5 rounded font-bold">24 Horas</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-outline block mb-1">Monitoramento Climático</span>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-1">Defesa Civil</h4>
+<span class="font-display text-display text-secondary leading-none block font-extrabold group-hover:scale-105 transition-transform">199</span>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-secondary font-label-md text-label-md">
+<span>Ligar agora</span>
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+</a>
+<!-- Prefeitura de São Carlos -->
+<a class="group bg-surface-card hover:bg-surface-bright rounded-2xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between" href="https://www.saocarlos.sp.gov.br" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">account_balance</span>
+</div>
+<span class="font-label-sm text-label-sm bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">Oficial</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-outline block mb-1">Portal Cidadão</span>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-1 leading-tight">Prefeitura de São Carlos</h4>
+<span class="font-body-sm text-body-sm text-secondary truncate block mt-2">saocarlos.sp.gov.br</span>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-secondary font-label-md text-label-md">
+<span>Acessar canal oficial</span>
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</div>
+</a>
+</div>
+</section>
+<!-- GUIA COMERCIAL & DESTAQUE DE ANUNCIANTES LOCAIS -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[1200px] mx-auto px-margin">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-accent-amber"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-accent-amber font-bold">Fomento ao Comércio São-carlense</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Guia Comercial de São Carlos</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Encontre fornecedores, lojas físicas, gastronomia e prestadores de serviço recomendados na cidade.
+          </p>
+</div>
+<a class="inline-flex items-center gap-space-xs bg-secondary text-on-secondary px-space-md py-2.5 rounded-full font-label-md text-label-md hover:bg-primary transition-colors shadow-sm" href="#anuncie">
+<span class="material-symbols-outlined text-[18px]">add_business</span>
+<span>Cadastrar Meu Negócio</span>
+</a>
+</div>
+<!-- Commercial Grid Mosaic -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-stretch">
+<!-- Destaque Comercial Patrocinado (Spans 7 cols) -->
+<div class="lg:col-span-7 bg-surface-card rounded-2xl p-space-lg shadow-md relative overflow-hidden flex flex-col justify-between">
+<div class="absolute top-0 left-0 right-0 h-1 bg-accent-amber"></div>
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-amber/20 text-on-surface font-label-sm text-label-sm font-bold uppercase">
+<span class="material-symbols-outlined text-[16px] text-accent-amber">star</span>
+                Destaque Comercial Patrocinado
+              </span>
+<span class="font-label-sm text-label-sm text-outline">Varejo · Centro</span>
+</div>
+<div class="flex flex-col sm:flex-row gap-space-md items-start mb-space-md">
+<div class="w-full sm:w-44 h-36 rounded-xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern retail boutique shop front in downtown São Carlos with fashionable apparel, warm boutique lighting, clean glass displays and wooden accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTTBF5YWCMR2LfC4UtdR64u48TUpjGCfR-L-40gaCFlsElmrptRxLq-zBfqmt5SXFtvtzL-HR4oUkVcU1Q-f5P9Xr90F5AsSq7jBxkJNimsUhSUwzjTbTAeS_h3BPEf8ewFdIA2yoVSfGBHVJVVME6_oAcQLEBHxQ4T6KKUP3p1TrJSzePJvMj4gn4rqiSa3zcxWdL8IBtYCvWKZRWO2dPlK08mL2aBwkLga0L1bGRMs9v-Gl3GPxZ"/>
+</div>
+<div class="space-y-1.5">
+<h3 class="font-headline-md text-headline-md text-primary">Loja Exemplo Centro</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Anúncio patrocinado de exemplo: contrato e período de veiculação combinados diretamente com o responsável pelo portal. Visibilidade de topo para marcas consolidadas na cidade.
+                </p>
+<div class="flex flex-wrap gap-x-space-md gap-y-1 pt-1 font-body-sm text-body-sm text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> Seg a sex, 9h às 18h</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Rua Episcopal, Centro</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-space-md flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low p-space-sm rounded-xl">
+<div class="flex items-center gap-space-sm">
+<a class="font-headline-sm text-headline-sm text-primary flex items-center gap-1 hover:text-secondary" href="tel:1600000001">
+<span class="material-symbols-outlined text-[20px] text-secondary">phone</span> (16) 0000-0001
+              </a>
+</div>
+<a class="inline-flex items-center gap-1 bg-secondary text-on-secondary px-space-md py-2 rounded-lg font-label-md text-label-md hover:bg-primary transition-colors" href="https://exemplo.com.br" target="_blank">
+<span>Visitar site do anunciante</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Classificados Gratuitos (Spans 5 cols) -->
+<div class="lg:col-span-5 bg-surface-card rounded-2xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-badge-success/15 text-badge-success font-label-sm text-label-sm font-bold uppercase">
+                Classificado Gratuito
+              </span>
+<span class="font-label-sm text-label-sm text-outline">Alimentação · Centro</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Padaria Aurora</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md leading-relaxed">
+              Anúncio gratuito revisado: Pães artesanais fresquinhos, fermentação natural, café da manhã colonial e encomendas diárias para eventos corporativos.
+            </p>
+<div class="space-y-2 mb-space-md font-body-sm text-body-sm text-outline">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">schedule</span>
+<span>Seg a sáb, 6h às 20h · Domingos até as 13h</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-badge-success">chat</span>
+<span class="text-on-surface font-medium">WhatsApp: (16) 0000-0000</span>
+</div>
+</div>
+</div>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Verificado pela moderação</span>
+<a class="text-secondary font-label-md text-label-md flex items-center gap-1 hover:underline" href="https://wa.me/5516000000000">
+              Conversar no WhatsApp <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Digital Agency & Custom Solutions (Spans 12 cols Full Width) -->
+<div class="lg:col-span-12 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-2xl p-space-lg shadow-lg flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="space-y-1 max-w-2xl">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-secondary text-on-secondary font-label-sm text-label-sm uppercase font-bold">
+              Solução Digital Sob Medida
+            </div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary">
+              Site, landing page ou sistema próprio para o seu negócio em São Carlos
+            </h3>
+<p class="font-body-md text-body-md text-surface-variant">
+              Desenvolvimento de plataformas web rápidas, catálogos de produtos e automações de atendimento para empresas e profissionais autônomos locais.
+            </p>
+</div>
+<div class="shrink-0 flex flex-col sm:flex-row gap-space-sm w-full md:w-auto">
+<a class="inline-flex items-center justify-center gap-space-xs bg-accent-amber hover:bg-accent-amber/90 text-primary font-label-lg text-label-lg px-space-lg py-3 rounded-xl transition-all shadow-md" href="mailto:contato@portalsaocarlos.com.br?subject=Orcamento%20Site%20Portal%20Sao%20Carlos">
+<span class="material-symbols-outlined text-[20px]">laptop_mac</span>
+<span>Solicitar Orçamento Digital</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- HIGH-CONVERTING ADVERTISING CTA BANNER -->
+<section class="max-w-[1200px] w-full mx-auto px-margin py-space-xl" id="anuncie">
+<div class="bg-surface-card rounded-3xl p-space-lg lg:p-space-xl shadow-xl overflow-hidden relative">
+<!-- Background Ambient Glow -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Explanatory Column (7 cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase font-bold">
+            Visibilidade sem burocracia
+          </span>
+<h2 class="font-display text-display text-primary leading-tight">
+            Alcance clientes em São Carlos todos os dias sem complicação.
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+            Divulgue seu comércio ou serviço para moradores da nossa cidade. Oferecemos anúncios gratuitos mediante moderação editorial e opções de destaque patrocinado direto com o portal.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-badge-success text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Sem taxas ocultas</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">chat</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Contato no seu WhatsApp</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-amber text-[20px]">verified</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">100% Grátis p/ MEI</span>
+</div>
+</div>
+<div class="pt-space-sm space-y-2">
+<p class="font-body-sm text-body-sm text-outline">
+              * Nota de transparência: Este portal independente não processa pagamentos via site. Todo o relacionamento de contratação é feito de forma segura e direta via e-mail ou atendimento humano.
+            </p>
+</div>
+</div>
+<!-- Right Action Box (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-2xl p-space-lg flex flex-col justify-between">
+<div class="space-y-space-sm mb-space-md">
+<span class="font-label-sm text-label-sm uppercase text-outline">Canais Oficiais de Contratação</span>
+<h3 class="font-headline-md text-headline-md text-primary">Fale com o Responsável</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Envie sua solicitação comercial, esclareça dúvidas ou solicite a inclusão dos dados da sua empresa no nosso catálogo.
+            </p>
+<div class="p-space-sm bg-surface-card rounded-xl shadow-sm flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</div>
+<div class="truncate">
+<span class="font-label-sm text-label-sm text-outline block">E-mail Comercial</span>
+<a class="font-headline-sm text-headline-sm text-secondary hover:underline truncate block" href="mailto:contato@portalsaocarlos.com.br">contato@portalsaocarlos.com.br</a>
+</div>
+</div>
+</div>
+<div class="space-y-space-xs">
+<a class="w-full flex items-center justify-center gap-space-xs bg-secondary hover:bg-primary-container text-on-secondary font-label-lg text-label-lg py-3 rounded-xl transition-all shadow-md" href="mailto:contato@portalsaocarlos.com.br?subject=Anunciar%20no%20Portal%20Sao%20Carlos">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Anuncie no Portal Agora</span>
+</a>
+<a class="w-full flex items-center justify-center gap-space-xs bg-surface-card hover:bg-surface-variant text-on-surface font-label-lg text-label-lg py-3 rounded-xl transition-all shadow-sm" href="https://wa.me/5516000000000?text=Ola%2C%20gostaria%20de%20anunciar%20meu%20comercio%20no%20Portal%20Sao%20Carlos">
+<span class="material-symbols-outlined text-[20px] text-badge-success">chat</span>
+<span>Atendimento via WhatsApp</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- INTERACTIVE FILTER LOGIC (Micro-interactions) -->
+<script>
+    function filterNews(category, el) {
+      const allButtons = document.querySelectorAll('#news-filters button');
+      allButtons.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-on-primary');
+        btn.classList.add('bg-surface-card', 'text-on-surface');
+      });
+      el.classList.add('bg-primary', 'text-on-primary');
+      el.classList.remove('bg-surface-card', 'text-on-surface');
+
+      const cards = document.querySelectorAll('.news-card');
+      cards.forEach(card => {
+        if (category === 'todas' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</div></main><footer class="w-full bg-primary text-surface-bright mt-space-xl"><div class="max-w-[1200px] mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded bg-secondary flex items-center justify-center"><span class="material-symbols-outlined text-on-secondary text-[20px]">newspaper</span></div><span class="font-headline-md text-headline-md text-surface-bright">Portal São Carlos</span></div><p class="font-body-sm text-body-sm text-surface-variant">O canal diário de comunicação, utilidade pública e fomento comercial de São Carlos e região paulista. Credibilidade jornalística e serviços para o cidadão.</p><div class="pt-space-xs"><span class="font-label-sm text-label-sm uppercase text-accent-amber block mb-space-xs">Expediente e Redação</span><p class="font-body-sm text-body-sm text-surface-container-high">Rua Episcopal, Centro - São Carlos/SP<br/>contato@portalsaocarlos.com.br</p></div></div><div class="space-y-space-md"><span class="font-label-lg text-label-lg text-surface-bright block border-b border-surface-variant/20 pb-space-xs">Canais Institucionais</span><ul class="space-y-space-sm font-body-md text-body-md text-surface-variant"><li><a class="hover:text-surface-bright transition-colors" data-path="portal-noticias" href="#">Notícias Regionais</a></li><li><a class="hover:text-surface-bright transition-colors" data-path="previsao-do-tempo" href="#">Boletim Meteorológico</a></li><li><a class="hover:text-surface-bright transition-colors" data-path="avisos-e-utilidades" href="#">Interdições &amp; Obras SAAE</a></li><li><a class="hover:text-surface-bright transition-colors" data-path="guia-comercial" href="#">Catálogo de Empresas Locais</a></li><li><a class="hover:text-accent-amber transition-colors" data-path="anuncie-aqui" href="#">Mídia Kit &amp; Publicidade</a></li></ul></div><div class="space-y-space-md"><span class="font-label-lg text-label-lg text-surface-bright block border-b border-surface-variant/20 pb-space-xs">Plantão Emergencial 24h</span><div class="space-y-space-xs font-body-sm text-body-sm"><div class="flex items-center justify-between p-space-xs rounded bg-primary-container text-surface-bright"><span class="font-headline-sm text-headline-sm text-badge-emergency">193</span><span class="text-surface-variant">Bombeiros Municipal</span></div><div class="flex items-center justify-between p-space-xs rounded bg-primary-container text-surface-bright"><span class="font-headline-sm text-headline-sm text-accent-amber">192</span><span class="text-surface-variant">SAMU Urgência</span></div><div class="flex items-center justify-between p-space-xs rounded bg-primary-container text-surface-bright"><span class="font-headline-sm text-headline-sm text-surface-bright">199</span><span class="text-surface-variant">Defesa Civil São Carlos</span></div><div class="flex items-center justify-between p-space-xs rounded bg-primary-container text-surface-bright"><span class="font-headline-sm text-headline-sm text-surface-bright">153</span><span class="text-surface-variant">Guarda Civil Municipal</span></div></div></div><div class="space-y-space-md"><span class="font-label-lg text-label-lg text-surface-bright block border-b border-surface-variant/20 pb-space-xs">Cadastre seu Negócio</span><p class="font-body-sm text-body-sm text-surface-variant">Conecte sua marca a milhares de são-carlenses todos os dias. Planos sob medida para comércio e serviços.</p><a class="inline-block w-full text-center bg-accent-amber hover:bg-accent-amber/90 text-primary font-label-lg text-label-lg py-space-sm px-space-md rounded-lg shadow-sm transition-all" data-path="anuncie-aqui" href="#">Quero Anunciar Agora</a><div class="text-center"><span class="font-label-sm text-label-sm text-surface-variant">Comercial: (16) 3300-0000</span></div></div></div><div class="border-t border-surface-variant/20 pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md text-surface-variant text-body-sm"><p>© 2024 Portal São Carlos. Todos os direitos reservados. CNPJ 00.000.000/0001-00.</p><div class="flex items-center gap-space-md"><a class="hover:text-surface-bright transition-colors" href="#">Termos de Uso</a><a class="hover:text-surface-bright transition-colors" href="#">Política de Privacidade</a><a class="hover:text-surface-bright transition-colors" href="#">Código de Ética Jornalística</a></div></div></div></footer></body></html>
