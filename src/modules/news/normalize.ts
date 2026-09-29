@@ -56,9 +56,14 @@ function annexUrl(value: unknown, opts: { requireImageType: boolean }): string |
     const attrs = entry as Record<string, unknown>;
     const url = pickString(attrs['@_url']);
     if (!url) continue;
+    const type = pickString(attrs['@_type']);
+    const medium = pickString(attrs['@_medium']);
+    // Metadado explícito não-imagem (audio/…, video/…, medium diverso de image)
+    // descarta o anexo — mesmo quando o chamador não exige type (enclosure/thumbnail).
+    const declaredNonImage =
+      (type !== null && !type.startsWith('image/')) || (medium !== null && medium !== 'image');
+    if (declaredNonImage) continue;
     if (opts.requireImageType) {
-      const type = pickString(attrs['@_type']);
-      const medium = pickString(attrs['@_medium']);
       const looksImage =
         (type !== null && type.startsWith('image/')) || (medium !== null && medium === 'image');
       if (!looksImage) continue;
@@ -77,8 +82,9 @@ function annexLinkUrl(value: unknown): string | null {
     const attrs = entry as Record<string, unknown>;
     const rel = pickString(attrs['@_rel']);
     const type = pickString(attrs['@_type']);
-    const isAnnex =
-      rel === 'enclosure' || rel === 'image' || (type !== null && type.startsWith('image/'));
+    // type explícito não-imagem descarta o link, mesmo com rel="enclosure".
+    if (type !== null && !type.startsWith('image/')) continue;
+    const isAnnex = rel === 'enclosure' || rel === 'image' || type !== null;
     if (!isAnnex) continue;
     const safe = toSafeImageUrl(pickString(attrs['@_href']));
     if (safe) return safe;
@@ -131,7 +137,8 @@ export function normalizeNewsItem(
   if (!isSafeHttpUrl(url)) return null;
 
   const summary = sanitizeToLength(raw.summary ?? raw.description ?? title, SUMMARY_MAX) || title;
-  const publishedAt = parseDate(raw.pubDate ?? raw.date ?? raw.isoDate) ?? collectedAt.toISOString();
+  const publishedAt =
+    parseDate(raw.pubDate ?? raw.date ?? raw.isoDate) ?? collectedAt.toISOString();
   const itemSource = pickString(raw.source) ?? feedSourceName;
   const category = sanitizeToLength(raw.category, 60) || undefined;
   const imageUrl = extractImageUrl(raw);

@@ -36,7 +36,11 @@ describe('normalizeNewsItem', () => {
   it('descarta item sem URL ou com protocolo inseguro', () => {
     expect(normalizeNewsItem({ title: 'Sem link' }, 'Feed', collectedAt)).toBeNull();
     expect(
-      normalizeNewsItem({ title: 'Link inseguro', link: 'javascript:alert(1)' }, 'Feed', collectedAt),
+      normalizeNewsItem(
+        { title: 'Link inseguro', link: 'javascript:alert(1)' },
+        'Feed',
+        collectedAt,
+      ),
     ).toBeNull();
   });
 
@@ -165,6 +169,27 @@ describe('extractImageUrl', () => {
       'Feed',
       collectedAt,
     );
+    expect(item!.imageUrl).toBeUndefined();
+  });
+
+  it('ignora link Atom de enclosure que não é imagem (áudio/vídeo)', () => {
+    const item = normalizeNewsItem(
+      {
+        title: 'Podcast Atom',
+        link: [
+          { '@_href': 'https://exemplo.com/post', '@_rel': 'alternate' },
+          {
+            '@_href': 'https://cdn.exemplo.com/audio.mp3',
+            '@_rel': 'enclosure',
+            '@_type': 'audio/mpeg',
+          },
+        ],
+        description: 'Resumo sem imagem',
+      },
+      'Feed',
+      collectedAt,
+    );
+    expect(item!.url).toBe('https://exemplo.com/post');
     expect(item!.imageUrl).toBeUndefined();
   });
 
