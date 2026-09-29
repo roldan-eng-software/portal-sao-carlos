@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const NAV_ITEMS = [
   { href: '#noticias', label: 'Notícias' },
@@ -30,23 +31,19 @@ export function Header() {
       <div className="mx-auto flex h-20 w-full max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3"
+          className="flex shrink-0 items-center"
           aria-label="Portal São Carlos — página inicial"
         >
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary"
-          >
-            <span className="material-symbols-outlined text-[20px] text-on-secondary">
-              newspaper
-            </span>
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-headline-sm text-primary">Portal São Carlos</span>
-            <span className="mt-1 text-label-sm uppercase tracking-wider text-outline">
-              Notícias &amp; Serviços
-            </span>
-          </span>
+          {/* Logotipo oficial do projeto (docs/modelo/logo.png → public/logo.png). */}
+          <Image
+            src="/logo.png"
+            alt="Portal São Carlos — Utilidade Pública & Notícias"
+            width={407}
+            height={165}
+            sizes="(min-width: 640px) 100px, 90px"
+            priority
+            className="h-9 w-auto sm:h-10"
+          />
         </Link>
 
         <nav

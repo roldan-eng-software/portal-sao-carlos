@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { env } from '@/config/env';
 import { APP_VERSION, BUILD_COMMIT, BUILD_DATE, DEPLOY_ENV, DEPLOY_LABEL } from '@/config/version';
 
@@ -24,14 +25,15 @@ export function Footer() {
           {/* Marca e expediente */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span
+              {/* Símbolo do logotipo oficial — fundo claro para contrastar no rodapé navy. */}
+              <Image
+                src="/logo-symbol.png"
+                alt=""
                 aria-hidden="true"
-                className="flex h-8 w-8 items-center justify-center rounded bg-secondary"
-              >
-                <span className="material-symbols-outlined text-[20px] text-on-secondary">
-                  newspaper
-                </span>
-              </span>
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-lg"
+              />
               <span className="font-display text-headline-md text-surface-bright">
                 Portal São Carlos
               </span>
