@@ -31,7 +31,7 @@ function AdCard({ ad, sponsored }: { ad: Ad; sponsored: boolean }) {
           <div className="relative mb-4 h-36 w-full overflow-hidden rounded-xl bg-linear-to-br from-primary to-primary-container">
             <Image
               src={ad.imageUrl}
-              alt=""
+              alt={`${ad.businessName} — ${ad.category} em ${ad.neighborhood}`}
               fill
               sizes="(max-width: 768px) 100vw, 40vw"
               className="object-cover"
@@ -52,7 +52,10 @@ function AdCard({ ad, sponsored }: { ad: Ad; sponsored: boolean }) {
         <div className="mt-4 space-y-2 text-body-sm text-outline">
           {ad.hours && (
             <p className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">
+              <span
+                className="material-symbols-outlined text-[18px] text-primary"
+                aria-hidden="true"
+              >
                 schedule
               </span>
               {ad.hours}
@@ -60,7 +63,10 @@ function AdCard({ ad, sponsored }: { ad: Ad; sponsored: boolean }) {
           )}
           {ad.phone && (
             <p className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">
+              <span
+                className="material-symbols-outlined text-[18px] text-primary"
+                aria-hidden="true"
+              >
                 phone
               </span>
               {telLink ? (
@@ -147,8 +153,8 @@ export function AdsSection({ result }: AdsSectionProps) {
             Guia Comercial de São Carlos
           </h2>
           <p className="text-body-md text-on-surface-variant">
-            Encontre fornecedores, lojas físicas, gastronomia e prestadores de serviço
-            recomendados na cidade. Publicidade — não notícia.
+            Encontre fornecedores, lojas físicas, gastronomia e prestadores de serviço recomendados
+            na cidade. Publicidade — não notícia.
           </p>
         </div>
         <a

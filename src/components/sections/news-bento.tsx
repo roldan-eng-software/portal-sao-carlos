@@ -75,7 +75,11 @@ export function NewsBento({ items }: NewsBentoProps) {
     <>
       {/* Filtros por categoria */}
       {categories.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label="Filtrar notícias por categoria">
+        <div
+          className="mb-4 flex flex-wrap gap-2"
+          role="group"
+          aria-label="Filtrar notícias por categoria"
+        >
           <button
             type="button"
             onClick={() => setFilter(null)}
@@ -118,7 +122,7 @@ export function NewsBento({ items }: NewsBentoProps) {
                 {item.imageUrl && (
                   <Image
                     src={item.imageUrl}
-                    alt=""
+                    alt={item.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 66vw"
                     className="object-cover"

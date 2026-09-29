@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
 import { WeatherSection } from '@/components/sections/weather-section';
 import { NewsSection } from '@/components/sections/news-section';
@@ -19,6 +20,11 @@ import { loadPromo, type Promo } from '@/modules/promo/loader';
 /** Revalidação ≈ 15 min: nenhuma fonte é consultada a cada visita (performance). */
 export const revalidate = 900;
 
+/** Canonical autorreferente da home (páginas de texto definem o próprio). */
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
+
 function settle<T>(
   result: PromiseSettledResult<ModuleResult<T>>,
   fallback: ModuleResult<T>,
@@ -27,15 +33,9 @@ function settle<T>(
 }
 
 export default async function Home() {
-  const [weatherRaw, newsRaw, noticesRaw, contactsRaw, adsRaw, promoRaw] =
-    await Promise.allSettled([
-      getWeather(),
-      getNews(),
-      loadNotices(),
-      loadContacts(),
-      loadAds(),
-      loadPromo(),
-    ]);
+  const [weatherRaw, newsRaw, noticesRaw, contactsRaw, adsRaw, promoRaw] = await Promise.allSettled(
+    [getWeather(), getNews(), loadNotices(), loadContacts(), loadAds(), loadPromo()],
+  );
 
   const weather = settle<WeatherData>(weatherRaw, errorResult('Open-Meteo'));
   const news = settle<NewsItem[]>(newsRaw, errorResult('Notícias externas'));
