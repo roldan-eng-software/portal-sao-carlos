@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AnnounceCTA } from '@/components/layout/announce-cta';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { env } from '@/config/env';
 import './globals.css';
 
@@ -87,6 +88,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Chamada de publicidade em todas as páginas (id="anuncie" — SC-006). */}
         <AnnounceCTA />
         <Footer />
+        {/* GA4 adiado pós-hidratação; só em VERCEL_ENV=production (bundle-defer-third-party). */}
+        <GoogleAnalytics />
       </body>
     </html>
   );
