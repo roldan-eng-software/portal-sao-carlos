@@ -9,7 +9,13 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky",
+    "release": "commit-and-tag-version",
+    "release:minor": "commit-and-tag-version --release-as minor",
+    "release:major": "commit-and-tag-version --release-as major",
+    "release:patch": "commit-and-tag-version --release-as patch",
+    "release:dry": "commit-and-tag-version --dry-run"
   },
   "dependencies": {
     "fast-xml-parser": "^4.5.1",
@@ -18,6 +24,8 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@tailwindcss/postcss": "^4.1.0",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.3.0",
@@ -25,8 +33,10 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.7.0",
+    "commit-and-tag-version": "^13.2.1",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.3.6",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "prettier": "^3.6.0",
     "tailwindcss": "^4.1.0",

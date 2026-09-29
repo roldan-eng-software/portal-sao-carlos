@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { env } from '@/config/env';
+import { APP_VERSION, BUILD_COMMIT, BUILD_DATE, DEPLOY_ENV, DEPLOY_LABEL } from '@/config/version';
 
 const EMERGENCY_LINES = [
   { number: '193', label: 'Bombeiros Municipal', tone: 'text-badge-emergency' },
@@ -36,9 +37,8 @@ export function Footer() {
               </span>
             </div>
             <p className="text-body-sm text-surface-variant">
-              Portal independente de utilidade pública de São Carlos e região. Não é órgão
-              oficial da Prefeitura, do SAAE, da CPFL nem de qualquer outro órgão público ou
-              empresa.
+              Portal independente de utilidade pública de São Carlos e região. Não é órgão oficial
+              da Prefeitura, do SAAE, da CPFL nem de qualquer outro órgão público ou empresa.
             </p>
             <div>
               <span className="mb-1 block text-label-sm uppercase text-accent-amber">
@@ -124,8 +124,8 @@ export function Footer() {
               Cadastre seu Negócio
             </span>
             <p className="text-body-sm text-surface-variant">
-              Conecte sua marca a milhares de são-carlenses todos os dias. Planos sob medida
-              para comércio e serviços.
+              Conecte sua marca a milhares de são-carlenses todos os dias. Planos sob medida para
+              comércio e serviços.
             </p>
             <a
               href="#anuncie"
@@ -140,10 +140,34 @@ export function Footer() {
           id="contato-responsavel"
           className="flex flex-col items-center justify-between gap-4 border-t border-surface-variant/20 pt-6 text-body-sm text-surface-variant md:flex-row"
         >
-          <p>
-            © {new Date().getFullYear()} Portal São Carlos — São Carlos/SP. Informações de
-            terceiros podem mudar; confirme dados importantes na fonte oficial.
-          </p>
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <p>
+              © {new Date().getFullYear()} Portal São Carlos — São Carlos/SP. Informações de
+              terceiros podem mudar; confirme dados importantes na fonte oficial.
+            </p>
+            {/* Controle de versões (skill changelog-automation): estado publicado. */}
+            <p
+              className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-label-sm text-surface-variant md:justify-start"
+              data-testid="versao-em-producao"
+              data-versao={APP_VERSION}
+              data-ambiente={DEPLOY_ENV}
+              title={
+                BUILD_COMMIT
+                  ? `Build de ${DEPLOY_LABEL.toLowerCase()} em ${BUILD_DATE} · commit ${BUILD_COMMIT}`
+                  : `Build local de ${BUILD_DATE} · versão ${APP_VERSION}`
+              }
+            >
+              <span className="rounded bg-primary-container px-2 py-0.5 text-surface-bright">
+                v{APP_VERSION}
+              </span>
+              <span
+                className={DEPLOY_ENV === 'production' ? 'text-badge-success' : 'text-accent-amber'}
+              >
+                {DEPLOY_LABEL}
+              </span>
+              {BUILD_COMMIT && <span className="font-mono">{BUILD_COMMIT}</span>}
+            </p>
+          </div>
           <div className="flex flex-wrap items-center gap-6">
             <Link href="/aviso-editorial" className="transition-colors hover:text-surface-bright">
               Aviso editorial
