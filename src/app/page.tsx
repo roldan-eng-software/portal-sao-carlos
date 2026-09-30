@@ -12,7 +12,7 @@ import { getWeather } from '@/modules/weather/adapter';
 import type { WeatherData } from '@/modules/weather/types';
 import { getNews } from '@/modules/news/adapter';
 import type { NewsItem } from '@/modules/news/types';
-import { loadNotices, type Notice } from '@/modules/notices/loader';
+import { getNotices, type Notice } from '@/modules/notices/adapter';
 import { loadContacts, type ContactItem } from '@/modules/contacts/loader';
 import { loadAds, type Ad } from '@/modules/ads/loader';
 import { loadPromo, type Promo } from '@/modules/promo/loader';
@@ -34,7 +34,7 @@ function settle<T>(
 
 export default async function Home() {
   const [weatherRaw, newsRaw, noticesRaw, contactsRaw, adsRaw, promoRaw] = await Promise.allSettled(
-    [getWeather(), getNews(), loadNotices(), loadContacts(), loadAds(), loadPromo()],
+    [getWeather(), getNews(), getNotices(), loadContacts(), loadAds(), loadPromo()],
   );
 
   const weather = settle<WeatherData>(weatherRaw, errorResult('Open-Meteo'));

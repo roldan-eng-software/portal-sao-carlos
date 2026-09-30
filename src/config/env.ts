@@ -39,8 +39,10 @@ function resolveSiteUrl(): string {
 export const env = {
   /** URL canônica do site (SEO, sitemap, robots). */
   siteUrl: resolveSiteUrl(),
-  /** Sobrescreve a lista de feeds RSS (separados por vírgula). */
+  /** Sobrescreve a lista de feeds RSS de notícias (separados por vírgula). */
   newsFeedsOverride: optional('NEWS_FEEDS'),
+  /** Sobrescreve a lista de feeds RSS de informativos (separados por vírgula). */
+  noticeFeedsOverride: optional('NOTICE_FEEDS'),
   /** Canais de contato do responsável pelas chamadas de publicidade. */
   contactWhatsapp: optional('CONTACT_WHATSAPP'),
   contactPhone: optional('CONTACT_PHONE'),

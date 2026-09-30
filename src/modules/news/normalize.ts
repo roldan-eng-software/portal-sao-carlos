@@ -1,3 +1,4 @@
+import { parseFeedDate, pickLink, pickString } from '@/lib/feed';
 import { isSafeHttpUrl, sanitizeToLength } from '@/lib/sanitize';
 import type { NewsItem, RawFeedItem } from './types';
 
@@ -5,35 +6,9 @@ export const TITLE_MAX = 200;
 export const SUMMARY_MAX = 500;
 const IMAGE_URL_MAX = 500;
 
-/** Extrai string de valores heterogêneos vindo do parser XML. */
-export function pickString(value: unknown): string | null {
-  if (typeof value === 'string') return value.trim().length > 0 ? value : null;
-  if (Array.isArray(value) && value.length > 0) return pickString(value[0]);
-  if (value && typeof value === 'object' && '#text' in value) {
-    return pickString((value as { '#text'?: unknown })['#text']);
-  }
-  return null;
-}
-
-/**
- * Link de item: RSS usa string; Atom usa `<link href="…">`
- * (objeto com atributos `@_href`).
- */
-function pickLink(value: unknown): string | null {
-  const direct = pickString(value);
-  if (direct) return direct;
-  if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return pickString((value as Record<string, unknown>)['@_href']);
-  }
-  if (Array.isArray(value) && value.length > 0) return pickLink(value[0]);
-  return null;
-}
-
 function parseDate(raw: unknown): string | null {
-  const text = pickString(raw);
-  if (!text) return null;
-  const date = new Date(text);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  const date = parseFeedDate(raw);
+  return date ? date.toISOString() : null;
 }
 
 /**

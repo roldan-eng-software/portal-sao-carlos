@@ -68,7 +68,7 @@ qualquer campo inválido → módulo em `stale`/`error`.
 Regras: HTML removido (R6); no máximo N itens por feed (limite configurável,
 padrão 10); nunca conteúdo integral do corpo do texto (gate 13).
 
-### `Notice` — informativo oficial (FR-003) — fonte: `content/notices.json`
+### `Notice` — informativo oficial (FR-003) — fonte: `content/notices.json` (curadoria) + feeds RSS de `config/sources.ts` (automático)
 
 | Campo | Tipo | Obrigatório | Validação |
 | --- | --- | --- | --- |
@@ -143,7 +143,7 @@ automática no carregamento (campos) + julgamento editorial humano (conteúdo).
 ```text
 ModuleResult<WeatherData>          (módulo clima — 1 por página)
 ModuleResult<NewsItem[]>           (módulo notícias — agrupa N feeds)
-ModuleResult<Notice[]>             (módulo informativos — arquivo versionado)
+ModuleResult<Notice[]>             (módulo informativos — arquivo versionado + feeds RSS)
 ModuleResult<Ad[]>                 (módulo anúncios — agrupa gratuitos; patrocinados ordenados primeiro)
 ModuleResult<Promo[]>              (divulgação própria — rotulada)
 ModuleResult<ContactItem[]>        (módulos contatos úteis)

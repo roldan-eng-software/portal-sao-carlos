@@ -1,36 +1,18 @@
-import { XMLParser } from 'fast-xml-parser';
-import { getNewsFeeds, type NewsFeedConfig } from '@/config/sources';
+import { getNewsFeeds, type FeedConfig } from '@/config/sources';
+import { extractFeedItems } from '@/lib/feed';
 import { fetchText, getLastGood, setLastGood } from '@/lib/fetch-cached';
 import { logSourceFailure, logSourceRecovery } from '@/lib/logger';
 import { errorResult, okResult, staleResult, type ModuleResult } from '@/lib/module-result';
-import { normalizeNewsItem, pickString } from './normalize';
+import { normalizeNewsItem } from './normalize';
 import type { NewsItem, RawFeedItem } from './types';
 
 const CACHE_KEY = 'news';
 const MAX_ITEMS_PER_FEED = 10;
 const MAX_TOTAL_ITEMS = 20;
 
-const parser = new XMLParser({
-  ignoreDeclaration: true,
-  parseTagValue: false,
-  trimValues: true,
-});
-
-function extractItems(xml: string): RawFeedItem[] {
-  const doc = parser.parse(xml) as {
-    rss?: { channel?: { item?: RawFeedItem | RawFeedItem[] } };
-    feed?: { entry?: RawFeedItem | RawFeedItem[] };
-  };
-  const rssItems = doc?.rss?.channel?.item;
-  if (rssItems) return Array.isArray(rssItems) ? rssItems : [rssItems];
-  const atomItems = doc?.feed?.entry;
-  if (atomItems) return Array.isArray(atomItems) ? atomItems : [atomItems];
-  return [];
-}
-
-async function fetchFeed(feed: NewsFeedConfig, collectedAt: Date): Promise<NewsItem[]> {
+async function fetchFeed(feed: FeedConfig, collectedAt: Date): Promise<NewsItem[]> {
   const xml = await fetchText(feed.url);
-  const rawItems = extractItems(xml);
+  const rawItems = extractFeedItems(xml) as RawFeedItem[];
   const items: NewsItem[] = [];
   for (const raw of rawItems) {
     if (items.length >= MAX_ITEMS_PER_FEED) break;
@@ -62,7 +44,7 @@ export async function getNews(): Promise<ModuleResult<NewsItem[]>> {
   );
 
   const successes = settled.filter(
-    (result): result is PromiseFulfilledResult<{ feed: NewsFeedConfig; items: NewsItem[] }> =>
+    (result): result is PromiseFulfilledResult<{ feed: FeedConfig; items: NewsItem[] }> =>
       result.status === 'fulfilled',
   );
 
@@ -82,5 +64,3 @@ export async function getNews(): Promise<ModuleResult<NewsItem[]>> {
   }
   return errorResult(feeds[0]?.displayName ?? 'Notícias externas');
 }
-
-export { pickString };

@@ -58,14 +58,22 @@ Todos os unknowns do Technical Context foram resolvidos. Nenhum
 ## R4 — Informativos do SAAE, CPFL e fontes oficiais
 
 - **Decision**: curadoria manual pelo responsável em `content/notices.json`
-  (título, resumo, data, fonte, link oficial), com revisão humana obrigatória.
-  Nenhuma integração automática com SAAE/CPFL nesta fase.
-- **Rationale**: não existem APIs públicas confirmadas do SAAE/CPFL; scraping
-  de órgãos públicos violaria os critérios de avaliação de fontes; curadoria
-  manual garante atribuição correta, link ao canal oficial e o tom de "portal
-  independente que não substitui canais oficiais" (gate 13).
+  (título, resumo, data, fonte, link oficial), com revisão humana obrigatória,
+  combinada no adapter com feeds RSS públicos registrados em
+  `config/sources.ts`. Em 2026-09-30 o feed oficial do SAAE
+  (`https://saaesaocarlos.com.br/feed/`) passou a integrar a seção de
+  informativos com atualização automática, seguindo o mesmo contrato de R3
+  (normalização, sanitização, atribuição + link ao original, cache ≈15 min,
+  remoção sem alteração de UI). CPFL permanece apenas com curadoria — nenhum
+  feed público confirmado.
+- **Rationale**: o SAAE publica RSS no próprio site oficial, atendendo ao
+  checklist §Fontes Externas (disponibilidade pública, sem chave, removível);
+  scraping e APIs inventadas continuam rejeitados. Curadoria manual mantém
+  atribuição correta, link ao canal oficial e o tom de "portal independente
+  que não substitui canais oficiais" (gate 13); o feed só entra com título,
+  resumo, data e link — nunca conteúdo integral (gate 13).
 - **Alternatives considered**: monitoramento automatizado dos sites
-  oficiais — rejeitado (termos, estabilidade, complexidade; Fase 3 no máximo);
+  oficiais via scraping — rejeitado (termos, estabilidade, complexidade);
   parceria institucional — fora do controle do projeto (não é parceria
   oficial; restrição da constituição).
 

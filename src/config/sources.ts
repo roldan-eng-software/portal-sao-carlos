@@ -10,7 +10,7 @@ import { env } from '@/config/env';
  * Nenhuma "API oficial" de portais é pressuposta — somente RSS público.
  */
 
-export interface NewsFeedConfig {
+export interface FeedConfig {
   id: string;
   displayName: string;
   url: string;
@@ -36,7 +36,7 @@ export function weatherUrl(): string {
   return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
 }
 
-const DEFAULT_NEWS_FEEDS: NewsFeedConfig[] = [
+const DEFAULT_NEWS_FEEDS: FeedConfig[] = [
   {
     id: 'google-news-sao-carlos',
     displayName: 'Google News — São Carlos',
@@ -47,16 +47,43 @@ const DEFAULT_NEWS_FEEDS: NewsFeedConfig[] = [
   // G1 São Carlos, ACidade ON, São Carlos Agora, Portal da Cidade São Carlos.
 ];
 
-export function getNewsFeeds(): NewsFeedConfig[] {
-  const override = env.newsFeedsOverride;
-  if (!override) return DEFAULT_NEWS_FEEDS;
+/**
+ * Fontes do módulo de informativos (seção "Informativos e Avisos de
+ * Utilidade Pública"). Checklist §Fontes Externas do SAAE: RSS público do
+ * site oficial do órgão (disponibilidade pública), sem chave, cache ≈15 min,
+ * somente título/resumo/data/link com atribuição e link ao canal oficial
+ * (gate 13), removível apagando esta entrada — sem alteração de UI.
+ * A curadoria manual em `content/notices.json` permanece e é combinada com
+ * o feed no adapter.
+ */
+const DEFAULT_NOTICE_FEEDS: FeedConfig[] = [
+  {
+    id: 'saae-sao-carlos',
+    displayName: 'SAAE São Carlos',
+    url: 'https://saaesaocarlos.com.br/feed/',
+  },
+];
+
+function overrideToFeeds(override: string, idPrefix: string): FeedConfig[] {
   return override
     .split(',')
     .map((url) => url.trim())
     .filter((url) => url.length > 0)
     .map((url, index) => ({
-      id: `feed-${index + 1}`,
+      id: `${idPrefix}-${index + 1}`,
       displayName: `Fonte ${index + 1}`,
       url,
     }));
+}
+
+export function getNewsFeeds(): FeedConfig[] {
+  const override = env.newsFeedsOverride;
+  if (!override) return DEFAULT_NEWS_FEEDS;
+  return overrideToFeeds(override, 'feed');
+}
+
+export function getNoticeFeeds(): FeedConfig[] {
+  const override = env.noticeFeedsOverride;
+  if (!override) return DEFAULT_NOTICE_FEEDS;
+  return overrideToFeeds(override, 'notice-feed');
 }

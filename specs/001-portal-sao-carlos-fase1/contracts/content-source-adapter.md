@@ -49,7 +49,7 @@ ContentSource<T>
 | --- | --- | --- | --- |
 | `weather` | Open-Meteo (coords fixas SC) | não | previsto |
 | `news` | Registro de feeds RSS (`config/sources.ts`) | não | previsto |
-| `notices` | `content/notices.json` (curadoria manual) | — | previsto (arquivo) |
+| `notices` | `content/notices.json` (curadoria manual) + feeds RSS (`config/sources.ts`, ex.: SAAE) | não | previsto (arquivo + RSS) |
 | `ads` | `content/ads.json` (moderação manual) | — | previsto (arquivo) |
 | `promo` | `content/promo.json` | — | previsto (arquivo) |
 | `contacts` | `content/contacts.json` | — | previsto (arquivo) |
