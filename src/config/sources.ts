@@ -14,6 +14,13 @@ export interface FeedConfig {
   id: string;
   displayName: string;
   url: string;
+  /**
+   * Filtro opcional de relevância: só entra no módulo o item cujo título
+   * contenha alguma das termas (case-insensitive). Usado por fontes
+   * regionais cujo feed mistura cidades — ex.: a seção do G1 publica junto
+   * notícias de todo o interior de SP (avaliação em research.md, R3.1).
+   */
+  filterTerms?: string[];
 }
 
 /** Coordenadas fixas de São Carlos/SP para a previsão do tempo. */
@@ -36,15 +43,33 @@ export function weatherUrl(): string {
   return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
 }
 
+/*
+ * Fontes de notícias — reavaliação do checklist constitucional em
+ * 2026-10-08 (research.md, R3.1): São Carlos Agora e G1 São Carlos e
+ * região aprovadas; ACidade ON e Portal da Cidade rejeitadas (sem feed
+ * jornalístico local). A ordem importa: as fontes diretas vêm primeiro
+ * para que, em caso de duplicidade, o link direto ao original vença o
+ * redirecionador do Google News (dedupe em modules/news/adapter.ts).
+ */
 const DEFAULT_NEWS_FEEDS: FeedConfig[] = [
+  {
+    id: 'sao-carlos-agora',
+    displayName: 'São Carlos Agora',
+    url: 'https://www.saocarlosagora.com.br/feed',
+  },
+  {
+    id: 'g1-sao-carlos-regiao',
+    displayName: 'G1 — São Carlos e região',
+    url: 'https://g1.globo.com/rss/g1/sp/sao-carlos-regiao/',
+    // Feed da seção mistura notícias de todo o interior de SP (~18% são
+    // de São Carlos sem filtro — medido em 2026-10-08).
+    filterTerms: ['São Carlos'],
+  },
   {
     id: 'google-news-sao-carlos',
     displayName: 'Google News — São Carlos',
     url: 'https://news.google.com/rss/search?q=S%C3%A3o%20Carlos%2C%20SP&hl=pt-BR&gl=BR&ceid=BR%3Apt-419',
   },
-  // Fontes locais candidatas — acrescentar APÓS verificação individual do
-  // checklist constitucional (research R3):
-  // G1 São Carlos, ACidade ON, São Carlos Agora, Portal da Cidade São Carlos.
 ];
 
 /**

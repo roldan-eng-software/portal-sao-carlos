@@ -55,6 +55,42 @@ Todos os unknowns do Technical Context foram resolvidos. Nenhum
   portais — rejeitado: **nenhuma API oficial confirmada existe; não inventar**
   (restrição explícita da constituição).
 
+## R3.1 — Reavaliação das fontes locais (2026-10-08)
+
+- **Decision**: os quatro candidatos do R3 foram submetidos ao checklist da
+  constituição (§Fontes Externas):
+
+| Fonte | RSS público | Relevância (medida) | Veredito |
+| --- | --- | --- | --- |
+| **São Carlos Agora** (`saocarlosagora.com.br/feed`) | Sim (RSS 2.0, 30 itens) | 100% São Carlos | **Aprovada** |
+| **G1 São Carlos e região** (`g1.globo.com/rss/g1/sp/sao-carlos-regiao/`) | Sim (seção real — controle com caminho inexistente retorna 0 itens) | 18/100 itens locais sem filtro | **Aprovada com `filterTerms: ["São Carlos"]`** |
+| **ACidade ON** (`acidadeon.com/feed/`) | Sim, mas conteúdo é blog genérico (SEO: criptomoedas, viagens), não jornalístico local; hub `/sao-carlos/` sem feed de artigos | Irrelevante | **Rejeitada** |
+| **Portal da Cidade** (`portaldacidade.com.br`) | Não — SPA devolve `text/html` em todos os caminhos de feed | Cidade correta | **Rejeitada** (sem feed; scraping proibido) |
+
+  Checklist das aprovadas: disponibilidade pública ✓ (RSS sem chave), limites
+  ✓ (1 requisição/15 min por fonte via cache ISR), termos/direitos ✓ (apenas
+  título, resumo, data e link com atribuição — gate 13), estabilidade ✓
+  (WordPress/Globo padrão), removibilidade ✓ (apagar a entrada em
+  `sources.ts`, sem UI), alternativa ✓ (Google News permanece como terceira
+  fonte).
+
+- **Composition**: `DEFAULT_NEWS_FEEDS` passa a ser
+  [São Carlos Agora, G1 (filtrado), Google News] — ordem importa: em caso de
+  duplicidade, o **link direto ao original vence** o redirecionador do
+  agregador, via dedupe por título normalizado (sem acentos/caixa; prefixo
+  ≥ 30 chars cobre o sufixo " - G1") em `modules/news/adapter.ts`.
+- **Rationale**: o portal precisa de manchetes 100% locais; o feed do G1 é
+  autoridade regional mas mistura ~82% de interior de SP, e o Google News
+  reúne as mesmas matérias com links intermediários — filtro + dedupe
+  resolvem sem remover resiliência (se uma fonte cair, as outras seguram).
+- **Alternatives considered**: G1 sem filtro — rejeitado (diluiria a seção
+  com notícias fora da cidade); remover o Google News — rejeitado (perda de
+  breadth e de fallback caso SCA/G1 caiam); filtro por lista negra de cidades
+  — rejeitado (frágil; termos positivos são configuração de 1 linha).
+- **Fixtures**: amostras reais congeladas em `tests/fixtures/sao-carlos-agora.xml`
+  e `tests/fixtures/g1-sao-carlos-regiao.xml` (2026-10-08), cobertas por
+  `tests/integration/news-feeds.test.ts`.
+
 ## R4 — Informativos do SAAE, CPFL e fontes oficiais
 
 - **Decision**: curadoria manual pelo responsável em `content/notices.json`
