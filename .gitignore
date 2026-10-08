@@ -30,3 +30,6 @@ Thumbs.db
 
 # Vitest
 .vitest/
+
+# Artefatos do Playwright MCP (validação visual)
+.playwright-mcp/

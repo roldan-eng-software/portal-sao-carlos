@@ -110,7 +110,20 @@ body {
   outline-offset: 2px;
 }
 
-/* Material Symbols Outlined (docs/modelo/code.html — ícones do design) */
+/* Material Symbols Outlined (docs/modelo/code.html — ícones do design).
+   Auto-hospedado: subset local de 31 ligaduras usadas no projeto (31 KB),
+   gerado de MaterialSymbolsOutlined[wght].ttf com fonttools mantendo os
+   eixos variáveis FILL/GRAD/opsz/wght — sem dependência da Google Fonts.
+   font-display: block é obrigatório: sem ele, a ligadura crua (ex.:
+   "storefront") aparece como texto antes do fonte carregar. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url('./fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;

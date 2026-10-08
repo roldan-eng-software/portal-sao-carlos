@@ -39,24 +39,43 @@ export function isValidNotice(value: unknown): value is Notice {
 
 /**
  * Carrega e valida os informativos curados (moderação manual por edição
- * versionada — gate 6). Itens inválidos são descartados; JSON corrompido
+ * versionada — gate 6). Itens inválidos são descartados com `warn`;
+ * itens válidos com status `arquivado` são estado legítimo do modelo e
+ * registram apenas `info` (não são conteúdo inválido). JSON corrompido
  * resulta em `error` amigável, nunca em quebra de página (FR-013).
+ *
+ * `rawList` é opcional e existe para os testes injetarem cenários sem
+ * depender do seed versionado.
  */
-export function loadNotices(): ModuleResult<Notice[]> {
+export function loadNotices(rawList: unknown = noticesSeed): ModuleResult<Notice[]> {
   try {
-    const rawList: unknown = noticesSeed;
     if (!Array.isArray(rawList)) {
       throw new Error('Arquivo de informativos inválido');
     }
-    const published = rawList.filter(isValidNotice).filter((item) => item.status === 'publicado');
-    if (published.length !== rawList.length) {
+    const valid = rawList.filter(isValidNotice);
+    const invalid = rawList.length - valid.length;
+    const published = valid.filter((item) => item.status === 'publicado');
+    const archived = valid.length - published.length;
+    const at = new Date().toISOString();
+    if (invalid > 0) {
       console.warn(
         JSON.stringify({
           level: 'warn',
           event: 'invalid_content_items',
           file: 'content/notices.json',
-          discarded: rawList.length - published.length,
-          at: new Date().toISOString(),
+          discarded: invalid,
+          at,
+        }),
+      );
+    }
+    if (archived > 0) {
+      console.info(
+        JSON.stringify({
+          level: 'info',
+          event: 'archived_content_items',
+          file: 'content/notices.json',
+          archived,
+          at,
         }),
       );
     }

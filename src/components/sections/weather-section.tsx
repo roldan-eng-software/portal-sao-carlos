@@ -12,7 +12,7 @@ function wmoToIcon(code: number): string {
   if (code === 0) return 'wb_sunny';
   if (code === 1) return 'partly_cloudy_day';
   if (code === 2 || code === 3) return 'cloud';
-  if (code === 45 || code === 48) return 'fog';
+  if (code === 45 || code === 48) return 'foggy';
   if (code >= 51 && code <= 67) return 'rainy';
   if (code >= 71 && code <= 77) return 'weather_snowy';
   if (code >= 80 && code <= 82) return 'rainy';

@@ -4,7 +4,8 @@
 
 **Created**: 2026-09-28
 
-**Status**: Draft
+**Status**: Implemented — 55/55 tasks concluídas (Fase 1 entregue em v0.1.0,
+2026-09-28; verificação de build/testes em 2026-10-08)
 
 **Input**: User description: "Portal São Carlos — Fase 1: landing page / portal público de utilidade pública para São Carlos/SP, com previsão do tempo, notícias, informativos oficiais, telefones e links úteis, área de anúncios (gratuitos e patrocinados), divulgação própria, contatos e políticas básicas, conforme a constituição do projeto (v1.0.0)."
 
