@@ -1,6 +1,9 @@
 # Plano de implementação — pontos de atenção (AGENTS.md §11)
 
-**Data**: 2026-10-08 · **Base**: `AGENTS.md` §11 · **Status**: proposto (aguardando aprovação)
+**Data**: 2026-10-08 · **Base**: `AGENTS.md` §11 · **Status**: Etapas 1, 2, 3 e 5
+concluídas (v0.2.0 publicada e em `origin`; constituição em v1.1.0); Etapa 4
+parcial — D1 (marca), D2 (GA4/emenda) e D3 (WhatsApp) decididos/aplicados
+(D3 ainda pendente de env vars na Vercel), D4 adiada pelo responsável
 
 Cada etapa indica problema, mudança, arquivos, critério de aceite e riscos.
 Etapas 1–3 são execução técnica (não exigem decisão); Etapa 4 são decisões do
@@ -225,6 +228,7 @@ Hoje só existe default de e-mail (`contactEmail`). Sem `CONTACT_WHATSAPP` /
 ### D4 — Política de anúncios gratuitos (perguntas 6 e 7)
 
 Definir critérios de aceitação, volume e periodicidade de publicação.
+
 - **Sugestão de entrega**: `docs/politica-anuncios.md` (critérios já existem
   na constituição §Publicidade — o que falta é operação: onde entrar, prazo,
   limite de itens) + link no aviso editorial/rodapé.

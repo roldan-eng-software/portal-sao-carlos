@@ -12,18 +12,19 @@ histórico git e documentação em `specs/`.
 
 | Item | Estado |
 | --- | --- |
-| Nome do pacote (`package.json`) | `portal-sao-carlos` v0.1.0 |
+| Nome do pacote (`package.json`) | `portal-sao-carlos` v0.2.0 |
 | Marca / título do site | **Portal São Carlos** (nome provisório) |
 | Domínio canônico de produção | `https://www.meubairro.dev.br` (apex `meubairro.dev.br` redireciona 301 → www, em `next.config.ts`) |
 | Repositório | `https://github.com/roldan-eng-software/portal-sao-carlos` |
 | Deploy | Vercel (ISR/estático; `VERCEL_ENV`/`VERCEL_GIT_COMMIT_SHA` usados no build) |
 | Fase atual | **Fase 1 — Portal público: CONCLUÍDA** (55/55 tasks `[X]` em `specs/001-portal-sao-carlos-fase1/tasks.md`) |
 | Git | branch `main`, working tree limpo na data desta verificação |
-| Tag | `v0.1.0` em `5cc1670` — há **9 commits após a tag ainda não released** (ver §11) |
+| Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
 informativos, telefones úteis, anúncios e políticas — **sem cadastro, sem
-pagamento, sem banco de dados** (constituição v1.0.0, `.specify/memory/constitution.md`).
+pagamento, sem banco de dados** (constituição **v1.1.0**, `.specify/memory/constitution.md`
+— a emenda v1.1.0 de 2026-10-08 formalizou o GA4 como métrica permitida).
 
 ---
 
@@ -31,11 +32,11 @@ pagamento, sem banco de dados** (constituição v1.0.0, `.specify/memory/constit
 
 | Verificação | Resultado |
 | --- | --- |
-| `npm run test` | ✅ 12 arquivos, **79 testes passando** |
+| `npm run test` | ✅ 15 arquivos, **102 testes passando** |
 | `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), 9 rotas estáticas, home com `revalidate 15m` |
-| `npm run lint` | ✅ 0 erros, **2 warnings** (fonte Material Symbols carregada via `<link>` em `src/app/layout.tsx:80` — `google-font-display` e `no-page-custom-font`) |
+| `npm run lint` | ✅ 0 erros e **0 warnings** (Material Symbols auto-hospedada desde a Etapa 1 — ver §6) |
 | Gates da constituição | 17/17 PASS conforme `specs/001-portal-sao-carlos-fase1/plan.md` |
-| Warning de build | `invalid_content_items` em `content/notices.json` — **esperado**: os 2 itens curados estão com `status: "arquivado"` e são descartados pelo loader (ver §11) |
+| Warning de build | Nenhum — itens `arquivado` de `content/notices.json` registram `info/archived_content_items` (não são mais `warn`) |
 
 ---
 
@@ -43,7 +44,7 @@ pagamento, sem banco de dados** (constituição v1.0.0, `.specify/memory/constit
 
 - **Framework**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (strict)
 - **Estilo**: Tailwind CSS 4 — tokens `@theme` em `src/app/globals.css` derivados do design **Civic Vanguard** (`docs/modelo/DESIGN.md`)
-- **Fontes**: Plus Jakarta Sans (display) e Inter (corpo) via `next/font/google`; ícones Material Symbols Outlined via `<link>` externo
+- **Fontes**: Plus Jakarta Sans (display) e Inter (corpo) via `next/font/google`; ícones Material Symbols Outlined **auto-hospedados** (subset de 34 ligaduras, ~34 KB, em `src/app/fonts/` — regeneração documentada no README de lá)
 - **Dados externos**: `fast-xml-parser` (RSS/Atom), fetch no servidor com cache
 - **Testes**: Vitest + React Testing Library (jsdom), setup em `tests/setup.ts`
 - **Qualidade**: ESLint 9 (`eslint.config.mjs`), Prettier, Husky (`commit-msg` → commitlint conventional), `commit-and-tag-version` (release + CHANGELOG Keep a Changelog)
@@ -155,7 +156,7 @@ Regras invariantes do fluxo:
 | Módulo | Fonte | Configuração |
 | --- | --- | --- |
 | Clima | **Open-Meteo** (sem chave) | Coordenadas fixas -22.0175, -47.8909 (São Carlos/SP), 5 dias, `weatherUrl()` em `config/sources.ts` |
-| Notícias | **Google News RSS** — busca "São Carlos, SP" | `DEFAULT_NEWS_FEEDS` em `config/sources.ts`; máx. 10/feed, 20 total; candidatas locais (G1, ACidade ON, São Carlos Agora…) **comentadas, aguardam checklist constitucional** |
+| Notícias | **São Carlos Agora** (RSS direto) + **G1 São Carlos e região** (com `filterTerms: ["São Carlos"]` — só 18% do feed é local sem filtro) + **Google News** (agregador/fallback) | `DEFAULT_NEWS_FEEDS` em `config/sources.ts` na ordem direto-primeiro; **dedupe por título normalizado** mantém o link original e descarta a cópia do agregador (`modules/news/adapter.ts`); máx. 10/feed, 20 total; avaliação em research.md **R3.1** (ACidade ON e Portal da Cidade rejeitados) |
 | Informativos | **RSS oficial do SAAE** (`saaesaocarlos.com.br/feed`) | Combinado com curadoria `content/notices.json` no `notices/adapter.ts`; máx. 10/feed, 12 total, merge por id, ordenação por data |
 | Anúncios / promo / contatos | Arquivos JSON versionados em `src/content/` | Moderação manual via revisão de git (gate 6) |
 
@@ -233,7 +234,7 @@ com segredo (gate 9):
 
 ---
 
-## 10. Restrições da constituição (NÃO VIOLAR — v1.0.0)
+## 10. Restrições da constituição (NÃO VIOLAR — v1.1.0)
 
 Proibido sem emenda formal (`.specify/memory/constitution.md`):
 
@@ -248,6 +249,9 @@ Proibido sem emenda formal (`.specify/memory/constitution.md`):
   busca e de SearchAction no JSON-LD é deliberada
 - Conteúdo 100% em **pt-BR**, sem sensacionalismo; falhas de fonte nunca
   viram erro técnico na página (SC-004)
+- ✅ **Permitido com condições**: Google Analytics 4 (emenda v1.1.0) — só
+  produção, carga adiada, coleta agregada, aviso de cookies publicado;
+  qualquer ampliação de coleta exige emenda
 
 Ordem de critérios para decisões técnicas futuras: simplicidade → custo →
 compatibilidade → manutenção → segurança → performance → substituibilidade →
@@ -255,29 +259,42 @@ escalabilidade só quando necessário.
 
 ---
 
-## 11. Pontos de atenção / trabalho pendente
+## 11. Pontos de atenção — situação (atualizado em 2026-10-08)
 
-1. **Release atrasado**: a tag `v0.1.0` está em `5cc1670`; há **9 commits não
-   releaseados** em `main` (logo, controle de versão, auditoria SEO, domínio
-   canônico, GA4, feed SAAE, arquivamento de exemplos). O `CHANGELOG.md`
-   `[Unreleased]` está vazio — `npm run release` + atualização do changelog
-   são a próxima ação de versionamento.
-2. **`spec.md` com `Status: Draft`** — desatualizado; as 55 tasks estão todas `[X]`.
-3. **`content/notices.json` sem itens publicados**: os 2 exemplos estão
-   `arquivado` e são descartados no build (warning `invalid_content_items`).
-   Informativos hoje vêm **exclusivamente do feed do SAAE**. Para publicar um
-   aviso manual, adicionar item com `status: "publicado"`.
-4. **Feed de notícias**: só Google News como default; fontes locais diretas
-   estão comentadas em `sources.ts` aguardando o checklist de fontes da
-   constituição (§Fontes Externas).
-5. **Lint**: 2 warnings sobre a `<link>` da Material Symbols em `layout.tsx`
-   (fora do `next/font`) — migrar para ícone local/`next/font` se quiser zerar.
-6. **Perguntas em aberto da constituição** (§final): nome definitivo do
-   projeto, política de métricas (GA4 já em produção — vale confrontar com a
-   pergunta 9), canais oficiais de contato, política de anúncios gratuitos.
-7. Não confundir: pacote se chama `portal-sao-carlos`, domínio é
-   `meubairro.dev.br`, marca no site é "Portal São Carlos" — todos provisórios
-   exceto o domínio.
+Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5:
+
+**Resolvidos:**
+
+1. ✅ **Release**: `v0.2.0` publicada (`0f4b794`) e em `origin`; CHANGELOG
+   com 7 feats + 2 fixes do período (chore/docs ocultos pelo `.versionrc.js`).
+2. ✅ **spec.md**: `Status: Implemented — 55/55 tasks`.
+3. ✅ **Loader de notices**: item `arquivado` registra
+   `info/archived_content_items`; só conteúdo **inválido** gera `warn`
+   (`tests/unit/notices-loader.test.ts`).
+4. ✅ **Fontes de notícias**: São Carlos Agora + G1 (`filterTerms:
+   ["São Carlos"]`) + Google News com **dedupe por título** — avaliação
+   completa em `research.md` R3.1; ACidade ON e Portal da Cidade
+   rejeitados. Feed vazio (HTTP 200 que não é feed) loga `feed_sem_itens`.
+5. ✅ **Lint 0/0**: Material Symbols auto-hospedada (subset de 34 ligaduras
+   em `src/app/fonts/`); bug `fog`→`foggy` corrigido — a neblina renderizava
+   texto cru em produção.
+6. ✅ **Métricas (D2)**: constituição emendada para **v1.1.0** — GA4
+   autorizado sob condições; aviso de cookies já publicado na política de
+   privacidade.
+7. ✅ **Marca (D1)**: manter "Portal São Carlos" (provisório) — decisão
+   registrada; nomenclatura divergente (§1) é intencional.
+8. ✅ **Contato (D3) local**: `CONTACT_WHATSAPP=5516981442301` no
+   `.env.local` (gitignored).
+
+**Pendências:**
+
+1. 🔲 **Vercel (D3)**: espelhar `CONTACT_WHATSAPP` (e opcionalmente
+   `CONTACT_PHONE`/`CONTACT_EMAIL`) em Environment Variables →
+   **Production** na Vercel e redeployar. Sem isso, o hero e o "Anuncie
+   aqui" seguem **sem WhatsApp/telefone no ar**.
+2. 🔲 **D4 — política de anúncios gratuitos** (perguntas 3/4 da
+   constituição v1.1.0): adiada pelo responsável em 2026-10-08.
+3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
 
 ---
 

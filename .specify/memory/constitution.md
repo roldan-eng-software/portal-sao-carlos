@@ -17,6 +17,27 @@ Follow-up TODOs: nenhum placeholder adiado; 10 perguntas registradas em
   "Perguntas em Aberto" aguardam decisão futura do proprietário.
 -->
 
+<!-- Sync Impact Report — emenda de 2026-10-08 (decisão D2 do plano de
+     pontos de atenção)
+Version change: 1.0.0 → 1.1.0
+Bump type: MINOR (política de métricas permitidas definida — expansão
+  material de orientação na seção Privacidade e Segurança)
+Modified sections:
+  - "Privacidade": o bullet condicional de métricas ("SOMENTE PODEM ser
+    implementadas quando a política for definida") foi substituído pela
+    política definida — Google Analytics 4 autorizado sob condições.
+  - "Perguntas em Aberto": removidos os itens já respondidos por decisões
+    implementadas — domínio (www.meubairro.dev.br, v0.1.0), identidade
+    visual (Civic Vanguard + logo, v0.1.0), fontes de notícias (reavaliação
+    R3.1, v0.2.0), métricas (esta emenda) e canais de contato (D3 —
+    WhatsApp/e-mail definidos). Lista renumerada de 10 para 5 perguntas.
+Added sections: "Métricas de acesso (política definida)".
+Removed sections: nenhuma.
+Follow-up TODOs: permanecem abertas as perguntas sobre nome definitivo,
+  formulário da Fase 2, moderação, política de anúncios gratuitos (D4,
+  adiada pelo responsável) e retenção de dados.
+-->
+
 # Portal São Carlos Constitution
 
 Nome provisório do projeto. O nome definitivo é uma decisão futura (ver
@@ -173,6 +194,29 @@ produtor primário nem substituto dos canais oficiais.
 **Rationale**: portal público de utilidade não precisa de identidade de
 usuários; menos dados = menos risco e menor obrigação legal.
 
+### Métricas de acesso (política definida — emenda v1.1.0)
+
+- A ferramenta autorizada é o **Google Analytics 4** (identificação de
+  medição pública `G-063LGPHV93`), sujeita às condições obrigatórias:
+  - carga adiada após a interação do visitante, sem bloquear o bundle
+    inicial nem a usabilidade da página;
+  - ativa **somente em produção** — previews e desenvolvimento local não
+    coletam métricas;
+  - nenhum segredo no cliente: o ID de medição é público por natureza
+    (gate 9 refere-se a segredos, não a esse identificador);
+  - coleta agregada de audiência (páginas visitadas, dispositivo, origem),
+    sem identificação pessoal desnecessária e sem finalidade diversa de
+    estatística de uso do portal.
+- A política DEVE constar da política de privacidade publicada, incluindo
+  aviso de cookies/tecnologias equivalentes e como o visitante pode
+  desativá-los (Princípio VII).
+- Qualquer outra ferramenta de métricas, ou mudança que amplie a coleta
+  para além do agregado, EXIGE emenda prévia a esta constituição.
+
+**Rationale**: o portal já opera com GA4 desde a v0.1.0 (commit 4b861c5);
+esta emenda formaliza a autorização que a pergunta em aberto 9 exigia,
+mantendo minimização e transparência.
+
 ### VIII. Confiabilidade Modular
 
 - Falha de uma API externa NÃO DEVE apresentar erro irreparável na página.
@@ -278,9 +322,9 @@ ou pagamentos de anúncios.
   responsável e procedimento de correção ou remoção.
 - Aviso sobre cookies ou tecnologias equivalentes DEVE ser exibido quando
   aplicável.
-- Métricas de acesso SOMENTE PODEM ser implementadas quando a política de
-  métricas permitidas for definida (ver "Perguntas em Aberto"), com coleta
-  preferencialmente agregada e sem identificação pessoal desnecessária.
+- Métricas de acesso seguem a política definida na seção "Métricas de
+  acesso (política definida)" logo abaixo; qualquer exceção ou ampliação
+  de coleta EXIGE emenda prévia.
 
 ### Segurança
 
@@ -493,24 +537,19 @@ Esta constituição é considerada válida e aplicável quando:
 - A data de ratificação é a data da adoção inicial; a data de última alteração
   DEVE ser atualizada a cada emenda.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-09-28
+**Version**: 1.1.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-08
 
 ## Perguntas em Aberto
 
 Perguntas que realmente precisam de resposta futura. Nenhuma delas é decisão
-definitiva:
+definitiva. (Histórico: os itens sobre domínio, identidade visual, fontes de
+notícias, métricas e canais de contato foram encerrados pela emenda v1.1.0 —
+ver Relatório de Impacto no topo deste arquivo.)
 
 1. Qual será o nome definitivo do projeto (hoje: provisório "Portal São
    Carlos")?
-2. Qual será o domínio?
-3. Como será a identidade visual (logo, cores, tipografia)?
-4. Quais fontes de notícias serão efetivamente utilizadas, após avaliação dos
-   critérios da seção "Fontes Externas e Direitos de Conteúdo"?
-5. Haverá formulário público para comerciantes na Fase 2?
-6. Quem fará a moderação dos anúncios e conteúdos?
-7. Qual será a política de publicação dos anúncios gratuitos (critérios,
+2. Haverá formulário público para comerciantes na Fase 2?
+3. Quem fará a moderação dos anúncios e conteúdos?
+4. Qual será a política de publicação dos anúncios gratuitos (critérios,
    volume, periodicidade)?
-8. Qual será a política de retenção de dados e por quanto tempo?
-9. Quais métricas de acesso serão permitidas (ferramenta, granularidade,
-   cookies)?
-10. Quais serão os canais oficiais de contato do responsável pelo portal?
+5. Qual será a política de retenção de dados e por quanto tempo?
