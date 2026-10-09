@@ -8,6 +8,15 @@ interface NoticesSectionProps {
   result: ModuleResult<Notice[]>;
 }
 
+/**
+ * Máximo de informativos exibidos na home — decisão editorial de densidade
+ * (2026-10-09): menos cards de conteúdo liberam espaço para os anúncios,
+ * sem alterar o cache do adapter (que segue armazenando até 12 itens).
+ * A lista do adapter já vem ordenada da mais recente para a mais antiga,
+ * então o recorte equivale às últimas 3 atualizações.
+ */
+const MAX_DISPLAY_ITEMS = 3;
+
 function formatDate(date: string): string {
   const parsed = new Date(`${date}T12:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return date;
@@ -26,7 +35,7 @@ function sourceIcon(sourceName: string): string {
 }
 
 export function NoticesSection({ result }: NoticesSectionProps) {
-  const items = result.data ?? [];
+  const items = (result.data ?? []).slice(0, MAX_DISPLAY_ITEMS);
 
   return (
     <Section

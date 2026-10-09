@@ -8,8 +8,17 @@ interface NewsSectionProps {
   result: ModuleResult<NewsItem[]>;
 }
 
+/**
+ * Máximo de notícias exibidas na home — decisão editorial de densidade
+ * (2026-10-09): menos cards de conteúdo liberam espaço para os anúncios,
+ * sem alterar o cache do adapter (que segue armazenando até 20 itens).
+ * A lista do adapter já vem ordenada da mais recente para a mais antiga,
+ * então o recorte equivale às últimas 5 atualizações.
+ */
+const MAX_DISPLAY_ITEMS = 5;
+
 export function NewsSection({ result }: NewsSectionProps) {
-  const items = result.data ?? [];
+  const items = (result.data ?? []).slice(0, MAX_DISPLAY_ITEMS);
 
   return (
     <Section id="noticias" aria-labelledby="noticias-titulo" className="py-10">
