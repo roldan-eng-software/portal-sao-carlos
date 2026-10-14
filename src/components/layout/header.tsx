@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { SWRegister } from '@/components/sw-register';
 
 const NAV_ITEMS = [
   { href: '#noticias', label: 'Notícias' },
@@ -34,7 +35,6 @@ export function Header() {
           className="flex shrink-0 items-center"
           aria-label="Portal São Carlos — página inicial"
         >
-          {/* Logotipo oficial do projeto (docs/modelo/logo.png → public/logo.png). */}
           <Image
             src="/logo.png"
             alt="Portal São Carlos — Utilidade Pública & Notícias"
@@ -65,6 +65,9 @@ export function Header() {
           </a>
         </div>
       </div>
+
+      {/* Registro do Service Worker (apenas produção) */}
+      <SWRegister />
 
       {/* Navegação horizontal (mobile/tablet) — sem JS, apenas rolagem. */}
       <nav

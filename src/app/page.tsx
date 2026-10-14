@@ -17,14 +17,15 @@ import { loadContacts, type ContactItem } from '@/modules/contacts/loader';
 import { loadAds, type Ad } from '@/modules/ads/loader';
 import { loadPromo, type Promo } from '@/modules/promo/loader';
 
-/** Revalidação ≈ 15 min: nenhuma fonte é consultada a cada visita (performance). */
-export const revalidate = 900;
+/** Revalidação ≈ 30 min: nenhuma fonte é consultada a cada visita (performance). */
+export const revalidate = 1800;
 
 /** Canonical autorreferente da home (páginas de texto definem o próprio). */
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
+/** Função auxiliar para lidar com resultados de promessas */
 function settle<T>(
   result: PromiseSettledResult<ModuleResult<T>>,
   fallback: ModuleResult<T>,

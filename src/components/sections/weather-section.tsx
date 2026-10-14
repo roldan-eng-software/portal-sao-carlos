@@ -60,6 +60,16 @@ export function WeatherSection({ result }: WeatherSectionProps) {
               location_on
             </span>
             {weather.city}
+            <span className="ml-2 text-label-sm text-on-surface-variant">
+              <a
+                href="https://open-meteo.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-label-sm text-on-surface-variant hover:text-secondary"
+              >
+                Dados: Open-Meteo
+              </a>
+            </span>
           </span>
         )}
       </div>
