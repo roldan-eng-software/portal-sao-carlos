@@ -71,7 +71,7 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // Se está antigo (>=30 min), serve cache mas inicia revalidação em background
-                const fetchPromise = fetch(event.request)
+                fetch(event.request)
                   .then((networkResponse) => {
                     // Atualiza cache com resposta fresca
                     if (networkResponse && networkResponse.status === 200) {

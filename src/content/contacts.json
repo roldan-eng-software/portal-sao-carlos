@@ -1,42 +1,53 @@
-[
-  {
-    "id": "bombeiros-193",
-    "name": "Corpo de Bombeiros",
-    "kind": "servico-publico",
-    "value": "193",
-    "address": null,
-    "hours": "24 horas",
-    "officialUrl": null,
-    "urgent": true
+{
+  "_meta": {
+    "description": "Telefones úteis e serviços públicos — moderação manual via edição deste arquivo + git commit",
+    "regras": {
+      "kind": "NÃO EDITAR — enum fixo: 'servico-publico' | 'contato'",
+      "value": "EDITÁVEL — telefone formatado (ex: '193') OU URL http(s) (1–200 chars)",
+      "officialUrl": "EDITÁVEL — URL oficial http(s) ou null",
+      "urgent": "EDITÁVEL — true = aparece na faixa de emergência do rodapé (apenas emergências reais)"
+    }
   },
-  {
-    "id": "samu-192",
-    "name": "SAMU — Emergência médica",
-    "kind": "servico-publico",
-    "value": "192",
-    "address": null,
-    "hours": "24 horas",
-    "officialUrl": null,
-    "urgent": true
-  },
-  {
-    "id": "defesa-civil-199",
-    "name": "Defesa Civil",
-    "kind": "servico-publico",
-    "value": "199",
-    "address": null,
-    "hours": "24 horas",
-    "officialUrl": null,
-    "urgent": true
-  },
-  {
-    "id": "prefeitura-sao-carlos",
-    "name": "Prefeitura Municipal de São Carlos",
-    "kind": "servico-publico",
-    "value": "https://www.saocarlos.sp.gov.br",
-    "address": null,
-    "hours": null,
-    "officialUrl": "https://www.saocarlos.sp.gov.br",
-    "urgent": false
-  }
-]
+  "items": [
+    {
+      "id": "bombeiros-193",
+      "name": "Corpo de Bombeiros",
+      "kind": "servico-publico",
+      "value": "193",
+      "address": null,
+      "hours": "24 horas",
+      "officialUrl": null,
+      "urgent": true
+    },
+    {
+      "id": "samu-192",
+      "name": "SAMU — Emergência médica",
+      "kind": "servico-publico",
+      "value": "192",
+      "address": null,
+      "hours": "24 horas",
+      "officialUrl": null,
+      "urgent": true
+    },
+    {
+      "id": "defesa-civil-199",
+      "name": "Defesa Civil",
+      "kind": "servico-publico",
+      "value": "199",
+      "address": null,
+      "hours": "24 horas",
+      "officialUrl": null,
+      "urgent": true
+    },
+    {
+      "id": "prefeitura-sao-carlos",
+      "name": "Prefeitura Municipal de São Carlos",
+      "kind": "servico-publico",
+      "value": "https://www.saocarlos.sp.gov.br",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://www.saocarlos.sp.gov.br",
+      "urgent": false
+    }
+  ]
+}

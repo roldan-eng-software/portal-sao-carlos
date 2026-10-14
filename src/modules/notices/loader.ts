@@ -47,13 +47,16 @@ export function isValidNotice(value: unknown): value is Notice {
  * `rawList` é opcional e existe para os testes injetarem cenários sem
  * depender do seed versionado.
  */
-export function loadNotices(rawList: unknown = noticesSeed): ModuleResult<Notice[]> {
+export function loadNotices(rawList?: unknown): ModuleResult<Notice[]> {
   try {
-    if (!Array.isArray(rawList)) {
+    const seed = rawList ?? noticesSeed;
+    const raw = seed as { items?: unknown[]; _meta?: unknown };
+    const items = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
+    if (!Array.isArray(items)) {
       throw new Error('Arquivo de informativos inválido');
     }
-    const valid = rawList.filter(isValidNotice);
-    const invalid = rawList.length - valid.length;
+    const valid = items.filter(isValidNotice);
+    const invalid = items.length - valid.length;
     const published = valid.filter((item) => item.status === 'publicado');
     const archived = valid.length - published.length;
     const at = new Date().toISOString();

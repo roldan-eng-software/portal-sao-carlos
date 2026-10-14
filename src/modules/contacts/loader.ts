@@ -39,7 +39,8 @@ export function isValidContact(value: unknown): value is ContactItem {
 
 export function loadContacts(): ModuleResult<ContactItem[]> {
   try {
-    const rawList: unknown = contactsSeed;
+    const raw = contactsSeed as { items?: unknown[]; _meta?: unknown };
+    const rawList = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
     if (!Array.isArray(rawList)) {
       throw new Error('Arquivo de contatos inválido');
     }

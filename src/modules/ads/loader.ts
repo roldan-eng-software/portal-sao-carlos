@@ -101,23 +101,25 @@ export function selectPublishedAds(items: unknown[], today: string): Ad[] {
  */
 export function loadAds(): ModuleResult<Ad[]> {
   try {
-    if (!Array.isArray(adsSeed)) {
+    const raw = adsSeed as { items?: unknown[]; _meta?: unknown };
+    const rawList = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
+    if (!Array.isArray(rawList)) {
       throw new Error('Arquivo de anúncios inválido');
     }
     const today = new Date().toISOString().slice(0, 10);
-    const validCount = adsSeed.filter(isValidAd).length;
-    if (validCount !== adsSeed.length) {
+    const validCount = rawList.filter(isValidAd).length;
+    if (validCount !== rawList.length) {
       console.warn(
         JSON.stringify({
           level: 'warn',
           event: 'invalid_content_items',
           file: 'content/ads.json',
-          discarded: adsSeed.length - validCount,
+          discarded: rawList.length - validCount,
           at: new Date().toISOString(),
         }),
       );
     }
-    const published = selectPublishedAds(adsSeed, today);
+    const published = selectPublishedAds(rawList, today);
     const lastPublished = published[0]?.publishedAt ?? null;
     return okResult(
       published,

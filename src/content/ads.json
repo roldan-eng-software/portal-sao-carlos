@@ -1,49 +1,63 @@
-[
-  {
-    "id": "anuncio-exemplo-padaria",
-    "kind": "anuncio-gratuito",
-    "businessName": "Padaria Aurora (anúncio de exemplo)",
-    "category": "Alimentação",
-    "description": "Anúncio gratuito de exemplo: substitua pelos dados reais do comerciante após revisão do responsável pelo portal. Pães artesanais, café da manhã e encomendas.",
-    "neighborhood": "Centro",
-    "phone": "(16) 0000-0000",
-    "whatsapp": "5516000000000",
-    "url": null,
-    "hours": "Seg a sáb, 6h às 20h",
-    "imageUrl": null,
-    "status": "publicado",
-    "publishedAt": "2026-09-20",
-    "expiresAt": null
+{
+  "_meta": {
+    "description": "Anúncios do portal — moderação manual via edição deste arquivo + git commit",
+    "regras": {
+      "kind": "NÃO EDITAR — enum fixo: 'anuncio-gratuito' | 'anuncio-patrocinado'",
+      "imageUrl": "NÃO EDITAR — fotos não suportadas nesta fase (constituição Art. III)",
+      "status": "EDITÁVEL — 'rascunho' | 'publicado' | 'suspenso' | 'removido'",
+      "publishedAt": "EDITÁVEL se status='publicado' (YYYY-MM-DD) | NÃO EDITAR se status='rascunho' (deve ser null)",
+      "expiresAt": "EDITÁVEL — YYYY-MM-DD ou null (fim do período combinado externamente)",
+      "contatos": "PELO MENOS UM OBRIGATÓRIO: phone OU whatsapp OU url"
+    }
   },
-  {
-    "id": "patrocinado-exemplo-loja",
-    "kind": "anuncio-patrocinado",
-    "businessName": "Loja Exemplo Centro (anúncio de exemplo)",
-    "category": "Varejo",
-    "description": "Anúncio patrocinado de exemplo: contrato e período de veiculação combinados fora do sistema, diretamente com o responsável pelo portal.",
-    "neighborhood": "Centro",
-    "phone": "(16) 0000-0001",
-    "whatsapp": null,
-    "url": "https://exemplo.com.br",
-    "hours": "Seg a sex, 9h às 18h",
-    "imageUrl": null,
-    "status": "publicado",
-    "publishedAt": "2026-09-22",
-    "expiresAt": "2026-12-31"
-  },
-  {
-    "id": "rascunho-oculto",
-    "kind": "anuncio-gratuito",
-    "businessName": "Anúncio em rascunho",
-    "category": "Serviços",
-    "description": "Este anúncio está em rascunho e NÃO deve aparecer publicado — moderação manual obrigatória (FR-020).",
-    "neighborhood": "Jardim Aeroporto",
-    "phone": "(16) 0000-0002",
-    "whatsapp": null,
-    "url": null,
-    "hours": null,
-    "status": "rascunho",
-    "publishedAt": null,
-    "expiresAt": null
-  }
-]
+  "items": [
+    {
+      "id": "anuncio-exemplo-padaria",
+      "kind": "anuncio-gratuito",
+      "businessName": "Padaria Aurora (anúncio de exemplo)",
+      "category": "Alimentação",
+      "description": "Anúncio gratuito de exemplo: substitua pelos dados reais do comerciante após revisão do responsável pelo portal. Pães artesanais, café da manhã e encomendas.",
+      "neighborhood": "Centro",
+      "phone": "(16) 0000-0000",
+      "whatsapp": "5516000000000",
+      "url": null,
+      "hours": "Seg a sáb, 6h às 20h",
+      "imageUrl": null,
+      "status": "publicado",
+      "publishedAt": "2026-09-20",
+      "expiresAt": null
+    },
+    {
+      "id": "patrocinado-exemplo-loja",
+      "kind": "anuncio-patrocinado",
+      "businessName": "Loja Exemplo Centro (anúncio de exemplo)",
+      "category": "Varejo",
+      "description": "Anúncio patrocinado de exemplo: contrato e período de veiculação combinados fora do sistema, diretamente com o responsável pelo portal.",
+      "neighborhood": "Centro",
+      "phone": "(16) 0000-0001",
+      "whatsapp": null,
+      "url": "https://exemplo.com.br",
+      "hours": "Seg a sex, 9h às 18h",
+      "imageUrl": null,
+      "status": "publicado",
+      "publishedAt": "2026-09-22",
+      "expiresAt": "2026-12-31"
+    },
+    {
+      "id": "rascunho-oculto",
+      "kind": "anuncio-gratuito",
+      "businessName": "Anúncio em rascunho",
+      "category": "Serviços",
+      "description": "Este anúncio está em rascunho e NÃO deve aparecer publicado — moderação manual obrigatória (FR-020).",
+      "neighborhood": "Jardim Aeroporto",
+      "phone": "(16) 0000-0002",
+      "whatsapp": null,
+      "url": null,
+      "hours": null,
+      "imageUrl": null,
+      "status": "rascunho",
+      "publishedAt": null,
+      "expiresAt": null
+    }
+  ]
+}
