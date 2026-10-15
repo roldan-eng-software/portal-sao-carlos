@@ -8,6 +8,19 @@ const nextConfig: NextConfig = {
     // Imagens de terceiros vindas dos feeds RSS (somente https — filtrado no normalize).
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Domínio apex → www canônico (301 permanente; SEO: evita conteúdo duplicado

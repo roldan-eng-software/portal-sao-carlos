@@ -6,7 +6,7 @@
  * - qualquer chave futura somente em variável de ambiente (gate 9)
  */
 
-const DEFAULT_REVALIDATE_SECONDS = 15 * 60;
+const DEFAULT_REVALIDATE_SECONDS = 5 * 60;
 const DEFAULT_TIMEOUT_MS = 5000;
 
 export interface FetchCachedOptions {
