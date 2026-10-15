@@ -57,15 +57,15 @@ export function Header() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">
-          <a
-            href="#anuncie"
+          <Link
+            href="/anuncie"
             className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-4 py-2.5 text-label-lg text-on-secondary shadow-[0_2px_8px_rgba(2,102,255,0.25)] transition-all hover:bg-primary-container"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
               storefront
             </span>
             <span>Anuncie Aqui</span>
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -98,7 +98,7 @@ export function AnnounceCTA() {
             <div className="mt-5 space-y-2">
               {email && (
                 <a
-                  href={`mailto:${email}?subject=${encodeURIComponent('Anunciar no Portal São Carlos')}`}
+                  href="/anuncie"
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-label-lg text-on-secondary shadow-md transition-all hover:bg-primary-container"
                 >
                   <span className="material-symbols-outlined text-[20px]" aria-hidden="true">

@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "description": "Anúncios pendentes de aprovação — preenchidos via formulário público /anuncie",
+    "regras": {
+      "kind": "NÃO EDITAR — enum fixo: 'anuncio-gratuito' | 'anuncio-patrocinado'",
+      "status": "NÃO EDITAR — sempre 'rascunho' para submissões do formulário",
+      "submittedAt": "AUTO — ISO 8601 timestamp da submissão",
+      "ip": "OPCIONAL — IP do remetente (para moderação)",
+      "honeypot": "NÃO EDITAR — campo anti-bot (deve vir vazio)"
+    }
+  },
+  "items": []
+}

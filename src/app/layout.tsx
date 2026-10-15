@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AnnounceCTA } from '@/components/layout/announce-cta';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
+import { ToastProvider } from '@/components/ui/Toast';
 import { env } from '@/config/env';
 import './globals.css';
 
@@ -84,6 +85,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         {/* GA4 adiado pós-hidratação; só em VERCEL_ENV=production (bundle-defer-third-party). */}
         <GoogleAnalytics />
+        {/* Toast notifications portal */}
+        <ToastProvider />
       </body>
     </html>
   );
