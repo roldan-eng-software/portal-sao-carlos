@@ -41,6 +41,18 @@ export function Footer() {
             <p className="text-body-sm text-surface-variant">
               Portal independente de utilidade pública de São Carlos e região. Não é órgão oficial
               da Prefeitura, do SAAE, da CPFL nem de qualquer outro órgão público ou empresa.
+              <br />
+              Este portal pertence ao grupo <strong className="text-surface-bright">MeuBairro</strong>.
+              Conheça o ecossistema em{' '}
+              <a
+                href="https://meubairro.dev.br"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary-fixed transition-colors hover:text-surface-bright"
+              >
+                meubairro.dev.br
+              </a>
+              .
             </p>
             <div>
               <span className="mb-1 block text-label-sm uppercase text-accent-amber">

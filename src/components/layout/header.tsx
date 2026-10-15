@@ -32,7 +32,7 @@ export function Header() {
       <div className="mx-auto flex h-20 w-full max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex shrink-0 items-center"
+          className="flex shrink-0 items-center gap-2"
           aria-label="Portal São Carlos — página inicial"
         >
           <Image
@@ -44,6 +44,9 @@ export function Header() {
             priority
             className="h-9 w-auto sm:h-10"
           />
+          <span className="hidden self-end text-label-sm text-on-surface-variant sm:block" aria-hidden="true">
+            Portal do <strong className="text-secondary">MeuBairro</strong>
+          </span>
         </Link>
 
         <nav
