@@ -57,15 +57,17 @@ export function Header() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">
-          <Link
-            href="/anuncie"
+          <a
+            href="https://wa.me/5516981442301?text=Para%20o%20cadastro%20gratuito%20escreva%20abaixo%20os%20seguintes%20dados...%0ANome%20do%20Comercio:%0ABreve%20descri%C3%A7%C3%A3o:%0AHor%C3%A1rio%20de%20atendimento:%0AEndere%C3%A7o:%0ANumero%20do%20seu%20WhatsApp:%0ASite%20de%20sua%20empresa:"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-4 py-2.5 text-label-lg text-on-secondary shadow-[0_2px_8px_rgba(2,102,255,0.25)] transition-all hover:bg-primary-container"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
               storefront
             </span>
             <span>Anuncie Aqui</span>
-          </Link>
+          </a>
         </div>
       </div>
 

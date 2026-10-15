@@ -16,7 +16,6 @@ const BENEFITS = [
 export function AnnounceCTA() {
   const wa = env.contactWhatsapp ? whatsappLink(env.contactWhatsapp) : null;
   const tel = env.contactPhone ? phoneLink(env.contactPhone) : null;
-  const email = env.contactEmail;
 
   return (
     <Section id="anuncie" aria-labelledby="anuncie-titulo" className="py-10">
@@ -75,7 +74,7 @@ export function AnnounceCTA() {
                 Envie sua solicitação comercial, esclareça dúvidas ou solicite a inclusão dos
                 dados da sua empresa no nosso catálogo.
               </p>
-              {email && (
+              {env.contactEmail && (
                 <div className="flex items-center gap-3 rounded-xl bg-surface-card p-3 shadow-card">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                     <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
@@ -85,10 +84,10 @@ export function AnnounceCTA() {
                   <div className="min-w-0">
                     <span className="block text-label-sm text-outline">E-mail Comercial</span>
                     <a
-                      href={`mailto:${email}`}
+                      href={`mailto:${env.contactEmail}`}
                       className="block truncate font-display text-headline-sm text-secondary hover:underline"
                     >
-                      {email}
+                      {env.contactEmail}
                     </a>
                   </div>
                 </div>
@@ -96,17 +95,17 @@ export function AnnounceCTA() {
             </div>
 
             <div className="mt-5 space-y-2">
-              {email && (
-                <a
-                  href="/anuncie"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-label-lg text-on-secondary shadow-md transition-all hover:bg-primary-container"
-                >
-                  <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
-                    send
-                  </span>
-                  <span>Anuncie no Portal Agora</span>
-                </a>
-              )}
+              <a
+                href="https://wa.me/5516981442301?text=Para%20o%20cadastro%20gratuito%20escreva%20abaixo%20os%20seguintes%20dados...%0ANome%20do%20Comercio:%0ABreve%20descri%C3%A7%C3%A3o:%0AHor%C3%A1rio%20de%20atendimento:%0AEndere%C3%A7o:%0ANumero%20do%20seu%20WhatsApp:%0ASite%20de%20sua%20empresa:"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-label-lg text-on-secondary shadow-md transition-all hover:bg-primary-container"
+              >
+                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+                  send
+                </span>
+                <span>Anuncie no Portal Agora</span>
+              </a>
               {wa && (
                 <a
                   href={`${wa}?text=${encodeURIComponent('Olá, gostaria de anunciar meu comércio no Portal São Carlos')}`}
@@ -134,7 +133,7 @@ export function AnnounceCTA() {
                   <span>Telefone: {env.contactPhone}</span>
                 </a>
               )}
-              {!wa && !tel && !email && (
+              {!wa && !tel && !env.contactEmail && (
                 <p className="text-body-sm text-on-surface-variant">
                   Canais de contato serão informados em breve. Solicite informações sobre
                   publicidade local.
