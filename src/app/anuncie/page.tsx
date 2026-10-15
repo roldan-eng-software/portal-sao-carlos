@@ -1,14 +1,12 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
-import { AD_CATEGORIES, AD_KINDS } from '@/lib/ads-validation';
+import { AD_CATEGORIES } from '@/lib/ads-validation';
 import { submitAdAction } from './actions';
-import { useToast } from '@/components/ui/Toast';
 
 const KIND_OPTIONS = [
   { value: 'anuncio-gratuito', label: 'Anúncio Gratuito — listagem básica no Guia Comercial' },
@@ -18,8 +16,6 @@ const KIND_OPTIONS = [
 const CATEGORY_OPTIONS = AD_CATEGORIES.map((cat) => ({ value: cat, label: cat }));
 
 export default function AnunciePage() {
-  const router = useRouter();
-  const { toasts, setToasts } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
