@@ -96,33 +96,34 @@ function AdCard({ ad, sponsored }: { ad: Ad; sponsored: boolean }) {
         <span className="text-label-sm text-outline">
           {sponsored ? 'Destaque patrocinado' : 'Verificado pela moderação'}
         </span>
-        {waLink ? (
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-label-md text-secondary hover:underline"
-          >
-            Conversar no WhatsApp
-            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
-              arrow_forward
-            </span>
-          </a>
-        ) : (
-          isSafeHttpUrl(ad.url) && (
+        <div className="flex flex-wrap items-center gap-2">
+          {waLink && (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-label-md text-secondary hover:underline"
+            >
+              Conversar no WhatsApp
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+                arrow_forward
+              </span>
+            </a>
+          )}
+          {isSafeHttpUrl(ad.url) && (
             <a
               href={ad.url}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-label-md text-secondary hover:underline"
             >
-              Visitar site do anunciante
+              Visitar site
               <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
                 open_in_new
               </span>
             </a>
-          )
-        )}
+          )}
+        </div>
       </div>
     </li>
   );
