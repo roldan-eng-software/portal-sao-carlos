@@ -13,19 +13,19 @@ histórico git e documentação em `specs/`.
 | Item | Estado |
 | --- | --- |
 | Nome do pacote (`package.json`) | `portal-sao-carlos` v0.2.0 |
-| Marca / título do site | **Portal São Carlos** (nome provisório) |
+| Marca / título do site | **Meu Bairro - Portal São Carlos** (definido na emenda constitucional v1.3.0) |
 | Domínio canônico de produção | `https://www.meubairro.dev.br` (apex `meubairro.dev.br` redireciona 301 → www, em `next.config.ts`) |
 | Repositório | `https://github.com/roldan-eng-software/portal-sao-carlos` |
 | Deploy | Vercel (ISR/estático; `VERCEL_ENV`/`VERCEL_GIT_COMMIT_SHA` usados no build) |
-| Fase atual | **Fase 1 — Portal público: CONCLUÍDA** (55/55 tasks `[X]` em `specs/001-portal-sao-carlos-fase1/tasks.md`) |
+| Fase atual | **Fase 2 — Persistência e Captura de Interesse: CONCLUÍDA** (64/64 tasks `[X]` em `specs/002-fase2-persistencia-captura/tasks.md`) |
 | Git | branch `main`, working tree limpo na data desta verificação |
 | Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
 | PRD SEO Local | **Fase 2 — Especs 01–08 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`, `README.md`) |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
-informativos, telefones úteis, anúncios e políticas — **sem cadastro, sem
-pagamento, sem banco de dados** (constituição **v1.1.0**, `.specify/memory/constitution.md`
-— a emenda v1.1.0 de 2026-10-08 formalizou o GA4 como métrica permitida).
+informativos, telefones úteis, anúncios e políticas — **sem cadastro de usuários,
+sem pagamento, sem banco de dados relacional** (constituição **v1.3.0**, `.specify/memory/constitution.md`
+— emendas v1.1.0/v1.2.0/v1.3.0 formalizaram: GA4 como métrica permitida, política de anúncios gratuitos, nome definitivo, moderador único, retenção LGPD).
 
 ---
 
@@ -47,9 +47,12 @@ pagamento, sem banco de dados** (constituição **v1.1.0**, `.specify/memory/con
 - **Estilo**: Tailwind CSS 4 — tokens `@theme` em `src/app/globals.css` derivados do design **Civic Vanguard** (`docs/modelo/DESIGN.md`)
 - **Fontes**: Plus Jakarta Sans (display) e Inter (corpo) via `next/font/google`; ícones Material Symbols Outlined **auto-hospedados** (subset de 34 ligaduras, ~34 KB, em `src/app/fonts/` — regeneração documentada no README de lá)
 - **Dados externos**: `fast-xml-parser` (RSS/Atom), fetch no servidor com cache
+- **Persistência**: JSON versionado em `src/content/` (news-history.json, ads-pending.json, ads.json) — sem banco de dados relacional
 - **Testes**: Vitest + React Testing Library (jsdom), setup em `tests/setup.ts`
 - **Qualidade**: ESLint 9 (`eslint.config.mjs`), Prettier, Husky (`commit-msg` → commitlint conventional), `commit-and-tag-version` (release + CHANGELOG Keep a Changelog)
-- **Sem**: banco de dados, ORM, autenticação, formulários, cache externo (Redis etc.)
+- **Autenticação**: Middleware simples com segredo compartilhado (`MODERATOR_SECRET`) para área de moderação
+- **Formulários**: Apenas `/anunciar` (público) — validação Zod-like manual, rate-limit por IP, dedupe CNPJ
+- **Sem**: banco de dados, ORM, autenticação de usuários, cadastro, pagamentos, cache externo (Redis etc.)
 
 ### Comandos
 
@@ -80,7 +83,24 @@ src/
 │   │   ├── page.tsx            # Hub /utilidade-publica
 │   │   └── telefones-uteis/page.tsx # /utilidade-publica/telefones-uteis
 │   ├── previsao-do-tempo/sao-carlos/page.tsx # Spec 05
-│   ├── robots.ts, sitemap.ts   # SEO local (dinâmico, incl. /empresas)
+│   ├── noticias/page.tsx       # Histórico paginado de notícias (Fase 2)
+│   ├── avisos/page.tsx         # Listagem de informativos (Spec 04)
+│   ├── avisos/saae/page.tsx    # Listagem SAAE (Spec 04)
+│   ├── sobre/page.tsx          # Institucional (Spec 03)
+│   ├── contato/page.tsx        # Institucional (Spec 03)
+│   ├── termos-de-uso/page.tsx  # Institucional (Spec 03)
+│   ├── anunciar/page.tsx       # Formulário público de anúncio (Fase 2)
+│   ├── moderacao/              # Área de moderação protegida (Fase 2)
+│   │   ├── layout.tsx          # Wrapper com autenticação
+│   │   ├── page.tsx            # Server component carrega dados
+│   │   └── moderation-client.tsx # Client component com tabs/ações
+│   ├── api/ads/                # API routes para moderação (Fase 2)
+│   │   ├── submit/route.ts     # POST /api/ads/submit (formulário público)
+│   │   ├── pending/route.ts    # GET /api/ads/pending (lista pendentes)
+│   │   ├── approve/route.ts    # POST /api/ads/approve
+│   │   ├── reject/route.ts     # POST /api/ads/reject
+│   │   └── manage/route.ts     # PATCH /api/ads/manage (edit/suspend/reactivate/remove)
+│   ├── robots.ts, sitemap.ts   # SEO local (dinâmico, incl. /empresas, /noticias)
 │   ├── globals.css             # Tokens do design system (@theme)
 │   └── icon.png, apple-icon.png
 ├── components/
@@ -88,16 +108,30 @@ src/
 │   │              # footer.tsx (versão/deploy, emergências, links de política),
 │   │              # announce-cta.tsx (faixa id="anuncie" em todas as páginas)
 │   ├── sections/  # hero, weather, news (+ news-bento), notices, contacts, ads, promo
+│   │              # news-history-section.tsx, ad-form-section.tsx
 │   ├── ui/        # content-label.tsx (6 rótulos), section.tsx, status-message.tsx, breadcrumb.tsx
-│   ├── seo/json-ld.tsx         # WebSite + Organization (JSON-LD)
+│   │              # ad-form.tsx, news-history-item-card.tsx, pagination.tsx
+│   │              # moderation-table.tsx, published-ads-manager.tsx, status-badge.tsx
+│   ├── seo/json-ld.tsx         # WebSite + Organization + ItemList (JSON-LD)
 │   └── analytics/google-analytics.tsx  # GA4 G-063LGPHV93, só produção, afterInteractive
 ├── modules/       # Domínio isolado da UI (contratos em specs/.../contracts/)
 │   ├── weather/   # adapter.ts (Open-Meteo), normalize.ts, types.ts
 │   ├── news/      # adapter.ts (RSS), normalize.ts, types.ts (com imageUrl)
 │   ├── notices/   # adapter.ts (curadoria JSON + RSS SAAE combinados), loader, normalize, types
 │   ├── ads/       # loader.ts (content/ads.json) — selectPublishedAds exportado
+│   │              # manage.ts (edição/status de anúncios publicados)
 │   ├── contacts/  # loader.ts (content/contacts.json) — CONTACT_CATEGORIES exportadas
 │   ├── promo/     # loader.ts (content/promo.json)
+│   ├── ads-pending/            # Fase 2: fila de moderação
+│   │   ├── loader.ts           # load/save pending ads (src/content/ads-pending.json)
+│   │   ├── submit.ts           # Validação, sanitização, rate-limit, dedupe CNPJ
+│   │   ├── notify.ts           # Aprovação/recusa + notificações WhatsApp/e-mail
+│   │   └── types.ts            # AdSubmission, AdPublished, ManageActionData
+│   ├── news-history/           # Fase 2: persistência de notícias
+│   │   ├── loader.ts           # getNewsHistoryPage, updateHistory
+│   │   ├── normalize.ts        # mergeWithHistory, toNewsHistoryItem, dedupe hash
+│   │   ├── retention.ts        # Filtro de retenção 12 meses
+│   │   └── types.ts            # NewsHistoryItem, NewsHistoryPage
 │   └── types.ts   # ContentKind — os 6 tipos de conteúdo
 ├── lib/
 │   ├── sanitize.ts        # HTML → texto puro; URL só http/https (dangerouslySetInnerHTML proibido)
@@ -106,25 +140,35 @@ src/
 │   ├── feed.ts            # Parsing RSS/Atom compartilhado (news e notices)
 │   ├── logger.ts          # Log estruturado de falha/recuperação por fonte
 │   ├── contact-links.ts   # Links WhatsApp
-│   └── date.ts            # dateToFormat (pt-BR, America/Sao_Paulo)
+│   ├── date.ts            # dateToFormat (pt-BR, America/Sao_Paulo)
+│   ├── auth.ts            # Middleware requireModeratorAuth (MODERATOR_SECRET)
+│   ├── cnpj.ts            # Validação/formatação CNPJ (modulo 11)
+│   └── rate-limit.ts      # Rate limit por IP (memória in-process, 10 req/10 min)
 ├── config/
 │   ├── env.ts             # Env validada (tudo opcional; resolução da SITE_URL)
 │   ├── sources.ts         # Registro de fontes (feeds + coordenadas do clima)
 │   └── version.ts         # APP_VERSION, DEPLOY_ENV, BUILD_COMMIT, BUILD_DATE (rodapé)
 └── content/               # Conteúdo curado manualmente (moderação = revisão de git)
     ├── ads.json, contacts.json, promo.json, notices.json
+    ├── ads-pending.json    # Fila de moderação (Fase 2)
+    └── news-history.json   # Histórico persistido de notícias (Fase 2)
 
 tests/
-├── unit/          # normalizadores, sanitize, module-result, loaders, rótulos, GA, version
+├── unit/          # normalizadores, sanitize, module-result, loaders, rótulos, GA, version, listagens
 ├── integration/   # notices-feed (feed SAAE mockado), source-failure (isolamento stale/error)
 └── setup.ts
 
-specs/001-portal-sao-carlos-fase1/   # Spec Kit: spec, plan, tasks (55/55), research,
-                                     # data-model, quickstart, contracts/, checklists/
+specs/
+├── 001-portal-sao-carlos-fase1/   # Spec Kit Fase 1: spec, plan, tasks (55/55)
+├── 002-fase2-persistencia-captura/ # Spec Kit Fase 2: spec, plan, tasks (64/64)
+│   ├── spec.md, plan.md, research.md, data-model.md
+│   ├── contracts/, quickstart.md, tasks.md, checklists/
 docs/
 ├── modelo/                         # Design Civic Vanguard (DESIGN.md, code.html, logo)
-└── prd/feature-seo-local-conteudo.md # PRD da Fase 2 (Specs 01–08)
-.specify/                            # Constituição v1.0.0 + scripts Spec Kit
+├── prd/feature-seo-local-conteudo.md # PRD da Fase 2 (Specs 01–08)
+├── auditoria-tecnica-seo-2026-10-24.md
+└── plano-pontos-atencao.md
+.specify/                            # Constituição v1.3.0 + scripts Spec Kit
 ```
 
 ---
@@ -185,14 +229,22 @@ imagens próprias** além dos assets estáticos em `public/`.
 | Rota | Origem | Spec |
 |------|--------|------|
 | `/` | Home (módulos independentes) | Fase 1 |
+| `/noticias` | Histórico paginado de notícias (ItemList JSON-LD) | Fase 2 |
 | `/empresas` | Guia comercial (hub) | Spec 06 |
 | `/empresas/[slug]` | Página individual da empresa (LocalBusiness JSON-LD) | Spec 06 |
 | `/utilidade-publica` | Hub utilidade pública | Spec 05 |
 | `/utilidade-publica/telefones-uteis` | Telefones por categoria (contacts.json + officialUrl) | Spec 05 |
 | `/previsao-do-tempo/sao-carlos` | Página dedicada de clima (Open-Meteo) | Spec 05 |
+| `/avisos` | Listagem de informativos (curadoria + SAAE) | Spec 04 |
+| `/avisos/saae` | Listagem SAAE (feed oficial) | Spec 04 |
+| `/sobre` | Página institucional | Spec 03 |
+| `/contato` | Página institucional | Spec 03 |
+| `/termos-de-uso` | Página institucional | Spec 03 |
 | `/aviso-editorial` | Transparência editorial | Fase 1 |
 | `/politica-de-privacidade` | Política de privacidade | Fase 1 |
-| `robots.txt`, `sitemap.xml` | SEO local (dinâmico) | Fase 1 + Spec 05/06 |
+| `/anunciar` | Formulário público de anúncio (Fase 2) | Fase 2 |
+| `/moderacao` | Área de moderação (protegida, MODERATOR_SECRET) | Fase 2 |
+| `robots.txt`, `sitemap.xml` | SEO local (dinâmico, incl. empresas + noticias) | Fase 1 + Spec 05/06 |
 
 **Ordem da home** (conteúdo público antes de publicidade — FR-009/SC-001):
 `JsonLd` → `HeroSection` → `WeatherSection` → `NewsSection` (usa `NewsBento` grid)
@@ -252,11 +304,11 @@ com segredo (gate 9):
 
 ---
 
-## 10. Restrições da constituição (NÃO VIOLAR — v1.1.0)
+## 10. Restrições da constituição (NÃO VIOLAR — v1.3.0)
 
 Proibido sem emenda formal (`.specify/memory/constitution.md`):
 
-- ❌ login/cadastro, dashboard, área do comerciante
+- ❌ login/cadastro de usuários, dashboard de usuário, área do comerciante
 - ❌ pagamentos (PIX, cartão, checkout, gateway)
 - ❌ upload/armazenamento de imagens de conteúdo (o portal exibe apenas imagens vindas de feeds)
 - ❌ comentários, fórum, rede social, marketplace, carrinho
@@ -267,9 +319,12 @@ Proibido sem emenda formal (`.specify/memory/constitution.md`):
   busca e de SearchAction no JSON-LD é deliberada
 - Conteúdo 100% em **pt-BR**, sem sensacionalismo; falhas de fonte nunca
   viram erro técnico na página (SC-004)
-- ✅ **Permitido com condições**: Google Analytics 4 (emenda v1.1.0) — só
-  produção, carga adiada, coleta agregada, aviso de cookies publicado;
-  qualquer ampliação de coleta exige emenda
+- ✅ **Permitido com condições** (emendas v1.1.0/v1.2.0/v1.3.0):
+  - Google Analytics 4 — só produção, carga adiada, coleta agregada, aviso de cookies publicado
+  - Formulário público `/anunciar` (Fase 2) — validação, rate-limit, dedupe CNPJ, moderação humana
+  - Persistência JSON versionada (`news-history.json`, `ads-pending.json`) — sem banco de dados relacional
+  - Área de moderação `/moderacao` — autenticação simples por segredo compartilhado (`MODERATOR_SECRET`)
+  - Qualquer ampliação de coleta/formulário exige emenda
 
 Ordem de critérios para decisões técnicas futuras: simplicidade → custo →
 compatibilidade → manutenção → segurança → performance → substituibilidade →
@@ -279,13 +334,13 @@ escalabilidade só quando necessário.
 
 ## 11. Pontos de atenção — situação (atualizado em 2026-10-24)
 
-Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5:
+Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 e Fase 2:
 
 **Resolvidos:**
 
 1. ✅ **Release**: `v0.2.0` publicada (`0f4b794`) e em `origin`; CHANGELOG
    com 7 feats + 2 fixes do período (chore/docs ocultos pelo `.versionrc.js`).
-2. ✅ **spec.md**: `Status: Implemented — 55/55 tasks`.
+2. ✅ **spec.md (Fase 1)**: `Status: Implemented — 55/55 tasks`.
 3. ✅ **Loader de notices**: item `arquivado` registra
    `info/archived_content_items`; só conteúdo **inválido** gera `warn`
    (`tests/unit/notices-loader.test.ts`).
@@ -311,29 +366,34 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 14. ✅ **Spec 04** — Listagens: `/noticias`, `/avisos`, `/avisos/saae` **validadas** — todas com metadata, canonical, breadcrumbs (hierárquico no SAAE), `StatusMessage` para estados ok/stale/error, `revalidate=1800`.
 15. ✅ **Spec 07** — Hub da home, header/rodapé e links internos: dropdown "Institucional" no header (5 páginas), coluna "Listagens Completas" no footer (5 rotas), botões "Ver todas" nas seções da home — todos implementados e testados.
 16. ✅ **Spec 08** — Search Console, sitemap e documentação no README: meta tag `google-site-verification` condicional via `NEXT_PUBLIC_GSC_VERIFICATION` (apenas produção), `README.md` criado com documentação completa de operação (verificação, sitemap, monitoramento, checklist pós-deploy, links úteis).
-
-**Pendências:**
-
-1. ✅ **Vercel (D3)**: `CONTACT_WHATSAPP`, `CONTACT_PHONE`, `CONTACT_EMAIL`,
+17. ✅ **Vercel (D3)**: `CONTACT_WHATSAPP`, `CONTACT_PHONE`, `CONTACT_EMAIL`,
    `NEXT_PUBLIC_GSC_VERIFICATION` configurados em Production + redeploy
    realizado (`dpl_458vFDLUHp7aKdVoUdYstXDnGAiY`).
-2. ✅ **D4 — política de anúncios gratuitos** (pergunta 4 da constituição
+18. ✅ **D4 — política de anúncios gratuitos** (pergunta 4 da constituição
    v1.1.0): definida na emenda v1.2.0 (2026-10-24):
    - Elegibilidade: comércio local geral (lojas, restaurantes, serviços)
    - Volume: 1 anúncio por CNPJ/negócio
    - Duração: indeterminado até remoção manual
    - Processo: formulário público (Fase 2) → fila de moderação → aprovação
    - Constituição emendada para v1.2.0 autorizando formulário na Fase 2
-3. ✅ **Pergunta 1 da constituição**: nome definitivo definido na emenda v1.3.0
+19. ✅ **Pergunta 1 da constituição**: nome definitivo definido na emenda v1.3.0
    (2026-10-24) → **"Meu Bairro - Portal São Carlos"**.
-4. ✅ **Pergunta 3 da constituição**: moderador definido na emenda v1.3.0 →
+20. ✅ **Pergunta 3 da constituição**: moderador definido na emenda v1.3.0 →
    **proprietário do portal (moderador único)**.
-5. ✅ **Pergunta 5 da constituição**: política de retenção LGPD definida na
+21. ✅ **Pergunta 5 da constituição**: política de retenção LGPD definida na
    emenda v1.3.0 → **legítimo interesse (ativo + 12 meses), consentimento
    (30 dias pendente), GA4 14 meses, cookies 12 meses**.
-6. 🟡 **Implementar Fase 2** — **EM ANDAMENTO**:
-   - ✅ Spec Kit: spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md, tasks.md
-   - 🔲 Implementação das 64 tarefas em 7 fases (MVP = User Story 1: histórico de notícias)
+22. ✅ **Fase 2 — Persistência e Captura de Interesse: CONCLUÍDA** (64/64 tasks):
+   - ✅ Spec Kit completo: spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md, tasks.md (64 tasks)
+   - ✅ User Story 1: Histórico de notícias (`/noticias` paginado, ItemList JSON-LD, retenção 12 meses, `news-history.json`)
+   - ✅ User Story 2: Formulário público (`/anunciar` — validação, rate-limit 10req/10min, dedupe CNPJ, `ads-pending.json`)
+   - ✅ User Story 3: Área de moderação (`/moderacao` — auth por `MODERATOR_SECRET`, tabs Pendentes/Publicados, aprovar/recusar/editar/suspender/reativar/remover)
+   - ✅ User Story 4: Verificação GA4 (`NEXT_PUBLIC_GSC_VERIFICATION` condicional apenas produção)
+   - ✅ 144 testes passando (incl. novos testes de listagem, moderação, formulário)
+   - ✅ Build OK (Turbopack), Lint 0 erros
+   - ✅ Deploy em produção realizado
+
+**Pendências atuais:** Nenhuma — Fase 1 e Fase 2 concluídas.
 
 ---
 
