@@ -324,9 +324,15 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
    - Duração: indeterminado até remoção manual
    - Processo: formulário público (Fase 2) → fila de moderação → aprovação
    - Constituição emendada para v1.2.0 autorizando formulário na Fase 2
-3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
-4. 🔲 **Pergunta 3 da constituição**: quem fará a moderação dos anúncios.
-5. 🔲 **Pergunta 5 da constituição**: política de retenção de dados.
+3. ✅ **Pergunta 1 da constituição**: nome definitivo definido na emenda v1.3.0
+   (2026-10-24) → **"Meu Bairro - Portal São Carlos"**.
+4. ✅ **Pergunta 3 da constituição**: moderador definido na emenda v1.3.0 →
+   **proprietário do portal (moderador único)**.
+5. ✅ **Pergunta 5 da constituição**: política de retenção LGPD definida na
+   emenda v1.3.0 → **legítimo interesse (ativo + 12 meses), consentimento
+   (30 dias pendente), GA4 14 meses, cookies 12 meses**.
+6. 🔲 **Implementar Fase 2** — especificação via Spec Kit: formulário público
+   + fila de moderação + área admin simples + persistência notícias.
 
 ---
 

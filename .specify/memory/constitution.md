@@ -56,14 +56,29 @@ Follow-up TODOs: permanecem abertas as perguntas sobre nome definitivo,
   moderação (quem fará), e retenção de dados.
 -->
 
-# Portal São Carlos Constitution
+<!-- Sync Impact Report — emenda de 2026-10-24 (decisões: nome definitivo,
+     moderação, retenção LGPD + início Fase 2)
+Version change: 1.2.0 → 1.3.0
+Bump type: MINOR (nome definitivo definido; moderação atribuída ao
+  proprietário; política de retenção LGPD; Fase 2 autorizada para implementação)
+Modified sections:
+  - Cabeçalho: nome do projeto atualizado para "Meu Bairro - Portal São Carlos"
+  - "Moderação": moderador definido como proprietário do portal
+  - "Privacidade": adicionada subseção "Retenção de Dados (LGPD)"
+  - "Perguntas em Aberto": itens 1, 3 e 5 respondidos
+  - "Fases Futuras": Fase 2 confirmada para implementação imediata
+Added sections: "Retenção de Dados (LGPD)" (em Privacidade).
+Removed sections: nenhuma.
+Follow-up TODOs: nenhuma pergunta em aberto restante — constituição completa para Fase 2.
+-->
 
-Nome provisório do projeto. O nome definitivo é uma decisão futura (ver
-"Perguntas em Aberto").
+# Meu Bairro - Portal São Carlos Constitution
+
+Nome definitivo do projeto: **Meu Bairro - Portal São Carlos** (definido em 2026-10-24, emenda v1.3.0).
 
 ## Visão e Propósito
 
-O Portal São Carlos é uma landing page / portal local de utilidade pública
+O **Meu Bairro - Portal São Carlos** é uma landing page / portal local de utilidade pública
 dedicado à cidade de São Carlos/SP, Brasil. Seus objetivos são:
 
 - Oferecer informações úteis, rápidas e compreensíveis para a população local:
@@ -328,6 +343,10 @@ ou pagamentos de anúncios.
   - Ter informações básicas suficientes para contato.
 - O proprietário do portal DEVE poder recusar, editar, suspender ou remover
   anúncios que não estejam de acordo com as regras editoriais.
+- **Moderador designado (decisão 2026-10-24):** o proprietário do portal
+  (responsável legal) é o moderador único. Não há equipe de moderação
+  separada nesta fase. Decisões de moderação são finais e documentadas
+  via histórico de commits no `content/ads.json`.
 
 ### Política de Anúncios Gratuitos (decisão D4 — 2026-10-24)
 
@@ -378,6 +397,40 @@ ou pagamentos de anúncios.
 - Métricas de acesso seguem a política definida na seção "Métricas de
   acesso (política definida)" logo abaixo; qualquer exceção ou ampliação
   de coleta EXIGE emenda prévia.
+
+### Retenção de Dados (LGPD — decisão 2026-10-24)
+
+**Princípio:** retenção pelo tempo estritamente necessário à finalidade
+(Princípio VII), com base legal no **legítimo interesse** (art. 7º, IX,
+LGPD) para dados de anunciantes e **consentimento** (art. 7º, I, LGPD)
+para formulário público de captação.
+
+**Dados coletados e prazos de retenção:**
+
+| Categoria de Dados | Finalidade | Base Legal | Prazo de Retenção | Ação pós-prazo |
+|---|---|---|---|---|
+| Dados de anunciantes (nome comercial, responsável, telefone/WhatsApp, e-mail, descrição, categoria, bairro, link externo) | Publicação e gestão de anúncios gratuitos/patrocinados | Legítimo interesse (art. 7º, IX) | Enquanto o anúncio estiver ativo + 12 meses após remoção/expiração | Exclusão automática ou anonimização |
+| Dados de submissão do formulário público (pendentes de moderação) | Triagem e validação | Consentimento (art. 7º, I) | 30 dias se não aprovado; se aprovado, segue regra acima | Exclusão se recusado/expirado |
+| Logs de acesso (GA4 — IP anonimizado, user agent, páginas, origem) | Métricas agregadas de audiência | Legítimo interesse (art. 7º, IX) | 14 meses (configuração padrão GA4) | Exclusão automática pelo GA4 |
+| Cookies/técnicos (session ID, preferências) | Funcionamento do site, consentimento | Legítimo interesse / Consentimento | Sessão (técnicos) / 12 meses (consentimento) | Expiração automática |
+
+**Direitos do titular (art. 18 LGPD):**
+- Confirmação, acesso, correção, anonimização, bloqueio, eliminação,
+  portabilidade, informação sobre compartilhamento, revogação do
+  consentimento.
+- Canal de atendimento: `roldan.eng.software@gmail.com` (resposta em até
+  15 dias corridos).
+- Procedimento: verificação de identidade mínima (e-mail/telefone do
+  cadastro) → ação no prazo legal.
+
+**Segurança:** dados armazenados apenas em `content/ads.json` versionado
+no Git (acesso restrito ao repositório privado). Nenhum banco de dados
+externo, nenhum processamento por terceiros além do GA4 (anônimo) e
+Vercel (logs de acesso padrão).
+
+**Registro de operações de tratamento (art. 37 LGPD):** mantido em
+`docs/lgpd/registro-tratamento.md` (atualizado a cada mudança de
+finalidade ou categoria de dados).
 
 ### Segurança
 
@@ -591,25 +644,32 @@ Esta constituição é considerada válida e aplicável quando:
 - A data de ratificação é a data da adoção inicial; a data de última alteração
   DEVE ser atualizada a cada emenda.
 
-**Version**: 1.2.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-24
+**Version**: 1.3.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-24
 
 ## Perguntas em Aberto
 
-Perguntas que realmente precisam de resposta futura. Nenhuma delas é decisão
-definitiva. (Histórico: os itens sobre domínio, identidade visual, fontes de
-notícias, métricas e canais de contato foram encerrados pela emenda v1.1.0;
-o item sobre política de anúncios gratuitos e formulário Fase 2 foram
-encerrados pela emenda v1.2.0 — ver Relatório de Impacto no topo deste arquivo.)
+Todas as perguntas foram respondidas. Nenhuma decisão pendente para a Fase 2.
+(Histórico: itens encerrados pelas emendas v1.1.0, v1.2.0 e v1.3.0 — ver
+Relatórios de Impacto no topo deste arquivo.)
 
-1. Qual será o nome definitivo do projeto (hoje: provisório "Portal São
-   Carlos")?
-2. ~~Haverá formulário público para comerciantes na Fase 2?~~
+~~1. Qual será o nome definitivo do projeto (hoje: provisório "Portal São
+   Carlos")?~~
+   **Respondido (emenda v1.3.0): "Meu Bairro - Portal São Carlos".**
+
+~~2. Haverá formulário público para comerciantes na Fase 2?~~
    **Respondido (emenda v1.2.0): Sim — formulário público com fila de moderação
    autorizado para Fase 2 (ver "Política de Anúncios Gratuitos").**
-3. Quem fará a moderação dos anúncios e conteúdos?
-4. ~~Qual será a política de publicação dos anúncios gratuitos (critérios,
+
+~~3. Quem fará a moderação dos anúncios e conteúdos?~~
+   **Respondido (emenda v1.3.0): O proprietário do portal (moderador único).**
+
+~~4. Qual será a política de publicação dos anúncios gratuitos (critérios,
    volume, periodicidade)?~~
    **Respondido (emenda v1.2.0): Ver "Política de Anúncios Gratuitos" —
    comércio local geral, 1 anúncio/CNPJ, duração indeterminada até remoção
    manual, processo via formulário público + moderação (Fase 2).**
-5. Qual será a política de retenção de dados e por quanto tempo?
+
+~~5. Qual será a política de retenção de dados e por quanto tempo?~~
+   **Respondido (emenda v1.3.0): Ver "Retenção de Dados (LGPD)" — legítimo
+   interesse para anunciantes (ativo + 12 meses), consentimento para
+   formulário (30 dias se não aprovado), GA4 14 meses, cookies 12 meses.**
