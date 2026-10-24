@@ -3,7 +3,7 @@
 Documento de contexto para agentes/IA e colaboradores que forem trabalhar neste
 repositório. Descreve **como está a implementação neste momento**, o que já foi
 entregue, o que é proibido pela constituição do projeto e onde estão os pontos
-de atenção. Atualizado em **2026-10-08** a partir de leitura direta do código,
+de atenção. Atualizado em **2026-10-24** a partir de leitura direta do código,
 histórico git e documentação em `specs/`.
 
 ---
@@ -20,6 +20,7 @@ histórico git e documentação em `specs/`.
 | Fase atual | **Fase 1 — Portal público: CONCLUÍDA** (55/55 tasks `[X]` em `specs/001-portal-sao-carlos-fase1/tasks.md`) |
 | Git | branch `main`, working tree limpo na data desta verificação |
 | Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
+| PRD SEO Local | **Fase 2 — Especs 05 e 06 concluídas** (`docs/prd/feature-seo-local-conteudo.md`) |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
 informativos, telefones úteis, anúncios e políticas — **sem cadastro, sem
@@ -28,12 +29,12 @@ pagamento, sem banco de dados** (constituição **v1.1.0**, `.specify/memory/con
 
 ---
 
-## 2. Estado de verificação (2026-10-08)
+## 2. Estado de verificação (2026-10-24)
 
 | Verificação | Resultado |
 | --- | --- |
-| `npm run test` | ✅ 15 arquivos, **102 testes passando** |
-| `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), 9 rotas estáticas, home com `revalidate 15m` |
+| `npm run test` | ✅ 20 arquivos, **144 testes passando** |
+| `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), rotas estáticas + dinâmicas, home com `revalidate 15m` |
 | `npm run lint` | ✅ 0 erros e **0 warnings** (Material Symbols auto-hospedada desde a Etapa 1 — ver §6) |
 | Gates da constituição | 17/17 PASS conforme `specs/001-portal-sao-carlos-fase1/plan.md` |
 | Warning de build | Nenhum — itens `arquivado` de `content/notices.json` registram `info/archived_content_items` (não são mais `warn`) |
@@ -72,7 +73,14 @@ src/
 │   ├── page.tsx                # Home — monta os 6 módulos com Promise.allSettled + revalidate=900
 │   ├── aviso-editorial/        # Página de transparência editorial (FR-011)
 │   ├── politica-de-privacidade/ # Política de privacidade (FR-011)
-│   ├── robots.ts, sitemap.ts   # SEO local (3 URLs no sitemap)
+│   ├── empresas/               # Guia comercial (Spec 06)
+│   │   ├── page.tsx            # Hub /empresas (listagem por categoria)
+│   │   └── [slug]/page.tsx     # Página individual com LocalBusiness JSON-LD
+│   ├── utilidade-publica/      # Spec 05
+│   │   ├── page.tsx            # Hub /utilidade-publica
+│   │   └── telefones-uteis/page.tsx # /utilidade-publica/telefones-uteis
+│   ├── previsao-do-tempo/sao-carlos/page.tsx # Spec 05
+│   ├── robots.ts, sitemap.ts   # SEO local (dinâmico, incl. /empresas)
 │   ├── globals.css             # Tokens do design system (@theme)
 │   └── icon.png, apple-icon.png
 ├── components/
@@ -80,15 +88,15 @@ src/
 │   │              # footer.tsx (versão/deploy, emergências, links de política),
 │   │              # announce-cta.tsx (faixa id="anuncie" em todas as páginas)
 │   ├── sections/  # hero, weather, news (+ news-bento), notices, contacts, ads, promo
-│   ├── ui/        # content-label.tsx (6 rótulos), section.tsx, status-message.tsx
+│   ├── ui/        # content-label.tsx (6 rótulos), section.tsx, status-message.tsx, breadcrumb.tsx
 │   ├── seo/json-ld.tsx         # WebSite + Organization (JSON-LD)
 │   └── analytics/google-analytics.tsx  # GA4 G-063LGPHV93, só produção, afterInteractive
 ├── modules/       # Domínio isolado da UI (contratos em specs/.../contracts/)
 │   ├── weather/   # adapter.ts (Open-Meteo), normalize.ts, types.ts
 │   ├── news/      # adapter.ts (RSS), normalize.ts, types.ts (com imageUrl)
 │   ├── notices/   # adapter.ts (curadoria JSON + RSS SAAE combinados), loader, normalize, types
-│   ├── ads/       # loader.ts (content/ads.json)
-│   ├── contacts/  # loader.ts (content/contacts.json)
+│   ├── ads/       # loader.ts (content/ads.json) — selectPublishedAds exportado
+│   ├── contacts/  # loader.ts (content/contacts.json) — CONTACT_CATEGORIES exportadas
 │   ├── promo/     # loader.ts (content/promo.json)
 │   └── types.ts   # ContentKind — os 6 tipos de conteúdo
 ├── lib/
@@ -97,7 +105,8 @@ src/
 │   ├── fetch-cached.ts    # Cache ~15 min, timeout ~5 s, "last good" por fonte, nunca lança
 │   ├── feed.ts            # Parsing RSS/Atom compartilhado (news e notices)
 │   ├── logger.ts          # Log estruturado de falha/recuperação por fonte
-│   └── contact-links.ts   # Links WhatsApp
+│   ├── contact-links.ts   # Links WhatsApp
+│   └── date.ts            # dateToFormat (pt-BR, America/Sao_Paulo)
 ├── config/
 │   ├── env.ts             # Env validada (tudo opcional; resolução da SITE_URL)
 │   ├── sources.ts         # Registro de fontes (feeds + coordenadas do clima)
@@ -112,7 +121,9 @@ tests/
 
 specs/001-portal-sao-carlos-fase1/   # Spec Kit: spec, plan, tasks (55/55), research,
                                      # data-model, quickstart, contracts/, checklists/
-docs/modelo/                         # Design Civic Vanguard (DESIGN.md, code.html, logo)
+docs/
+├── modelo/                         # Design Civic Vanguard (DESIGN.md, code.html, logo)
+└── prd/feature-seo-local-conteudo.md # PRD da Fase 2 (Specs 01–08)
 .specify/                            # Constituição v1.0.0 + scripts Spec Kit
 ```
 
@@ -169,12 +180,19 @@ imagens próprias** além dos assets estáticos em `public/`.
 
 ## 7. Páginas e composição
 
-**Rotas reais** (apenas 3 páginas + endpoints de SEO):
+**Rotas reais** (páginas públicas + endpoints de SEO):
 
-- `/` — home
-- `/aviso-editorial`
-- `/politica-de-privacidade`
-- `robots.txt`, `sitemap.xml`
+| Rota | Origem | Spec |
+|------|--------|------|
+| `/` | Home (módulos independentes) | Fase 1 |
+| `/empresas` | Guia comercial (hub) | Spec 06 |
+| `/empresas/[slug]` | Página individual da empresa (LocalBusiness JSON-LD) | Spec 06 |
+| `/utilidade-publica` | Hub utilidade pública | Spec 05 |
+| `/utilidade-publica/telefones-uteis` | Telefones por categoria (contacts.json + officialUrl) | Spec 05 |
+| `/previsao-do-tempo/sao-carlos` | Página dedicada de clima (Open-Meteo) | Spec 05 |
+| `/aviso-editorial` | Transparência editorial | Fase 1 |
+| `/politica-de-privacidade` | Política de privacidade | Fase 1 |
+| `robots.txt`, `sitemap.xml` | SEO local (dinâmico) | Fase 1 + Spec 05/06 |
 
 **Ordem da home** (conteúdo público antes de publicidade — FR-009/SC-001):
 `JsonLd` → `HeroSection` → `WeatherSection` → `NewsSection` (usa `NewsBento` grid)
@@ -192,8 +210,8 @@ valores de `ContentKind` — `noticia`, `informativo`, `servico-publico`,
 rótulo **textual** (nunca só cor).
 
 **SEO**: metadados + Open Graph/Twitter com `/og-image.png`, canonical por
-página, JSON-LD `WebSite`+`Organization`, sitemap (3 URLs), robots aberto,
-redirect apex→www. **Analytics**: GA4 `G-063LGPHV93`, apenas `VERCEL_ENV=production`,
+página, JSON-LD `WebSite`+`Organization`, sitemap (dinâmico, incl. empresas),
+robots aberto, redirect apex→www. **Analytics**: GA4 `G-063LGPHV93`, apenas `VERCEL_ENV=production`,
 carga `afterInteractive`.
 
 **Versão no rodapé** (`config/version.ts`): `APP_VERSION` do `package.json`,
@@ -259,7 +277,7 @@ escalabilidade só quando necessário.
 
 ---
 
-## 11. Pontos de atenção — situação (atualizado em 2026-10-08)
+## 11. Pontos de atenção — situação (atualizado em 2026-10-24)
 
 Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5:
 
@@ -285,6 +303,8 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
    registrada; nomenclatura divergente (§1) é intencional.
 8. ✅ **Contato (D3) local**: `CONTACT_WHATSAPP=5516981442301` no
    `.env.local` (gitignored).
+9. ✅ **Spec 05** — Utilidade pública: `/utilidade-publica`, `/utilidade-publica/telefones-uteis`, `/previsao-do-tempo/sao-carlos` implementadas e testadas.
+10. ✅ **Spec 06** — Guia comercial: `/empresas` (hub) e `/empresas/[slug]` (LocalBusiness JSON-LD, 404 para expirados) implementadas e testadas.
 
 **Pendências:**
 
@@ -295,6 +315,12 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 2. 🔲 **D4 — política de anúncios gratuitos** (perguntas 3/4 da
    constituição v1.1.0): adiada pelo responsável em 2026-10-08.
 3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
+4. 🔲 **Spec 01** — Auditoria técnica SEO (diagnóstico, sem alterações).
+5. 🔲 **Spec 02** — SEO técnico base (noindex admin, manifest, breadcrumbs, sitemap dinâmico completo).
+6. 🔲 **Spec 03** — Páginas institucionais: `/sobre`, `/contato`, `/termos-de-uso`.
+7. 🔲 **Spec 04** — Listagens: `/noticias`, `/avisos`, `/avisos/saae`.
+8. 🔲 **Spec 07** — Hub da home, header/rodapé e links internos (depende de 03–06).
+9. 🔲 **Spec 08** — Search Console, sitemap e documentação no README.
 
 ---
 
