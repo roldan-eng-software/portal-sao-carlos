@@ -31,7 +31,7 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-moderator-secret': moderatorSecret,
+          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ submissionId: id }),
       });
@@ -71,7 +71,7 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-moderator-secret': moderatorSecret,
+          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ submissionId: id, reason }),
       });
@@ -110,7 +110,7 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
-          'x-moderator-secret': moderatorSecret,
+          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ adId, action, data }),
       });
