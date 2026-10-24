@@ -1,6 +1,6 @@
-import type { AdSubmission, AdPublished } from './types';
+import type { AdSubmission, AdPublished, AdSubmissionStatus } from './types';
 import { loadAds, saveAds } from '@/modules/ads/loader';
-import { loadPendingAds, savePendingAds } from './loader';
+import { loadPendingAds, updatePendingAd } from './loader';
 
 /**
  * Gera link WhatsApp (wa.me) com mensagem pré-formatada.
@@ -98,9 +98,8 @@ export async function approveAdSubmission(
   await saveAds(adsArray);
 
   // Remove da fila de pendentes (marca como aprovado)
-  pending[index].status = 'aprovado';
-  pending[index].reviewedAt = now;
-  await savePendingAds(pending);
+  const updatedSubmission: AdSubmission = { ...pending[index], status: 'aprovado' as AdSubmissionStatus, reviewedAt: now };
+  await updatePendingAd(updatedSubmission);
 
   return { success: true, publishedAd };
 }
@@ -128,11 +127,8 @@ export async function rejectAdSubmission(
     return { success: false, errors: ['Motivo da recusa é obrigatório.'] };
   }
 
-  pending[index].status = 'recusado';
-  pending[index].reviewedAt = new Date().toISOString();
-  pending[index].rejectionReason = reason.trim();
-
-  await savePendingAds(pending);
+  const updatedSubmission: AdSubmission = { ...pending[index], status: 'recusado' as AdSubmissionStatus, reviewedAt: new Date().toISOString(), rejectionReason: reason.trim() };
+  await updatePendingAd(updatedSubmission);
 
   return { success: true };
 }

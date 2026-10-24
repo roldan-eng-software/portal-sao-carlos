@@ -1,8 +1,7 @@
 import { sanitizeText, sanitizeUrl, sanitizePhone } from '@/lib/sanitize';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { isValidCnpj as validateCNPJ, formatCnpj as formatCNPJ } from '@/lib/cnpj';
-import { loadAds } from '@/modules/ads/loader';
-import { loadPendingAds, savePendingAds } from './loader';
+import { savePendingAd, checkPendingCNPJDuplicate } from './loader';
 import type { AdSubmission } from './types';
 import { isValidCategory } from './types';
 
@@ -40,7 +39,7 @@ export function validateAndSanitizeAdForm(
   const requiredFields: Array<{ key: keyof AdSubmission; label: string; maxLength: number }> = [
     { key: 'businessName', label: 'Nome do comércio/serviço', maxLength: 120 },
     { key: 'category', label: 'Categoria', maxLength: 40 },
-    { key: 'description', label: 'Descrição', maxLength: 500 },
+    { key: 'description', label: 'Descricão', maxLength: 500 },
     { key: 'neighborhood', label: 'Bairro/região', maxLength: 80 },
   ] as const;
 
@@ -103,7 +102,7 @@ export function validateAndSanitizeAdForm(
     sanitizedData.hours = sanitizeText(rawData.hours, 200);
   }
 
-  // CNPJ (opcional para dedup)
+  // CNPJ (opcional para dedupe)
   if (rawData.cnpj) {
     const cnpj = sanitizeText(rawData.cnpj, 18);
     if (cnpj) {
@@ -123,26 +122,11 @@ export function validateAndSanitizeAdForm(
 }
 
 /**
- * Verifica duplicidade de CNPJ em anúncios pendentes e publicados.
+ * Verifica duplicidade de CNPJ pendente apenas.
+ * Publicados ainda são consultados via ads.json (arquivo versionado).
  */
 export async function checkCNPJDuplicate(cnpj: string): Promise<boolean> {
-  if (!cnpj) return false;
-
-  // Verifica pendentes
-  const { loadPendingAds } = await import('./loader');
-  const pending = await loadPendingAds();
-  if (pending.some((ad) => ad.cnpj === cnpj && ad.status === 'pendente')) {
-    return true;
-  }
-
-  // Verifica publicados
-  const published = await loadAds();
-  const publishedAds = Array.isArray(published) ? published : (published as any).data || [];
-  if (publishedAds.some((ad: any) => ad.cnpj === cnpj && ad.status === 'publicado')) {
-    return true;
-  }
-
-  return false;
+  return await checkPendingCNPJDuplicate(cnpj);
 }
 
 /**
@@ -162,7 +146,7 @@ export async function createAdSubmission(
     };
   }
 
-  // Verifica duplicidade CNPJ
+  // Verifica duplicidade de CNPJ
   if (validation.sanitizedData.cnpj) {
     const duplicate = await checkCNPJDuplicate(validation.sanitizedData.cnpj);
     if (duplicate) {
@@ -173,7 +157,7 @@ export async function createAdSubmission(
     }
   }
 
-  // Cria submissão
+  // Cria submissão com ID do banco
   const submission: AdSubmission = {
     id: crypto.randomUUID(),
     businessName: validation.sanitizedData.businessName!,
@@ -190,11 +174,10 @@ export async function createAdSubmission(
     sourceIp: ip,
   };
 
-  // Salva
-  const pending = await loadPendingAds();
-  pending.push(submission as AdSubmission);
-  await savePendingAds(pending);
+  // Salva no banco Neon (async, sem await no conflito, porque somos single instance)
+  await savePendingAd({ ...submission });
 
+  // Mantém a variável submessa correspondente
   return {
     success: true,
     submission,
