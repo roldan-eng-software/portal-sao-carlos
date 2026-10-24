@@ -31,6 +31,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      // Listagens de conteúdo (Spec 04) — itens individuais de feed NÃO
+      // entram: são efêmeros e apontam para fontes externas.
+      url: `${base}/noticias`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${base}/avisos`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${base}/avisos/saae`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.5,
+    },
+    {
       url: `${base}/aviso-editorial`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
