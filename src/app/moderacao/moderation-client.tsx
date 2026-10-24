@@ -9,9 +9,10 @@ import type { AdSubmission, AdPublished, ManageActionData } from '@/modules/ads-
 interface ModerationClientProps {
   initialPending: AdSubmission[];
   initialPublished: AdPublished[];
+  moderatorSecret: string;
 }
 
-export function ModerationClient({ initialPending, initialPublished }: ModerationClientProps) {
+export function ModerationClient({ initialPending, initialPublished, moderatorSecret }: ModerationClientProps) {
   const [activeTab, setActiveTab] = useState<'pending' | 'published'>('pending');
   const [pendingAds, setPendingAds] = useState<AdSubmission[]>(initialPending);
   const [publishedAds, setPublishedAds] = useState<AdPublished[]>(initialPublished);
@@ -28,7 +29,10 @@ export function ModerationClient({ initialPending, initialPublished }: Moderatio
     try {
       const response = await fetch('/api/ads/approve', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-moderator-secret': moderatorSecret,
+        },
         body: JSON.stringify({ submissionId: id }),
       });
       const result = await response.json();
@@ -65,7 +69,10 @@ export function ModerationClient({ initialPending, initialPublished }: Moderatio
     try {
       const response = await fetch('/api/ads/reject', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-moderator-secret': moderatorSecret,
+        },
         body: JSON.stringify({ submissionId: id, reason }),
       });
       const result = await response.json();
@@ -101,7 +108,10 @@ export function ModerationClient({ initialPending, initialPublished }: Moderatio
     try {
       const response = await fetch('/api/ads/manage', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-moderator-secret': moderatorSecret,
+        },
         body: JSON.stringify({ adId, action, data }),
       });
       const result = await response.json();

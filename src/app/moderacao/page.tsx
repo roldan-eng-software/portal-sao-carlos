@@ -3,6 +3,7 @@ import { loadPendingAds } from '@/modules/ads-pending/loader';
 import { loadAds } from '@/modules/ads/loader';
 import type { AdPublished } from '@/modules/ads-pending/types';
 import { ModerationClient } from './moderation-client';
+import { env } from '@/config/env';
 
 export const metadata: Metadata = {
   title: 'Moderação de Anúncios — Portal São Carlos',
@@ -18,7 +19,6 @@ async function getModerationData() {
   const pending = await loadPendingAds();
   const publishedResult = await loadAds();
 
-  // Se o retorno for um ModuleResult, extraímos o array de dados
   const publishedAds = Array.isArray(publishedResult) 
     ? publishedResult 
     : (publishedResult as any).data || [];
@@ -33,5 +33,10 @@ async function getModerationData() {
 export default async function ModerationPage() {
   const data = await getModerationData();
 
-  return <ModerationClient initialPending={data.pending} initialPublished={data.published} />;
+  // Passa o secret para o client component para uso nas chamadas de API
+  return <ModerationClient 
+    initialPending={data.pending} 
+    initialPublished={data.published}
+    moderatorSecret={env.moderatorSecret ?? ''}
+  />;
 }
