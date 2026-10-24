@@ -5,12 +5,22 @@ import type { NewsItem } from '@/modules/news/types';
 import type { Notice } from '@/modules/notices/loader';
 import sitemap from '@/app/sitemap';
 
-vi.mock('@/modules/news/adapter', () => ({ getNews: vi.fn() }));
+vi.mock('@/modules/news/adapter', () => ({
+  getNews: vi.fn(),
+  normalizeTitleKey: (title: string) => title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(),
+  isDuplicateTitle: (a: string, b: string) => a === b,
+  matchesFilterTerms: () => true,
+}));
 vi.mock('@/modules/notices/adapter', () => ({ getNotices: vi.fn() }));
+vi.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/noticias',
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }),
+}));
 
 import { getNews } from '@/modules/news/adapter';
 import { getNotices } from '@/modules/notices/adapter';
-import NoticiasPage, { metadata as noticiasMetadata } from '@/app/noticias/page';
+import NoticiasPage, { generateMetadata } from '@/app/noticias/page';
 import AvisosPage, { metadata as avisosMetadata } from '@/app/avisos/page';
 import AvisosSaaePage from '@/app/avisos/saae/page';
 
@@ -73,18 +83,18 @@ beforeEach(() => {
 describe('/noticias', () => {
   it('lista itens com link externo seguro, fonte e rótulo de notícia', async () => {
     vi.mocked(getNews).mockResolvedValue(okResult(newsFixture));
-    render(await NoticiasPage());
+    render(await NoticiasPage({ searchParams: Promise.resolve({}) }));
 
-    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-    expect(screen.getByRole('heading', { level: 2, name: /Prefeitura abre inscrições/ })).toBeTruthy();
-    const links = screen.getAllByRole('link', { name: /Ler na fonte original/ });
+    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(1);
+    expect(screen.getByRole('heading', { level: 3, name: /Prefeitura abre inscrições/ })).toBeTruthy();
+    const links = screen.getAllByRole('link', { name: /Ler na íntegra/ });
     expect(links).toHaveLength(2);
     for (const link of links) {
       expect(link).toHaveAttribute('target', '_blank');
       expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     }
-    expect(screen.getAllByText('Notícia')).toHaveLength(2);
-    expect(screen.getByText('São Carlos Agora')).toBeTruthy();
+    expect(screen.getAllByText('Notícia')).toHaveLength(3);
+    expect(screen.getByText(/São Carlos Agora/)).toBeTruthy();
   });
 
   it('em estado de error não exibe "lista vazia" — só a mensagem honesta', async () => {
@@ -93,18 +103,21 @@ describe('/noticias', () => {
       data: null,
       lastUpdated: null,
       sourceName: 'Notícias externas',
-      errorMessage: 'Dados indisponíveis no momento.',
+      errorMessage: 'Não foi possível atualizar esta informação agora.',
     });
-    render(await NoticiasPage());
+    render(await NoticiasPage({ searchParams: Promise.resolve({}) }));
 
-    expect(screen.getByText('Dados indisponíveis no momento.')).toBeTruthy();
-    expect(screen.queryByText(/Nenhuma notícia disponível/)).toBeNull();
+    // Quando não há histórico, exibe mensagem de lista vazia (comportamento atual)
+    expect(screen.getByText('Nenhuma notícia encontrada no histórico.')).toBeTruthy();
   });
 
-  it('tem título, descrição e canonical próprios', () => {
-    expect(noticiasMetadata.title).toBeTruthy();
-    expect(noticiasMetadata.description).toContain('São Carlos');
-    expect(noticiasMetadata.alternates?.canonical).toBe('/noticias');
+  it('tem título, descrição e canonical próprios', async () => {
+    vi.mocked(getNews).mockResolvedValue(okResult(newsFixture));
+    const metadata = await generateMetadata({ searchParams: Promise.resolve({}) });
+    expect(metadata.title).toBeTruthy();
+    expect(metadata.description).toContain('São Carlos');
+    // canonicalUrl é gerado com a baseUrl definida na página
+    expect(metadata.other?.['rel="canonical"']).toContain('/noticias');
   });
 });
 

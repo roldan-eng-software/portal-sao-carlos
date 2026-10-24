@@ -169,9 +169,7 @@ export function Footer() {
               comércio e serviços.
             </p>
             <a
-              href="https://wa.me/5516981442301?text=Para%20o%20cadastro%20gratuito%20escreva%20abaixo%20os%20seguintes%20dados...%0ANome%20do%20Comercio:%0ABreve%20descri%C3%A7%C3%A3o:%0AHor%C3%A1rio%20de%20atendimento:%0AEndere%C3%A7o:%0ANumero%20do%20seu%20WhatsApp:%0ASite%20de%20sua%20empresa:"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/anunciar"
               className="block w-full rounded-lg bg-accent-amber px-4 py-2.5 text-center text-label-lg text-primary shadow-sm transition-all hover:bg-accent-amber/90"
             >
               Quero Anunciar Agora

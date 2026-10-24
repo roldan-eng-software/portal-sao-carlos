@@ -140,4 +140,52 @@ export function loadAds(): ModuleResult<Ad[]> {
   }
 }
 
+import fs from 'fs/promises';
+import path from 'path';
+
+const ADS_FILE = path.resolve(process.cwd(), 'src/content/ads.json');
+
+interface AdsFile {
+  items: unknown[];
+  _meta?: {
+    version: number;
+    updatedAt: string;
+  };
+}
+
+/**
+ * Carrega anúncios brutos do arquivo (para moderação).
+ */
+export async function loadRawAds(): Promise<AdsFile> {
+  try {
+    const content = await fs.readFile(ADS_FILE, 'utf-8');
+    const data = JSON.parse(content);
+    if (data.items && Array.isArray(data.items)) {
+      return data as AdsFile;
+    }
+    if (Array.isArray(data)) {
+      return { items: data, _meta: { version: 1, updatedAt: new Date().toISOString() } };
+    }
+    return { items: [], _meta: { version: 1, updatedAt: new Date().toISOString() } };
+  } catch {
+    return { items: [], _meta: { version: 1, updatedAt: new Date().toISOString() } };
+  }
+}
+
+/**
+ * Salva anúncios no arquivo JSON (escrita atômica).
+ */
+export async function saveAds(ads: unknown[]): Promise<void> {
+  const data: AdsFile = {
+    items: ads,
+    _meta: {
+      version: 1,
+      updatedAt: new Date().toISOString(),
+    },
+  };
+  const tempFile = `${ADS_FILE}.tmp`;
+  await fs.writeFile(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+  await fs.rename(tempFile, ADS_FILE);
+}
+
 export { sanitizeToLength };

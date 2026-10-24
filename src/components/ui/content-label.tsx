@@ -35,14 +35,15 @@ interface ContentLabelProps {
   kind: ContentKind;
   /** Permite o rótulo específico de um anúncio patrocinado (ex.: "Parceiro local"). */
   customLabel?: string;
+  className?: string;
 }
 
-export function ContentLabel({ kind, customLabel }: ContentLabelProps) {
+export function ContentLabel({ kind, customLabel, className = '' }: ContentLabelProps) {
   const label = customLabel ?? contentLabel(kind);
   return (
     <span
       data-kind={kind}
-      className={`inline-block rounded border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${KIND_STYLES[kind]}`}
+      className={`inline-block rounded border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${KIND_STYLES[kind]} ${className}`}
     >
       {label}
     </span>

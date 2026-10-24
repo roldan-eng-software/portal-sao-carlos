@@ -9,12 +9,16 @@ import { env } from '@/config/env';
  * o portal não possui busca (decisão de design), e um alvo inexistente
  * gera erro no Rich Results Test.
  */
-export function JsonLd() {
+interface JsonLdProps {
+  data?: Record<string, unknown>;
+}
+
+export function JsonLd({ data: customData }: JsonLdProps) {
   const siteUrl = env.siteUrl;
   const description =
     'Portal independente de utilidade pública de São Carlos/SP: previsão do tempo, notícias, informativos, contatos úteis e anúncios locais.';
 
-  const data = {
+  const defaultData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -48,6 +52,8 @@ export function JsonLd() {
       },
     ],
   };
+
+  const data = customData ?? defaultData;
 
   return (
     <script

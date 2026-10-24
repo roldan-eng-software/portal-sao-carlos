@@ -61,3 +61,20 @@ export function isSafeHttpUrl(value: unknown): value is string {
     return false;
   }
 }
+
+/** Sanitiza número de telefone (remove tudo exceto dígitos). */
+export function sanitizePhone(value: unknown): string {
+  if (typeof value !== 'string') return '';
+  return value.replace(/\D/g, '');
+}
+
+/** Valida e normaliza URL de redirecionamento ou link externo. */
+export function sanitizeUrl(value: unknown): string {
+  if (isSafeHttpUrl(value)) return value.trim();
+  return '';
+}
+
+/** Sanitiza texto genérico para armazenamento (remove HTML, trunca). */
+export function sanitizeText(value: unknown, maxLength = 1000): string {
+  return sanitizeToLength(value, maxLength);
+}

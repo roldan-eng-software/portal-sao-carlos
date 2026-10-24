@@ -22,6 +22,8 @@ npm run start      # serve o build
 npm run lint       # ESLint
 npm run test       # Vitest (run)  |  npm run test:watch
 npm run release    # commit-and-tag-version (patch); release:minor / release:major / release:dry
+npm run cleanup:news-history # limpa notícias >12 meses (LGPD legítimo interesse)
+npm run cleanup:ads-pending  # limpa submissões pendentes >30 dias (LGPD consentimento)
 ```
 
 ## Variáveis de ambiente
@@ -35,6 +37,8 @@ Todas **opcionais** (`.env.example`); lidas só no servidor, nenhuma `NEXT_PUBLI
 | `NOTICE_FEEDS` | Sobrescreve feeds de informativos (padrão: SAAE) |
 | `CONTACT_WHATSAPP` / `CONTACT_PHONE` / `CONTACT_EMAIL` | Canais das chamadas "Anuncie aqui" |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | **Token de verificação do Google Search Console** (apenas produção) |
+| `MODERATOR_SECRET` | **Segredo do moderador** para acesso à área `/moderacao` (apenas produção) |
+| `NEWS_HISTORY_RETENTION_DAYS` | Retenção do histórico de notícias em dias (padrão: 365) |
 
 > **Importante**: `NEXT_PUBLIC_GSC_VERIFICATION` deve ser configurado **apenas em Production** na Vercel (Environment Variables → Production). Não configure em Preview/Development para evitar vazamento do token em URLs não canônicas.
 
