@@ -70,6 +70,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      // Guia comercial (Spec 06).
+      url: `${base}/empresas`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
       url: `${base}/aviso-editorial`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
