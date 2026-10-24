@@ -1,0 +1,24 @@
+{
+  "name": "Portal São Carlos — informações úteis de São Carlos/SP",
+  "short_name": "Portal São Carlos",
+  "description": "Previsão do tempo, notícias, informativos oficiais, telefones úteis e anúncios locais de São Carlos/SP. Portal independente de utilidade pública.",
+  "start_url": "/",
+  "display": "browser",
+  "lang": "pt-BR",
+  "background_color": "#f8fafc",
+  "theme_color": "#001428",
+  "icons": [
+    {
+      "src": "/logo-symbol.png",
+      "sizes": "165x165",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "165x165",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

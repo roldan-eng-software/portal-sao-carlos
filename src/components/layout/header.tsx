@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { SWRegister } from '@/components/sw-register';
 
 const NAV_ITEMS = [
   { href: '#noticias', label: 'Notícias' },
@@ -70,9 +69,6 @@ export function Header() {
           </a>
         </div>
       </div>
-
-      {/* Registro do Service Worker (apenas produção) */}
-      <SWRegister />
 
       {/* Navegação horizontal (mobile/tablet) — sem JS, apenas rolagem. */}
       <nav

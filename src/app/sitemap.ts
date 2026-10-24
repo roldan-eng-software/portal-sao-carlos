@@ -6,6 +6,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${base}/`, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
     {
+      // Captação de anúncios — página pública (auditoria Spec 01, achado 2).
+      url: `${base}/anuncie`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
       url: `${base}/aviso-editorial`,
       lastModified: new Date(),
       changeFrequency: 'yearly',

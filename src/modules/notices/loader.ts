@@ -50,9 +50,15 @@ export function isValidNotice(value: unknown): value is Notice {
 export function loadNotices(rawList?: unknown): ModuleResult<Notice[]> {
   try {
     const seed = rawList ?? noticesSeed;
-    const raw = seed as { items?: unknown[]; _meta?: unknown };
-    const items = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
-    if (!Array.isArray(items)) {
+    let items: unknown[];
+    if (Array.isArray(seed)) {
+      items = seed;
+    } else if (seed && typeof seed === 'object' && Array.isArray((seed as { items?: unknown[] }).items)) {
+      items = (seed as { items: unknown[] }).items;
+    } else {
+      // Forma inesperada (JSON corrompido / reestruturado errado): tratar como
+      // falha da fonte, nunca como "lista vazia silenciosa" — sem isso, um
+      // arquivo mal formatado resultaria em ok vazio sem nenhum log.
       throw new Error('Arquivo de informativos inválido');
     }
     const valid = items.filter(isValidNotice);

@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description:
     'Previsão do tempo, notícias, informativos oficiais, telefones úteis e anúncios locais de São Carlos/SP. Portal independente de utilidade pública.',
   applicationName: 'Portal São Carlos',
+  manifest: '/manifest.webmanifest',
   keywords: [
     'São Carlos',
     'São Carlos SP',
