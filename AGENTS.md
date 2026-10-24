@@ -314,13 +314,19 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 
 **Pendências:**
 
-1. 🔲 **Vercel (D3)**: espelhar `CONTACT_WHATSAPP` (e opcionalmente
-   `CONTACT_PHONE`/`CONTACT_EMAIL`) em Environment Variables →
-   **Production** na Vercel e redeployar. Sem isso, o hero e o "Anuncie
-   aqui" seguem **sem WhatsApp/telefone no ar**.
-2. 🔲 **D4 — política de anúncios gratuitos** (perguntas 3/4 da
-   constituição v1.1.0): adiada pelo responsável em 2026-10-08.
+1. ✅ **Vercel (D3)**: `CONTACT_WHATSAPP`, `CONTACT_PHONE`, `CONTACT_EMAIL`,
+   `NEXT_PUBLIC_GSC_VERIFICATION` configurados em Production + redeploy
+   realizado (`dpl_458vFDLUHp7aKdVoUdYstXDnGAiY`).
+2. ✅ **D4 — política de anúncios gratuitos** (pergunta 4 da constituição
+   v1.1.0): definida na emenda v1.2.0 (2026-10-24):
+   - Elegibilidade: comércio local geral (lojas, restaurantes, serviços)
+   - Volume: 1 anúncio por CNPJ/negócio
+   - Duração: indeterminado até remoção manual
+   - Processo: formulário público (Fase 2) → fila de moderação → aprovação
+   - Constituição emendada para v1.2.0 autorizando formulário na Fase 2
 3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
+4. 🔲 **Pergunta 3 da constituição**: quem fará a moderação dos anúncios.
+5. 🔲 **Pergunta 5 da constituição**: política de retenção de dados.
 
 ---
 

@@ -38,6 +38,24 @@ Follow-up TODOs: permanecem abertas as perguntas sobre nome definitivo,
   adiada pelo responsável) e retenção de dados.
 -->
 
+<!-- Sync Impact Report — emenda de 2026-10-24 (decisão D4 — política de
+     anúncios gratuitos + autorização formulário Fase 2)
+Version change: 1.1.0 → 1.2.0
+Bump type: MINOR (política de anúncios gratuitos definida + autorização
+  de formulário público para captação na Fase 2)
+Modified sections:
+  - "Publicidade e Anúncios": adicionada subseção "Política de Anúncios
+    Gratuitos" com critérios, volume, duração e processo definidos.
+  - "Perguntas em Aberto": item 4 (política de anúncios gratuitos)
+    respondido; item 2 (formulário Fase 2) autorizado condicionalmente.
+  - "Fases Futuras": Fase 2 agora explicitamente inclui formulário público
+    com fila de moderação.
+Added sections: "Política de Anúncios Gratuitos" (em Publicidade e Anúncios).
+Removed sections: nenhuma.
+Follow-up TODOs: permanecem abertas as perguntas sobre nome definitivo,
+  moderação (quem fará), e retenção de dados.
+-->
+
 # Portal São Carlos Constitution
 
 Nome provisório do projeto. O nome definitivo é uma decisão futura (ver
@@ -311,6 +329,41 @@ ou pagamentos de anúncios.
 - O proprietário do portal DEVE poder recusar, editar, suspender ou remover
   anúncios que não estejam de acordo com as regras editoriais.
 
+### Política de Anúncios Gratuitos (decisão D4 — 2026-10-24)
+
+**Critérios de elegibilidade:**
+- Comércio local geral: lojas, restaurantes, prestadores de serviço com
+  endereço físico em São Carlos/SP.
+- Excluídos: atividades ilegais, conteúdo adulto, armas, jogos de azar,
+  imitação de órgãos públicos, uso não autorizado de marcas de terceiros.
+
+**Limite de volume:**
+- 1 (um) anúncio gratuito ativo por CNPJ/negócio.
+- Anúncios adicionais do mesmo negócio requerem contratação de destaque
+  patrocinado.
+
+**Duração / periodicidade:**
+- Publicação por tempo indeterminado até remoção manual pelo moderador.
+- O moderador PODE remover anúncios desatualizados, duplicados ou que
+  violem as regras editoriais a qualquer momento.
+- Renovação não se aplica (não há expiração automática).
+
+**Processo de publicação (Fase 2):**
+1. Comerciante preenche formulário público no portal (nome do comércio,
+   categoria, descrição, bairro, telefone/WhatsApp, link externo opcional,
+   horário de atendimento).
+2. Submissão entra em **fila de moderação** (status: pendente).
+3. Moderador valida elegibilidade, regras editoriais e duplicidade (CNPJ).
+4. Se aprovado → publicação no `content/ads.json` com `kind: "anuncio-gratuito"`.
+5. Se recusado → notificação ao comerciante com motivo (via WhatsApp/e-mail).
+6. O proprietário do portal PODE editar, suspender ou remover anúncios a
+   qualquer momento.
+
+> **Nota**: O formulário público da Fase 2 exige emenda à constituição
+> (Princípio II — Simplicidade). Esta política autoriza condicionalmente
+> sua implementação como parte da Fase 2, mantendo a moderação manual
+> obrigatória e a proibição de publicação automática.
+
 ## Privacidade e Segurança
 
 ### Privacidade
@@ -482,9 +535,10 @@ Landing page, cabeçalho, informações úteis, previsão do tempo, notícias,
 informativos, área de anúncios, contatos, políticas básicas e SEO local.
 
 **Fase 2 — Persistência e captura de interesse**
-Cache e persistência das notícias; formulário de interesse para anunciantes;
-área de moderação simples, se necessária; métricas básicas de acesso sem
-coleta excessiva de dados.
+Cache e persistência das notícias; **formulário público para anúncios
+gratuitos com fila de moderação** (conforme "Política de Anúncios Gratuitos");
+área de moderação simples; métricas básicas de acesso sem coleta excessiva de
+dados.
 
 **Fase 3 — Expansão editorial**
 Melhorias editoriais, busca, categorias, agenda de eventos e integrações
@@ -537,19 +591,25 @@ Esta constituição é considerada válida e aplicável quando:
 - A data de ratificação é a data da adoção inicial; a data de última alteração
   DEVE ser atualizada a cada emenda.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-08
+**Version**: 1.2.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-24
 
 ## Perguntas em Aberto
 
 Perguntas que realmente precisam de resposta futura. Nenhuma delas é decisão
 definitiva. (Histórico: os itens sobre domínio, identidade visual, fontes de
-notícias, métricas e canais de contato foram encerrados pela emenda v1.1.0 —
-ver Relatório de Impacto no topo deste arquivo.)
+notícias, métricas e canais de contato foram encerrados pela emenda v1.1.0;
+o item sobre política de anúncios gratuitos e formulário Fase 2 foram
+encerrados pela emenda v1.2.0 — ver Relatório de Impacto no topo deste arquivo.)
 
 1. Qual será o nome definitivo do projeto (hoje: provisório "Portal São
    Carlos")?
-2. Haverá formulário público para comerciantes na Fase 2?
+2. ~~Haverá formulário público para comerciantes na Fase 2?~~
+   **Respondido (emenda v1.2.0): Sim — formulário público com fila de moderação
+   autorizado para Fase 2 (ver "Política de Anúncios Gratuitos").**
 3. Quem fará a moderação dos anúncios e conteúdos?
-4. Qual será a política de publicação dos anúncios gratuitos (critérios,
-   volume, periodicidade)?
+4. ~~Qual será a política de publicação dos anúncios gratuitos (critérios,
+   volume, periodicidade)?~~
+   **Respondido (emenda v1.2.0): Ver "Política de Anúncios Gratuitos" —
+   comércio local geral, 1 anúncio/CNPJ, duração indeterminada até remoção
+   manual, processo via formulário público + moderação (Fase 2).**
 5. Qual será a política de retenção de dados e por quanto tempo?
