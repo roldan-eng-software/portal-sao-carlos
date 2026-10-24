@@ -20,7 +20,7 @@ histórico git e documentação em `specs/`.
 | Fase atual | **Fase 1 — Portal público: CONCLUÍDA** (55/55 tasks `[X]` em `specs/001-portal-sao-carlos-fase1/tasks.md`) |
 | Git | branch `main`, working tree limpo na data desta verificação |
 | Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
-| PRD SEO Local | **Fase 2 — Especs 01, 02, 03, 04, 05 e 06 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`) |
+| PRD SEO Local | **Fase 2 — Especs 01, 02, 03, 04, 05, 06 e 07 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`) |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
 informativos, telefones úteis, anúncios e políticas — **sem cadastro, sem
@@ -309,6 +309,7 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 12. ✅ **Spec 02** — SEO técnico base: `noindex` admin, `manifest.webmanifest`, breadcrumbs com `BreadcrumbList`, **sitemap dinâmico completo incluindo `/empresas/[slug]`** implementados.
 13. ✅ **Spec 03** — Páginas institucionais: `/sobre`, `/contato`, `/termos-de-uso` **validadas** — todas com metadata, canonical, breadcrumbs + BreadcrumbList JSON-LD, estrutura semântica correta.
 14. ✅ **Spec 04** — Listagens: `/noticias`, `/avisos`, `/avisos/saae` **validadas** — todas com metadata, canonical, breadcrumbs (hierárquico no SAAE), `StatusMessage` para estados ok/stale/error, `revalidate=1800`.
+15. ✅ **Spec 07** — Hub da home, header/rodapé e links internos: dropdown "Institucional" no header (5 páginas), coluna "Listagens Completas" no footer (5 rotas), botões "Ver todas" nas seções da home — todos implementados e testados.
 
 **Pendências:**
 
@@ -319,8 +320,7 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 2. 🔲 **D4 — política de anúncios gratuitos** (perguntas 3/4 da
    constituição v1.1.0): adiada pelo responsável em 2026-10-08.
 3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
-4. 🔲 **Spec 07** — Hub da home, header/rodapé e links internos (depende de 03–06).
-5. 🔲 **Spec 08** — Search Console, sitemap e documentação no README.
+4. 🔲 **Spec 08** — Search Console, sitemap e documentação no README.
 
 ---
 
