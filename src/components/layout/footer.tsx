@@ -17,6 +17,14 @@ const INSTITUTIONAL_LINKS = [
   { href: '#anuncios', label: 'Guia Comercial' },
 ] as const;
 
+const LISTING_LINKS = [
+  { href: '/noticias', label: 'Todas as notícias' },
+  { href: '/avisos', label: 'Todos os avisos' },
+  { href: '/empresas', label: 'Guia comercial completo' },
+  { href: '/utilidade-publica/telefones-uteis', label: 'Telefones úteis' },
+  { href: '/previsao-do-tempo/sao-carlos', label: 'Previsão do tempo' },
+] as const;
+
 export function Footer() {
   return (
     <footer className="w-full bg-primary text-surface-bright">
@@ -97,6 +105,25 @@ export function Footer() {
                   Política de privacidade
                 </Link>
               </li>
+            </ul>
+          </nav>
+
+          {/* Listagens completas */}
+          <nav aria-label="Listagens completas">
+            <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
+              Listagens Completas
+            </span>
+            <ul className="space-y-2 text-body-md text-surface-variant">
+              {LISTING_LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="transition-colors hover:text-surface-bright"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 

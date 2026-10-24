@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ModuleResult } from '@/lib/module-result';
 import { isSafeHttpUrl } from '@/lib/sanitize';
 import type { ContactItem } from '@/modules/contacts/loader';
@@ -66,9 +67,21 @@ export function ContactsSection({ result }: ContactsSectionProps) {
             Discagem rápida e canais de resposta imediata com funcionamento 24 horas por dia.
           </p>
         </div>
-        <p className="w-fit rounded-lg bg-surface-card px-3 py-1.5 text-body-sm text-outline shadow-card">
-          Em emergências graves, disque direto pelo seu celular.
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="w-fit rounded-lg bg-surface-card px-3 py-1.5 text-body-sm text-outline shadow-card">
+            Em emergências graves, disque direto pelo seu celular.
+          </p>
+          <Link
+            href="/utilidade-publica/telefones-uteis"
+            className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+            aria-label="Ver todos os telefones úteis"
+          >
+            Ver todos
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              arrow_forward
+            </span>
+          </Link>
+        </div>
       </div>
 
       {items.length > 0 ? (

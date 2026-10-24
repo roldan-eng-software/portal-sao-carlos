@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ModuleResult } from '@/lib/module-result';
 import type { WeatherData } from '@/modules/weather/types';
 import { StatusMessage } from '@/components/ui/status-message';
@@ -54,24 +55,36 @@ export function WeatherSection({ result }: WeatherSectionProps) {
             Dados em tempo real da estação meteorológica — atualização periódica.
           </p>
         </div>
-        {weather && (
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-surface-card px-3 py-1.5 text-body-sm text-on-surface-variant shadow-card">
-            <span className="material-symbols-outlined text-[16px] text-outline" aria-hidden="true">
-              location_on
+        <div className="flex flex-wrap items-center gap-3">
+          {weather && (
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-surface-card px-3 py-1.5 text-body-sm text-on-surface-variant shadow-card">
+              <span className="material-symbols-outlined text-[16px] text-outline" aria-hidden="true">
+                location_on
+              </span>
+              {weather.city}
+              <span className="ml-2 text-label-sm text-on-surface-variant">
+                <a
+                  href="https://open-meteo.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-label-sm text-on-surface-variant hover:text-secondary"
+                >
+                  Dados: Open-Meteo
+                </a>
+              </span>
             </span>
-            {weather.city}
-            <span className="ml-2 text-label-sm text-on-surface-variant">
-              <a
-                href="https://open-meteo.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-label-sm text-on-surface-variant hover:text-secondary"
-              >
-                Dados: Open-Meteo
-              </a>
+          )}
+          <Link
+            href="/previsao-do-tempo/sao-carlos"
+            className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+            aria-label="Ver previsão completa"
+          >
+            Ver completa
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              arrow_forward
             </span>
-          </span>
-        )}
+          </Link>
+        </div>
       </div>
 
       {weather ? (

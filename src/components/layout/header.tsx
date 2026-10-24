@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 
 const NAV_ITEMS = [
   { href: '#noticias', label: 'Notícias' },
@@ -7,6 +10,14 @@ const NAV_ITEMS = [
   { href: '#informativos', label: 'Avisos Úteis' },
   { href: '#contatos', label: 'Telefones de Emergência' },
   { href: '#anuncios', label: 'Guia Comercial' },
+] as const;
+
+const INSTITUTIONAL_ITEMS = [
+  { href: '/sobre', label: 'Sobre o Portal' },
+  { href: '/contato', label: 'Contato' },
+  { href: '/termos-de-uso', label: 'Termos de uso' },
+  { href: '/aviso-editorial', label: 'Aviso editorial' },
+  { href: '/politica-de-privacidade', label: 'Política de privacidade' },
 ] as const;
 
 function NavLinks({ className = '' }: { className?: string }) {
@@ -22,6 +33,63 @@ function NavLinks({ className = '' }: { className?: string }) {
         </a>
       ))}
     </>
+  );
+}
+
+function InstitutionalDropdown() {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fecha ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-label="Menu institucional"
+        className="flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary"
+      >
+        <span>Institucional</span>
+        <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+          {open ? 'expand_less' : 'expand_more'}
+        </span>
+      </button>
+      {open && (
+        <div
+          className="absolute right-0 mt-2 w-56 rounded-xl bg-surface-card shadow-lg border border-border-subtle py-2 z-50 animate-in fade-in-0 zoom-in-95 duration-150"
+          role="menu"
+        >
+          <nav aria-label="Páginas institucionais">
+            <ul className="space-y-1 px-2">
+              {INSTITUTIONAL_ITEMS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block w-full rounded-lg px-3 py-2 text-body-md text-on-surface hover:bg-surface-container"
+                    role="menuitem"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -53,6 +121,7 @@ export function Header() {
           className="hidden min-w-0 flex-1 items-center justify-center gap-6 xl:flex"
         >
           <NavLinks />
+          <InstitutionalDropdown />
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">
@@ -77,6 +146,7 @@ export function Header() {
       >
         <div className="mx-auto flex w-full max-w-[1200px] gap-5 overflow-x-auto px-4 py-2.5 sm:px-6">
           <NavLinks />
+          <InstitutionalDropdown />
         </div>
       </nav>
     </header>

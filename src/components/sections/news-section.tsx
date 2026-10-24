@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ModuleResult } from '@/lib/module-result';
 import type { NewsItem } from '@/modules/news/types';
 import { StatusMessage } from '@/components/ui/status-message';
@@ -28,7 +29,7 @@ export function NewsSection({ result }: NewsSectionProps) {
           <div className="mb-1 flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-secondary" aria-hidden="true" />
             <span className="text-label-sm uppercase tracking-wider text-secondary">
-              Jornalismo &amp; Atualizações
+              Jornalismo & Atualizações
             </span>
           </div>
           <h2 id="noticias-titulo" className="font-display text-headline-lg text-primary">
@@ -39,6 +40,16 @@ export function NewsSection({ result }: NewsSectionProps) {
             oficiais. Títulos e resumos com link para a fonte original.
           </p>
         </div>
+        <Link
+          href="/noticias"
+          className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+          aria-label="Ver todas as notícias"
+        >
+          Ver todas
+          <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+            arrow_forward
+          </span>
+        </Link>
       </div>
 
       {items.length > 0 ? (

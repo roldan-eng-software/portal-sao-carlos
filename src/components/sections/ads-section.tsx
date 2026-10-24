@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import type { ModuleResult } from '@/lib/module-result';
 import { isSafeHttpUrl } from '@/lib/sanitize';
@@ -158,15 +159,27 @@ export function AdsSection({ result }: AdsSectionProps) {
             na cidade. Publicidade — não notícia.
           </p>
         </div>
-        <a
-          href="#anuncie"
-          className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary px-4 py-2.5 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
-        >
-          <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
-            add_business
-          </span>
-          Cadastrar Meu Negócio
-        </a>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/empresas"
+            className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+            aria-label="Ver guia comercial completo"
+          >
+            Ver guia completo
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              arrow_forward
+            </span>
+          </Link>
+          <a
+            href="#anuncie"
+            className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary px-4 py-2.5 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+          >
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+              add_business
+            </span>
+            Cadastrar Meu Negócio
+          </a>
+        </div>
       </div>
 
       {items.length === 0 ? (

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ModuleResult } from '@/lib/module-result';
 import type { Notice } from '@/modules/notices/loader';
 import { StatusMessage } from '@/components/ui/status-message';
@@ -63,14 +64,26 @@ export function NoticesSection({ result }: NoticesSectionProps) {
             </p>
           </div>
         </div>
-        <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-surface-container px-3 py-1.5 text-label-sm font-semibold text-on-surface">
-          <span className="h-2 w-2 rounded-full bg-badge-success" aria-hidden="true" />
-          Painel Atualizado:{' '}
-          {new Intl.DateTimeFormat('pt-BR', {
-            dateStyle: 'short',
-            timeZone: 'America/Sao_Paulo',
-          }).format(result.lastUpdated ? new Date(result.lastUpdated) : new Date())}
-        </span>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-surface-container px-3 py-1.5 text-label-sm font-semibold text-on-surface">
+            <span className="h-2 w-2 rounded-full bg-badge-success" aria-hidden="true" />
+            Painel Atualizado:{' '}
+            {new Intl.DateTimeFormat('pt-BR', {
+              dateStyle: 'short',
+              timeZone: 'America/Sao_Paulo',
+            }).format(result.lastUpdated ? new Date(result.lastUpdated) : new Date())}
+          </span>
+          <Link
+            href="/avisos"
+            className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
+            aria-label="Ver todos os avisos"
+          >
+            Ver todos
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              arrow_forward
+            </span>
+          </Link>
+        </div>
       </div>
 
       {/* Faixa de aviso (portal independente) */}
