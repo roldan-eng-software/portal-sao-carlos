@@ -91,11 +91,15 @@ export async function approveAdSubmission(
     updatedAt: now,
   };
 
-  // Salva publicado
-  const ads = await loadAds();
-  const adsArray = Array.isArray(ads) ? ads : (ads as any).data || [];
-  adsArray.push(publishedAd);
-  await saveAds(adsArray);
+  // Salva publicado (tenta JSON; em produção Vercel é read-only, então não falha)
+  try {
+    const ads = await loadAds();
+    const adsArray = Array.isArray(ads) ? ads : (ads as any).data || [];
+    adsArray.push(publishedAd);
+    await saveAds(adsArray);
+  } catch (e) {
+    console.warn('Não foi possível persistir em ads.json (read-only FS). Anúncio fica apenas no Neon.', e);
+  }
 
   // Remove da fila de pendentes (marca como aprovado)
   const updatedSubmission: AdSubmission = { ...pending[index], status: 'aprovado' as AdSubmissionStatus, reviewedAt: now };
