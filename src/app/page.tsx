@@ -42,6 +42,12 @@ export default async function Home() {
   const news = settle<NewsItem[]>(newsRaw, errorResult('Notícias externas'));
   const notices = settle<Notice[]>(noticesRaw, errorResult('Informativos do portal'));
   const contacts = settle<ContactItem[]>(contactsRaw, errorResult('Contatos úteis do portal'));
+  // A home exibe apenas os tiles marcados com homeSection (composição fixa
+  // de 4); o restante vive na página de telefones úteis (Spec 05).
+  const homeContacts: typeof contacts = {
+    ...contacts,
+    data: contacts.data ? contacts.data.filter((item) => item.homeSection) : contacts.data,
+  };
   const ads = settle<Ad[]>(adsRaw, errorResult('Anúncios do portal'));
   const promo = settle<Promo[]>(promoRaw, errorResult('Divulgações do portal'));
 
@@ -54,7 +60,7 @@ export default async function Home() {
       <WeatherSection result={weather} />
       <NewsSection result={news} />
       <NoticesSection result={notices} />
-      <ContactsSection result={contacts} />
+      <ContactsSection result={homeContacts} />
       <AdsSection result={ads} />
       <PromoSection result={promo} />
     </div>

@@ -51,6 +51,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      // Central de utilidade pública (Spec 05).
+      url: `${base}/utilidade-publica`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${base}/utilidade-publica/telefones-uteis`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${base}/previsao-do-tempo/sao-carlos`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
       url: `${base}/aviso-editorial`,
       lastModified: new Date(),
       changeFrequency: 'yearly',

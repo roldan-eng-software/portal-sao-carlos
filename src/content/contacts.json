@@ -1,53 +1,188 @@
 {
   "_meta": {
-    "description": "Telefones úteis e serviços públicos — moderação manual via edição deste arquivo + git commit",
-    "regras": {
-      "kind": "NÃO EDITAR — enum fixo: 'servico-publico' | 'contato'",
-      "value": "EDITÁVEL — telefone formatado (ex: '193') OU URL http(s) (1–200 chars)",
-      "officialUrl": "EDITÁVEL — URL oficial http(s) ou null",
-      "urgent": "EDITÁVEL — true = aparece na faixa de emergência do rodapé (apenas emergências reais)"
-    }
+    "description": "Contatos úteis exibidos na página /utilidade-publica/telefones-uteis (Spec 05 do PRD de SEO local). Dados somente de fontes oficiais verificáveis — nunca inventados. A categorização (category) é manual e segue os valores de CONTACT_CATEGORIES em modules/contacts/loader.ts; categorias sem nenhum item válido simplesmente não são renderizadas.",
+    "fields": {
+      "id": "EDITÁVEL — identificador estável em kebab-case (não repetir)",
+      "name": "EDITÁVEL — nome do serviço/órgão exibido ao visitante",
+      "kind": "FIXO — 'servico-publico' (órgão/serviço público) ou 'contato' (canal do portal)",
+      "category": "EDITÁVEL — agrupamento na página de telefones úteis; um dos valores de CONTACT_CATEGORIES",
+      "value": "EDITÁVEL — telefone formatado ou URL http(s)",
+      "address": "EDITÁVEL — null quando desconhecido; nunca inventar",
+      "hours": "EDITÁVEL — null quando não verificado em fonte oficial",
+      "officialUrl": "EDITÁVEL — página oficial de onde o número foi verificado; null apenas se não houver URL oficial",
+      "urgent": "true = emergência real (aparece destacado)",
+      "homeSection": "true = também aparece nos 4 tiles da seção de contatos da home (manter no máximo 4 itens true — a grade da home é fixa)"
+    },
+    "observacao": "Telefones do terminal rodoviário foram deliberadamente omitidos: não foi encontrada fonte oficial confirmando o número (só agregadores terceiros). Inclua apenas quando houver URL oficial verificável."
   },
   "items": [
     {
-      "id": "bombeiros-193",
-      "name": "Corpo de Bombeiros",
-      "kind": "servico-publico",
-      "value": "193",
-      "address": null,
-      "hours": "24 horas",
-      "officialUrl": null,
-      "urgent": true
-    },
-    {
       "id": "samu-192",
-      "name": "SAMU — Emergência médica",
+      "name": "SAMU — Sociedade Portuguesa de Auxídio Humanitário (emergência médica)",
       "kind": "servico-publico",
+      "category": "emergencia",
       "value": "192",
       "address": null,
-      "hours": "24 horas",
-      "officialUrl": null,
-      "urgent": true
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": true,
+      "homeSection": false
+    },
+    {
+      "id": "bombeiros-193",
+      "name": "Corpo de Bombeiros (emergência, incêndio e resgate)",
+      "kind": "servico-publico",
+      "category": "emergencia",
+      "value": "193",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": true,
+      "homeSection": false
     },
     {
       "id": "defesa-civil-199",
-      "name": "Defesa Civil",
+      "name": "Defesa Civil (emergências, enchentes e desabamentos)",
       "kind": "servico-publico",
+      "category": "emergencia",
       "value": "199",
       "address": null,
-      "hours": "24 horas",
-      "officialUrl": null,
-      "urgent": true
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/defesacivil",
+      "urgent": true,
+      "homeSection": true
     },
     {
-      "id": "prefeitura-sao-carlos",
-      "name": "Prefeitura Municipal de São Carlos",
+      "id": "policial-militar-190",
+      "name": "Polícia Militar (emergência)",
       "kind": "servico-publico",
-      "value": "https://www.saocarlos.sp.gov.br",
+      "category": "seguranca",
+      "value": "190",
       "address": null,
       "hours": null,
-      "officialUrl": "https://www.saocarlos.sp.gov.br",
-      "urgent": false
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": true,
+      "homeSection": false
+    },
+    {
+      "id": "policia-civil-197",
+      "name": "Polícia Civil — Delegacia (registro de ocorrência)",
+      "kind": "servico-publico",
+      "category": "seguranca",
+      "value": "197",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "saae-0800",
+      "name": "SAAE São Carlos — Atendimento 0800 (falta de água, esgoto e emergências de rede)",
+      "kind": "servico-publico",
+      "category": "agua-e-esgoto",
+      "value": "0800 300 1520",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saaesaocarlos.com.br/uncategorized/fale-conosco",
+      "urgent": false,
+      "homeSection": true
+    },
+    {
+      "id": "saae-comercial",
+      "name": "SAAE São Carlos — Telefone comercial",
+      "kind": "servico-publico",
+      "category": "agua-e-esgoto",
+      "value": "(16) 3373-6427",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saaesaocarlos.com.br/uncategorized/fale-conosco",
+      "urgent": false,
+      "homeSection": true
+    },
+    {
+      "id": "cpfl-paulista",
+      "name": "CPFL Paulista — Atendimento (energia elétrica)",
+      "kind": "servico-publico",
+      "category": "energia-e-gas",
+      "value": "0800 010 10 10",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://www.cpfl.com.br/projetos-particulares/fale-conosco",
+      "urgent": false,
+      "homeSection": true
+    },
+    {
+      "id": "ceme-centro-especialidades",
+      "name": "CEME — Centro Municipal de Especialidades (saúde)",
+      "kind": "servico-publico",
+      "category": "saude",
+      "value": "(16) 3368-1252",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "prefeitura-1000",
+      "name": "Prefeitura Municipal de São Carlos",
+      "kind": "servico-publico",
+      "category": "prefeitura-e-servicos",
+      "value": "(16) 3362-1000",
+      "address": "Rua Episcopal, 1575 — Centro, São Carlos/SP — CEP 13.560-905",
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "prefeitura-central-153",
+      "name": "Central de atendimento da Prefeitura — assuntos municipais",
+      "kind": "servico-publico",
+      "category": "prefeitura-e-servicos",
+      "value": "153",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "sim-servicos-integrados",
+      "name": "SIM — Serviços Integrados do Município (Centro)",
+      "kind": "servico-publico",
+      "category": "prefeitura-e-servicos",
+      "value": "(16) 3362-2961",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "cemac-artes-cultura",
+      "name": "CEMAC — Centro Municipal de Artes e Cultura",
+      "kind": "servico-publico",
+      "category": "outras-informacoes",
+      "value": "(16) 3419-8997",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
+    },
+    {
+      "id": "biblioteca-vila-prado",
+      "name": "Biblioteca Municipal — Vila Prado",
+      "kind": "servico-publico",
+      "category": "outras-informacoes",
+      "value": "(16) 3374-3084",
+      "address": null,
+      "hours": null,
+      "officialUrl": "https://saocarlos.sp.gov.br/index.php/utilidade-publica/telefones-uteis.html",
+      "urgent": false,
+      "homeSection": false
     }
   ]
 }
