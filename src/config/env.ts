@@ -47,4 +47,6 @@ export const env = {
   contactWhatsapp: optional('CONTACT_WHATSAPP'),
   contactPhone: optional('CONTACT_PHONE'),
   contactEmail: optional('CONTACT_EMAIL') ?? 'contato@portalsaocarlos.com.br',
+  /** Verificação do Google Search Console (apenas produção). */
+  gscVerification: optional('NEXT_PUBLIC_GSC_VERIFICATION'),
 } as const;

@@ -56,6 +56,12 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // Verificação do Google Search Console — apenas se NEXT_PUBLIC_GSC_VERIFICATION
+  // estiver definida (configurada na Vercel em produção). Não incluímos no build
+  // local/preview para evitar vazamento de token em ambientes não canônicos.
+  ...(env.gscVerification && {
+    verification: { google: env.gscVerification },
+  }),
 };
 
 /* Fontes do design system (DESIGN.md §Typography) — self-host via next/font. */
