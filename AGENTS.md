@@ -331,8 +331,9 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 5. ✅ **Pergunta 5 da constituição**: política de retenção LGPD definida na
    emenda v1.3.0 → **legítimo interesse (ativo + 12 meses), consentimento
    (30 dias pendente), GA4 14 meses, cookies 12 meses**.
-6. 🔲 **Implementar Fase 2** — especificação via Spec Kit: formulário público
-   + fila de moderação + área admin simples + persistência notícias.
+6. 🟡 **Implementar Fase 2** — **EM ANDAMENTO**:
+   - ✅ Spec Kit: spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md, tasks.md
+   - 🔲 Implementação das 64 tarefas em 7 fases (MVP = User Story 1: histórico de notícias)
 
 ---
 
