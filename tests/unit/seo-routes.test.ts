@@ -9,22 +9,22 @@ import robots from '@/app/robots';
  * sitemap ou para o robots.txt (achado 1).
  */
 describe('sitemap', () => {
-  const urls = sitemap().map((entry) => new URL(entry.url).pathname);
-
-  it('inclui as páginas públicas', () => {
+  it('inclui as páginas públicas', async () => {
+    const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
     expect(urls).toContain('/');
     expect(urls).toContain('/anuncie');
     expect(urls).toContain('/aviso-editorial');
     expect(urls).toContain('/politica-de-privacidade');
   });
 
-  it('nunca inclui rotas administrativas ou de API', () => {
+  it('nunca inclui rotas administrativas ou de API', async () => {
+    const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
     expect(urls.some((url) => url.startsWith('/admin'))).toBe(false);
     expect(urls.some((url) => url.startsWith('/api'))).toBe(false);
   });
 
-  it('usa URLs canônicas absolutas', () => {
-    for (const entry of sitemap()) {
+  it('usa URLs canônicas absolutas', async () => {
+    for (const entry of await sitemap()) {
       expect(entry.url).toMatch(/^https?:\/\//);
     }
   });

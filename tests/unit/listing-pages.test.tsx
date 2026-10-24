@@ -152,9 +152,8 @@ describe('/avisos/saae', () => {
 });
 
 describe('sitemap com listagens', () => {
-  const urls = sitemap().map((entry) => new URL(entry.url).pathname);
-
-  it('inclui /noticias, /avisos e /avisos/saae', () => {
+  it('inclui /noticias, /avisos e /avisos/saae', async () => {
+    const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
     expect(urls).toContain('/noticias');
     expect(urls).toContain('/avisos');
     expect(urls).toContain('/avisos/saae');

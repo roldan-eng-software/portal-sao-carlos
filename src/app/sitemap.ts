@@ -1,9 +1,18 @@
 import type { MetadataRoute } from 'next';
 import { env } from '@/config/env';
+import { loadAds, type Ad } from '@/modules/ads/loader';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.siteUrl;
-  return [
+
+  // Carregar anúncios publicados e não expirados para gerar URLs individuais
+  const adsResult = await loadAds();
+  const publishedAds = (adsResult.data ?? []).filter((ad: Ad) => {
+    if (!ad.expiresAt) return true;
+    return ad.expiresAt >= new Date().toISOString().slice(0, 10);
+  });
+
+  const staticUrls: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
     {
       // Captação de anúncios — página pública (auditoria Spec 01, achado 2).
@@ -89,4 +98,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  const companyUrls: MetadataRoute.Sitemap = publishedAds.map((ad) => ({
+    url: `${base}/empresas/${ad.id}`,
+    lastModified: ad.publishedAt ? new Date(`${ad.publishedAt}T12:00:00Z`) : new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...staticUrls, ...companyUrls];
 }

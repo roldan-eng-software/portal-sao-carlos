@@ -179,9 +179,8 @@ describe('/previsao-do-tempo/sao-carlos', () => {
 });
 
 describe('sitemap com utilidade pública', () => {
-  const urls = sitemap().map((entry) => new URL(entry.url).pathname);
-
-  it('inclui /utilidade-publica, telefones úteis e previsão do tempo', () => {
+  it('inclui /utilidade-publica, telefones úteis e previsão do tempo', async () => {
+    const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
     expect(urls).toContain('/utilidade-publica');
     expect(urls).toContain('/utilidade-publica/telefones-uteis');
     expect(urls).toContain('/previsao-do-tempo/sao-carlos');

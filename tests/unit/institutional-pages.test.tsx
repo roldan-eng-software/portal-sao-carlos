@@ -74,9 +74,8 @@ describe('Breadcrumbs (JSON-LD)', () => {
 });
 
 describe('sitemap com páginas institucionais', () => {
-  const urls = sitemap().map((entry) => new URL(entry.url).pathname);
-
-  it('inclui /sobre, /contato e /termos-de-uso', () => {
+  it('inclui /sobre, /contato e /termos-de-uso', async () => {
+    const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
     expect(urls).toContain('/sobre');
     expect(urls).toContain('/contato');
     expect(urls).toContain('/termos-de-uso');
