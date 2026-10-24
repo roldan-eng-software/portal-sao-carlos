@@ -20,7 +20,7 @@ histórico git e documentação em `specs/`.
 | Fase atual | **Fase 1 — Portal público: CONCLUÍDA** (55/55 tasks `[X]` em `specs/001-portal-sao-carlos-fase1/tasks.md`) |
 | Git | branch `main`, working tree limpo na data desta verificação |
 | Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
-| PRD SEO Local | **Fase 2 — Especs 01, 05 e 06 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`) |
+| PRD SEO Local | **Fase 2 — Especs 01, 02, 05 e 06 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`) |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
 informativos, telefones úteis, anúncios e políticas — **sem cadastro, sem
@@ -306,6 +306,7 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 9. ✅ **Spec 05** — Utilidade pública: `/utilidade-publica`, `/utilidade-publica/telefones-uteis`, `/previsao-do-tempo/sao-carlos` implementadas e testadas.
 10. ✅ **Spec 06** — Guia comercial: `/empresas` (hub) e `/empresas/[slug]` (LocalBusiness JSON-LD, 404 para expirados) implementadas e testadas.
 11. ✅ **Spec 01** — Auditoria técnica SEO: relatório em `docs/auditoria-tecnica-seo-2026-10-24.md` — nenhum bloqueador crítico; site pronto para indexação; 1 achado médio (meta tag GSC ausente, Spec 08) e 2 baixos (skip link opcional, documentação GSC no README).
+12. ✅ **Spec 02** — SEO técnico base: `noindex` admin, `manifest.webmanifest`, breadcrumbs com `BreadcrumbList`, **sitemap dinâmico completo incluindo `/empresas/[slug]`** implementados.
 
 **Pendências:**
 
@@ -316,11 +317,10 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3 e 5
 2. 🔲 **D4 — política de anúncios gratuitos** (perguntas 3/4 da
    constituição v1.1.0): adiada pelo responsável em 2026-10-08.
 3. 🔲 **Pergunta 1 da constituição**: nome definitivo do projeto.
-4. 🔲 **Spec 02** — SEO técnico base (noindex admin, manifest, breadcrumbs, sitemap dinâmico completo com páginas individuais de empresa).
-5. 🔲 **Spec 03** — Páginas institucionais: `/sobre`, `/contato`, `/termos-de-uso` (já implementadas — validar breadcrumbs/metadata).
-6. 🔲 **Spec 04** — Listagens: `/noticias`, `/avisos`, `/avisos/saae` (já implementadas — validar estados stale/error).
-7. 🔲 **Spec 07** — Hub da home, header/rodapé e links internos (depende de 03–06).
-8. 🔲 **Spec 08** — Search Console, sitemap e documentação no README.
+4. 🔲 **Spec 03** — Páginas institucionais: `/sobre`, `/contato`, `/termos-de-uso` (já implementadas — validar breadcrumbs/metadata).
+5. 🔲 **Spec 04** — Listagens: `/noticias`, `/avisos`, `/avisos/saae` (já implementadas — validar estados stale/error).
+6. 🔲 **Spec 07** — Hub da home, header/rodapé e links internos (depende de 03–06).
+7. 🔲 **Spec 08** — Search Console, sitemap e documentação no README.
 
 ---
 
