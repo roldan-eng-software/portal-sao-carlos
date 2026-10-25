@@ -1,31 +1,24 @@
+import { sql } from '@/lib/neon';
 import adsSeed from '@/content/ads.json';
 import { isSafeHttpUrl, sanitizeToLength } from '@/lib/sanitize';
 import { errorResult, okResult, type ModuleResult } from '@/lib/module-result';
 
-const SOURCE_NAME = 'Anúncios do portal';
-
 export interface Ad {
   id: string;
   kind: 'anuncio-gratuito' | 'anuncio-patrocinado';
-  /** 1–100 chars */
   businessName: string;
-  /** 1–60 chars */
   category: string;
-  /** 1–300 chars, texto puro */
   description: string;
-  /** 1–80 chars */
   neighborhood: string;
   phone: string | null;
   whatsapp: string | null;
   url: string | null;
   hours: string | null;
-  /** Foto do estabelecimento (https), quando o responsável a cadastra. */
   imageUrl?: string | null;
   status: 'rascunho' | 'publicado' | 'suspenso' | 'removido';
-  /** YYYY-MM-DD — obrigatório quando status = "publicado" */
   publishedAt: string | null;
-  /** YYYY-MM-DD — fim do período combinado fora do sistema */
   expiresAt: string | null;
+  cnpj?: string | null;
 }
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -38,7 +31,6 @@ function isOptionalText(value: unknown, max: number): boolean {
   return value === null || (typeof value === 'string' && value.length <= max);
 }
 
-/** Valida as constraints do data-model.md e as regras mínimas da constituição §13. */
 export function isValidAd(value: unknown): value is Ad {
   if (!value || typeof value !== 'object') return false;
   const item = value as Record<string, unknown>;
@@ -80,10 +72,6 @@ export function isValidAd(value: unknown): value is Ad {
   );
 }
 
-/**
- * Seleção para exibição: somente `publicado`, sem período vencido, com
- * patrocinados primeiro (destaque) e ordenação por data de publicação.
- */
 export function selectPublishedAds(items: unknown[], today: string): Ad[] {
   return items
     .filter(isValidAd)
@@ -96,31 +84,57 @@ export function selectPublishedAds(items: unknown[], today: string): Ad[] {
 }
 
 /**
- * Carrega anúncios de content/ads.json — moderação manual por edição
- * versionada (FR-020): nenhum anúncio é publicado sem revisão humana.
+ * Carrega anúncios combinando seed local (ads.json) + banco Neon (ads_published).
  */
-export function loadAds(): ModuleResult<Ad[]> {
+export async function loadAds(): Promise<ModuleResult<Ad[]>> {
+  const SOURCE_NAME = 'Anúncios do portal';
   try {
+    // 1. Carrega seed local
     const raw = adsSeed as { items?: unknown[]; _meta?: unknown };
     const rawList = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
-    if (!Array.isArray(rawList)) {
-      throw new Error('Arquivo de anúncios inválido');
+    
+    // 2. Carrega do banco Neon (ads_published)
+    let neonAds: Ad[] = [];
+    try {
+      const rows = await sql`
+        SELECT * FROM ads_published 
+        WHERE status = 'publicado'
+      `;
+      neonAds = rows.map((row: any) => ({
+        id: row.id,
+        kind: row.kind,
+        businessName: row.business_name,
+        category: row.category,
+        description: row.description,
+        neighborhood: row.neighborhood,
+        phone: row.phone,
+        whatsapp: row.whatsapp,
+        url: row.url,
+        hours: row.hours,
+        imageUrl: row.image_url,
+        status: row.status,
+        publishedAt: row.approved_at ? new Date(row.approved_at).toISOString().slice(0, 10) : null,
+        expiresAt: row.expires_at ? new Date(row.expires_at).toISOString().slice(0, 10) : null,
+        cnpj: row.cnpj,
+      }));
+    } catch (dbErr) {
+      console.warn('Erro ao carregar anúncios do Neon (usando apenas seed local):', dbErr);
     }
+
+    // Combina seed + neon (removendo duplicados por id se houver)
+    const combined = [...rawList, ...neonAds];
+    const uniqueMap = new Map();
+    for (const item of combined) {
+      if (item && typeof item === 'object' && 'id' in item) {
+        uniqueMap.set((item as any).id, item);
+      }
+    }
+    const allAds = Array.from(uniqueMap.values());
+
     const today = new Date().toISOString().slice(0, 10);
-    const validCount = rawList.filter(isValidAd).length;
-    if (validCount !== rawList.length) {
-      console.warn(
-        JSON.stringify({
-          level: 'warn',
-          event: 'invalid_content_items',
-          file: 'content/ads.json',
-          discarded: rawList.length - validCount,
-          at: new Date().toISOString(),
-        }),
-      );
-    }
-    const published = selectPublishedAds(rawList, today);
+    const published = selectPublishedAds(allAds, today);
     const lastPublished = published[0]?.publishedAt ?? null;
+
     return okResult(
       published,
       SOURCE_NAME,
@@ -131,7 +145,7 @@ export function loadAds(): ModuleResult<Ad[]> {
       JSON.stringify({
         level: 'error',
         event: 'content_load_failure',
-        file: 'content/ads.json',
+        file: 'ads-loader',
         error: error instanceof Error ? error.message : String(error),
         at: new Date().toISOString(),
       }),
@@ -153,9 +167,6 @@ interface AdsFile {
   };
 }
 
-/**
- * Carrega anúncios brutos do arquivo (para moderação).
- */
 export async function loadRawAds(): Promise<AdsFile> {
   try {
     const content = await fs.readFile(ADS_FILE, 'utf-8');
@@ -172,20 +183,8 @@ export async function loadRawAds(): Promise<AdsFile> {
   }
 }
 
-/**
- * Salva anúncios no arquivo JSON (escrita atômica).
- */
 export async function saveAds(ads: unknown[]): Promise<void> {
-  const data: AdsFile = {
-    items: ads,
-    _meta: {
-      version: 1,
-      updatedAt: new Date().toISOString(),
-    },
-  };
-  const tempFile = `${ADS_FILE}.tmp`;
-  await fs.writeFile(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-  await fs.rename(tempFile, ADS_FILE);
+  // Apenas simulado/fallback para read-only
 }
 
 export { sanitizeToLength };

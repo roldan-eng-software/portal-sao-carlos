@@ -12,8 +12,8 @@ function isExpired(ad: Ad): boolean {
 }
 
 /** Busca um anúncio publicado e não expirado pelo slug (id). */
-function findAdBySlug(slug: string): Ad | null {
-  const result = loadAds();
+async function findAdBySlug(slug: string): Promise<Ad | null> {
+  const result = await loadAds();
   const ads = result.data ?? [];
   const ad = ads.find((item) => item.id === slug);
   if (!ad) return null;
@@ -27,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const ad = findAdBySlug(slug);
+  const ad = await findAdBySlug(slug);
   if (!ad) {
     return { title: 'Empresa não encontrada' };
   }
@@ -56,7 +56,7 @@ export default async function EmpresaDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const ad = findAdBySlug(slug);
+  const ad = await findAdBySlug(slug);
 
   if (!ad) {
     notFound();
