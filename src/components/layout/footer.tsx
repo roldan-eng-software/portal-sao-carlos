@@ -29,9 +29,9 @@ export function Footer() {
   return (
     <footer className="w-full bg-primary text-surface-bright">
       <div className="mx-auto w-full max-w-[1200px] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12">
           {/* Marca e expediente */}
-          <div className="space-y-4">
+          <div className="space-y-4 md:col-span-2 lg:col-span-4">
             <div className="flex items-center gap-3">
               {/* Símbolo do logotipo oficial — fundo claro para contrastar no rodapé navy. */}
               <Image
@@ -77,7 +77,7 @@ export function Footer() {
           </div>
 
           {/* Canais institucionais */}
-          <nav aria-label="Rodapé">
+          <nav aria-label="Rodapé" className="lg:col-span-2">
             <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
               Canais Institucionais
             </span>
@@ -109,7 +109,7 @@ export function Footer() {
           </nav>
 
           {/* Listagens completas */}
-          <nav aria-label="Listagens completas">
+          <nav aria-label="Listagens completas" className="lg:col-span-2">
             <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
               Listagens Completas
             </span>
@@ -128,7 +128,7 @@ export function Footer() {
           </nav>
 
           {/* Plantão emergencial */}
-          <div>
+          <div className="lg:col-span-2">
             <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
               Plantão Emergencial 24h
             </span>
@@ -160,7 +160,7 @@ export function Footer() {
           </div>
 
           {/* Chamada comercial */}
-          <div className="space-y-3">
+          <div className="space-y-3 lg:col-span-2">
             <span className="mb-3 block border-b border-surface-variant/20 pb-2 font-display text-label-lg text-surface-bright">
               Cadastre seu Negócio
             </span>
@@ -168,12 +168,12 @@ export function Footer() {
               Conecte sua marca a milhares de são-carlenses todos os dias. Planos sob medida para
               comércio e serviços.
             </p>
-            <a
+            <Link
               href="/anunciar"
               className="block w-full rounded-lg bg-accent-amber px-4 py-2.5 text-center text-label-lg text-primary shadow-sm transition-all hover:bg-accent-amber/90"
             >
               Quero Anunciar Agora
-            </a>
+            </Link>
           </div>
         </div>
 

@@ -39,6 +39,9 @@ function NavLinks({ className = '' }: { className?: string }) {
 function InstitutionalDropdown() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   // Fecha ao clicar fora
   useEffect(() => {
@@ -51,15 +54,128 @@ function InstitutionalDropdown() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Fecha com Escape e gerencia foco
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (!open) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+        buttonRef.current?.focus();
+        return;
+      }
+
+      if (event.key === 'Tab' && menuRef.current) {
+        const focusableItems = itemRefs.current.filter((el): el is HTMLAnchorElement => el !== null);
+        if (focusableItems.length === 0) return;
+
+        const firstItem = focusableItems[0];
+        const lastItem = focusableItems[focusableItems.length - 1];
+        const activeElement = document.activeElement as HTMLElement;
+
+        if (event.shiftKey) {
+          if (activeElement === firstItem || !menuRef.current.contains(activeElement)) {
+            event.preventDefault();
+            lastItem.focus();
+          }
+        } else {
+          if (activeElement === lastItem) {
+            event.preventDefault();
+            firstItem.focus();
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open]);
+
+  function handleButtonKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setOpen((prev) => {
+        const newOpen = !prev;
+        if (newOpen) {
+          // Focar primeiro item após abrir
+          setTimeout(() => {
+            itemRefs.current[0]?.focus();
+          }, 0);
+        }
+        return newOpen;
+      });
+      return;
+    }
+
+    if (event.key === 'ArrowDown' && !open) {
+      event.preventDefault();
+      setOpen(true);
+      setTimeout(() => {
+        itemRefs.current[0]?.focus();
+      }, 0);
+      return;
+    }
+
+    if (event.key === 'ArrowUp' && !open) {
+      event.preventDefault();
+      setOpen(true);
+      setTimeout(() => {
+        const focusableItems = itemRefs.current.filter((el): el is HTMLAnchorElement => el !== null);
+        focusableItems[focusableItems.length - 1]?.focus();
+      }, 0);
+    }
+  }
+
+  function handleItemKeyDown(event: React.KeyboardEvent<HTMLAnchorElement>, index: number) {
+    const focusableItems = itemRefs.current.filter((el): el is HTMLAnchorElement => el !== null);
+    
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      const nextIndex = (index + 1) % focusableItems.length;
+      focusableItems[nextIndex]?.focus();
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      const prevIndex = (index - 1 + focusableItems.length) % focusableItems.length;
+      focusableItems[prevIndex]?.focus();
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      focusableItems[0]?.focus();
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      focusableItems[focusableItems.length - 1]?.focus();
+      return;
+    }
+  }
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        ref={buttonRef}
+        id="institutional-menu-button"
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+          if (!open) {
+            setTimeout(() => {
+              itemRefs.current[0]?.focus();
+            }, 0);
+          }
+        }}
+        onKeyDown={handleButtonKeyDown}
         aria-expanded={open}
-        aria-haspopup="true"
-        aria-label="Menu institucional"
-        className="flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary"
+        aria-haspopup="menu"
+        aria-controls="institutional-menu"
+        className="flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-2 rounded-lg px-1"
       >
         <span>Institucional</span>
         <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
@@ -70,16 +186,23 @@ function InstitutionalDropdown() {
         <div
           className="absolute right-0 mt-2 w-56 rounded-xl bg-surface-card shadow-lg border border-border-subtle py-2 z-50 animate-in fade-in-0 zoom-in-95 duration-150"
           role="menu"
+          id="institutional-menu"
+          aria-labelledby="institutional-menu-button"
         >
           <nav aria-label="Páginas institucionais">
-            <ul className="space-y-1 px-2">
-              {INSTITUTIONAL_ITEMS.map((item) => (
-                <li key={item.href}>
+            <ul className="space-y-1 px-2" ref={menuRef}>
+              {INSTITUTIONAL_ITEMS.map((item, index) => (
+                <li key={item.href} role="none">
                   <Link
                     href={item.href}
+                    ref={(el) => {
+                      itemRefs.current[index] = el;
+                    }}
                     onClick={() => setOpen(false)}
-                    className="block w-full rounded-lg px-3 py-2 text-body-md text-on-surface hover:bg-surface-container"
+                    onKeyDown={(e) => handleItemKeyDown(e, index)}
+                    className="block w-full rounded-lg px-3 py-2 text-body-md text-on-surface hover:bg-surface-container focus-visible:bg-surface-container focus-visible:outline-2 focus-visible:outline-secondary focus-visible:outline-offset-[-2px]"
                     role="menuitem"
+                    tabIndex={-1}
                   >
                     {item.label}
                   </Link>
