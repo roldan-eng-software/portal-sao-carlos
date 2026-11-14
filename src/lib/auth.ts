@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
 import { env } from '@/config/env';
+
+export function isModeratorSecret(value: string | null | undefined): boolean {
+  const secret = env.moderatorSecret;
+  if (!secret || !value) return false;
+  const received = Buffer.from(value);
+  const expected = Buffer.from(secret);
+  return received.length === expected.length && timingSafeEqual(received, expected);
+}
 
 function verifyModerator(request: NextRequest): boolean {
   const secret = env.moderatorSecret;

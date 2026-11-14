@@ -9,10 +9,9 @@ import type { AdSubmission, AdPublished, ManageActionData } from '@/modules/ads-
 interface ModerationClientProps {
   initialPending: AdSubmission[];
   initialPublished: AdPublished[];
-  moderatorSecret: string;
 }
 
-export function ModerationClient({ initialPending, initialPublished, moderatorSecret }: ModerationClientProps) {
+export function ModerationClient({ initialPending, initialPublished }: ModerationClientProps) {
   const [activeTab, setActiveTab] = useState<'pending' | 'published'>('pending');
   const [pendingAds, setPendingAds] = useState<AdSubmission[]>(initialPending);
   const [publishedAds, setPublishedAds] = useState<AdPublished[]>(initialPublished);
@@ -31,7 +30,6 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ submissionId: id }),
       });
@@ -71,7 +69,6 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ submissionId: id, reason }),
       });
@@ -110,7 +107,6 @@ export function ModerationClient({ initialPending, initialPublished, moderatorSe
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${moderatorSecret}`,
         },
         body: JSON.stringify({ adId, action, data }),
       });

@@ -1,8 +1,10 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { loadPendingAds } from '@/modules/ads-pending/loader';
 import { loadManagedPublished } from '@/modules/ads/manage';
+import { isModeratorSecret } from '@/lib/auth';
 import { ModerationClient } from './moderation-client';
-import { env } from '@/config/env';
+import { ModeratorLogin } from './moderator-login';
 
 export const metadata: Metadata = {
   title: 'Moderação de Anúncios — Portal São Carlos',
@@ -13,19 +15,13 @@ export const metadata: Metadata = {
   },
 }
 
-// Carrega dados no servidor (sem cache)
-async function getModerationData() {
-  const [pending, published] = await Promise.all([loadPendingAds(), loadManagedPublished()]);
-  return { pending, published };
-}
-
 export default async function ModerationPage() {
-  const data = await getModerationData();
+  const cookieStore = await cookies();
+  if (!isModeratorSecret(cookieStore.get('moderator_secret')?.value)) {
+    return <ModeratorLogin />;
+  }
 
-  // Passa o secret para o client component para uso nas chamadas de API
-  return <ModerationClient 
-    initialPending={data.pending} 
-    initialPublished={data.published}
-    moderatorSecret={env.moderatorSecret ?? ''}
-  />;
+  const [pending, published] = await Promise.all([loadPendingAds(), loadManagedPublished()]);
+
+  return <ModerationClient initialPending={pending} initialPublished={published} />;
 }
