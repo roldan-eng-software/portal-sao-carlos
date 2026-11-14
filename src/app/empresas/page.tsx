@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   alternates: { canonical: '/empresas' },
 };
 
+/**
+ * ISR de 30 min como rede de segurança. A invalidação sob demanda acontece em
+ * `revalidateAdsPages()` quando um anúncio é aprovado/editado/suspenso/removido;
+ * sem este export a página era gerada uma única vez no build e um anúncio novo
+ * só aparecia no próximo deploy.
+ */
+export const revalidate = 1800;
+
 export default async function EmpresasPage() {
   const adsResult = await loadAds();
   const ads: Ad[] = adsResult.data ?? [];

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { approveAdSubmission } from '@/modules/ads-pending/notify';
 import { generateWhatsAppLink, approvalMessage } from '@/modules/ads-pending/notify';
 import { requireModeratorAuth } from '@/lib/auth';
+import { revalidateAdsPages } from '@/lib/revalidate-ads';
 import type { AdSubmission } from '@/modules/ads-pending/types';
 
 export async function POST(request: NextRequest) {
@@ -26,6 +27,10 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    // O anúncio saiu da fila e entrou em ads_published: invalida o HTML em
+    // cache da home, de /empresas e do sitemap para ele aparecer na hora.
+    revalidateAdsPages(result.publishedAd?.id ?? submissionId);
 
     // Gera links de notificação para o moderador usar
     const submission = result.publishedAd!;

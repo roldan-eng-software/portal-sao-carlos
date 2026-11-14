@@ -2,6 +2,13 @@ import type { MetadataRoute } from 'next';
 import { env } from '@/config/env';
 import { loadAds, type Ad } from '@/modules/ads/loader';
 
+/**
+ * O sitemap lista as páginas individuais de cada empresa publicada, então
+ * precisa acompanhar `ads_published`. `revalidateAdsPages()` invalida
+ * `/sitemap.xml` sob demanda; aqui fica o intervalo de segurança.
+ */
+export const revalidate = 1800;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.siteUrl;
 

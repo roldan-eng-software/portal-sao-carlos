@@ -51,8 +51,8 @@ resultados abaixo de build e lint são da última verificação registrada (2026
 
 | Verificação | Resultado |
 | --- | --- |
-| `npm run test` | ✅ 26 arquivos, **164 testes passando** (2026-11-14) |
-| `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), rotas estáticas + dinâmicas, home com `revalidate 15m` |
+| `npm run test` | ✅ 27 arquivos, **172 testes passando** (2026-11-14) |
+| `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), rotas estáticas + dinâmicas, home com `revalidate 30m` |
 | `npm run lint` | ✅ 0 erros e **0 warnings** (Material Symbols auto-hospedada desde a Etapa 1 — ver §6) |
 | Gates da constituição | 17/17 PASS conforme `specs/001-portal-sao-carlos-fase1/plan.md` |
 | Warning de build | Nenhum — itens `arquivado` de `content/notices.json` registram `info/archived_content_items` (não são mais `warn`) |
@@ -481,6 +481,24 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    **Blindagem da UI**: `/anuncie` agora exibe no aviso flutuante a mensagem real do
    servidor quando o envio falha (nunca em silêncio) e renderiza `errors.form`
    (honeypot/erro geral) na página. Teste novo cobre o caminho de falha do servidor.
+27. ✅ **Anúncio aprovado não aparecia na landing page** (2026-11-14): a aprovação
+   gravava certo em `ads_published` (confirmado: `morena-cafe-e-gastronomia-mwgs8sly`,
+   `aprovado` → `publicado`, log `aprovar` em 2026-11-14T19:13:06Z) e a página
+   `/empresas/[slug]` respondeu 200 com a empresa. O problema era **cache de HTML**:
+   nada chamava `revalidatePath` depois de publicar, então a home
+   (`revalidate = 1800`) e `/sitemap.xml` serviam a versão anterior por até 30 min,
+   e `/empresas` **não tinha ISR nenhum** — era gerada uma única vez no build e só
+   mudaria no próximo deploy (verificado: home, `/empresas` e sitemap sem a empresa
+   em produção). **Correção**: novo `src/lib/revalidate-ads.ts` com
+   `revalidateAdsPages(adId?)`, que invalida `/`, `/empresas`, `/empresas/[slug]`,
+   `/empresas/<id>` e `/sitemap.xml`; chamado em `/api/ads/approve` (após aprovar) e
+   em `/api/ads/manage` (edit/suspend/reactivate/remove, só quando `success: true`).
+   `/empresas` e `sitemap.ts` ganharam `revalidate = 1800` como rede de segurança.
+   Cobertura em `tests/unit/revalidate-ads.test.ts` (8 testes: helper + as duas rotas,
+   incluindo "não revalida quando a ação falha"). Suíte: 27 arquivos, 172 testes.
+
+**Regra de manutenção**: qualquer rota que grave em `ads_published` **deve** chamar
+`revalidateAdsPages()` depois da escrita, senão a landing page fica desatualizada.
 
 **Pendências atuais (2026-11-14):**
 - `MODERATOR_SECRET` rotacionado em 2026-11-14 pelo proprietário (o valor anterior ficou exposto no HTML de `/moderacao` desde 2026-10-24). A variável é Sensitive na Vercel: não pode ser lida por `vercel env pull`; guarde a senha fora do repositório.

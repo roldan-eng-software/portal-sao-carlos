@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { editPublishedAd, updateAdStatus, removeAd } from '@/modules/ads/manage';
 import { requireModeratorAuth } from '@/lib/auth';
+import { revalidateAdsPages } from '@/lib/revalidate-ads';
 
 export async function PATCH(request: NextRequest) {
   const authError = await requireModeratorAuth(request);
@@ -17,17 +18,29 @@ export async function PATCH(request: NextRequest) {
     }
 
     switch (action) {
-      case 'edit':
-        return NextResponse.json(await editPublishedAd(adId, data));
+      case 'edit': {
+        const result = await editPublishedAd(adId, data);
+        if (result.success) revalidateAdsPages(adId);
+        return NextResponse.json(result);
+      }
 
-      case 'suspend':
-        return NextResponse.json(await updateAdStatus(adId, 'suspenso'));
+      case 'suspend': {
+        const result = await updateAdStatus(adId, 'suspenso');
+        if (result.success) revalidateAdsPages(adId);
+        return NextResponse.json(result);
+      }
 
-      case 'reactivate':
-        return NextResponse.json(await updateAdStatus(adId, 'publicado'));
+      case 'reactivate': {
+        const result = await updateAdStatus(adId, 'publicado');
+        if (result.success) revalidateAdsPages(adId);
+        return NextResponse.json(result);
+      }
 
-      case 'remove':
-        return NextResponse.json(await removeAd(adId));
+      case 'remove': {
+        const result = await removeAd(adId);
+        if (result.success) revalidateAdsPages(adId);
+        return NextResponse.json(result);
+      }
 
       default:
         return NextResponse.json(
