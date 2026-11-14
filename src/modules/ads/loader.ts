@@ -1,5 +1,4 @@
 import { sql } from '@/lib/neon';
-import adsSeed from '@/content/ads.json';
 import { isSafeHttpUrl, sanitizeToLength } from '@/lib/sanitize';
 import { errorResult, okResult, type ModuleResult } from '@/lib/module-result';
 
@@ -84,52 +83,33 @@ export function selectPublishedAds(items: unknown[], today: string): Ad[] {
 }
 
 /**
- * Carrega anúncios combinando seed local (ads.json) + banco Neon (ads_published).
+ * Carrega os anúncios publicados do banco Neon (ads_published).
+ * O seed src/content/ads.json só serve à migração (db/seed-ads-published.mjs).
  */
 export async function loadAds(): Promise<ModuleResult<Ad[]>> {
   const SOURCE_NAME = 'Anúncios do portal';
   try {
-    // 1. Carrega seed local
-    const raw = adsSeed as { items?: unknown[]; _meta?: unknown };
-    const rawList = Array.isArray(raw?.items) ? raw.items : (Array.isArray(raw) ? raw : []);
-    
-    // 2. Carrega do banco Neon (ads_published)
-    let neonAds: Ad[] = [];
-    try {
-      const rows = await sql`
-        SELECT * FROM ads_published 
-        WHERE status = 'publicado'
-      `;
-      neonAds = rows.map((row: any) => ({
-        id: row.id,
-        kind: row.kind,
-        businessName: row.business_name,
-        category: row.category,
-        description: row.description,
-        neighborhood: row.neighborhood,
-        phone: row.phone,
-        whatsapp: row.whatsapp,
-        url: row.url,
-        hours: row.hours,
-        imageUrl: row.image_url,
-        status: row.status,
-        publishedAt: row.approved_at ? new Date(row.approved_at).toISOString().slice(0, 10) : null,
-        expiresAt: row.expires_at ? new Date(row.expires_at).toISOString().slice(0, 10) : null,
-        cnpj: row.cnpj,
-      }));
-    } catch (dbErr) {
-      console.warn('Erro ao carregar anúncios do Neon (usando apenas seed local):', dbErr);
-    }
-
-    // Combina seed + neon (removendo duplicados por id se houver)
-    const combined = [...rawList, ...neonAds];
-    const uniqueMap = new Map();
-    for (const item of combined) {
-      if (item && typeof item === 'object' && 'id' in item) {
-        uniqueMap.set((item as any).id, item);
-      }
-    }
-    const allAds = Array.from(uniqueMap.values());
+    const rows = await sql`
+      SELECT * FROM ads_published
+      WHERE status = 'publicado'
+    `;
+    const allAds: Ad[] = rows.map((row) => ({
+      id: row.id,
+      kind: row.kind,
+      businessName: row.business_name,
+      category: row.category,
+      description: row.description,
+      neighborhood: row.neighborhood,
+      phone: row.phone,
+      whatsapp: row.whatsapp,
+      url: row.url,
+      hours: row.hours,
+      imageUrl: row.image_url,
+      status: row.status,
+      publishedAt: row.approved_at ? new Date(row.approved_at).toISOString().slice(0, 10) : null,
+      expiresAt: row.expires_at ? new Date(row.expires_at).toISOString().slice(0, 10) : null,
+      cnpj: row.cnpj,
+    }));
 
     const today = new Date().toISOString().slice(0, 10);
     const published = selectPublishedAds(allAds, today);
@@ -154,37 +134,5 @@ export async function loadAds(): Promise<ModuleResult<Ad[]>> {
   }
 }
 
-import fs from 'fs/promises';
-import path from 'path';
-
-const ADS_FILE = path.resolve(process.cwd(), 'src/content/ads.json');
-
-interface AdsFile {
-  items: unknown[];
-  _meta?: {
-    version: number;
-    updatedAt: string;
-  };
-}
-
-export async function loadRawAds(): Promise<AdsFile> {
-  try {
-    const content = await fs.readFile(ADS_FILE, 'utf-8');
-    const data = JSON.parse(content);
-    if (data.items && Array.isArray(data.items)) {
-      return data as AdsFile;
-    }
-    if (Array.isArray(data)) {
-      return { items: data, _meta: { version: 1, updatedAt: new Date().toISOString() } };
-    }
-    return { items: [], _meta: { version: 1, updatedAt: new Date().toISOString() } };
-  } catch {
-    return { items: [], _meta: { version: 1, updatedAt: new Date().toISOString() } };
-  }
-}
-
-export async function saveAds(ads: unknown[]): Promise<void> {
-  // Apenas simulado/fallback para read-only
-}
-
 export { sanitizeToLength };
+

@@ -1,43 +1,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import fs from 'fs';
-import path from 'path';
 import { validateAdFormData, type AdFormData, type ValidatedAdData } from '@/lib/ads-validation';
+import { savePendingAd } from '@/modules/ads-pending/loader';
 
 interface SubmitResult {
   success: boolean;
   message?: string;
   errors?: Array<{ field: string; message: string }>;
-}
-
-const PENDING_ADS_PATH = path.join(process.cwd(), 'src/content/pending-ads.json');
-
-function readPendingAds(): ValidatedAdData[] {
-  try {
-    const content = fs.readFileSync(PENDING_ADS_PATH, 'utf-8');
-    const data = JSON.parse(content);
-    return data.items || [];
-  } catch {
-    return [];
-  }
-}
-
-function writePendingAds(items: ValidatedAdData[]): void {
-  const data = {
-    _meta: {
-      description: 'Anúncios pendentes de aprovação — preenchidos via formulário público /anuncie',
-      regras: {
-        kind: 'NÃO EDITAR — enum fixo: \'anuncio-gratuito\' | \'anuncio-patrocinado\'',
-        status: 'NÃO EDITAR — sempre \'rascunho\' para submissões do formulário',
-        submittedAt: 'AUTO — ISO 8601 timestamp da submissão',
-        ip: 'OPCIONAL — IP do remetente (para moderação)',
-        honeypot: 'NÃO EDITAR — campo anti-bot (deve vir vazio)',
-      },
-    },
-    items,
-  };
-  fs.writeFileSync(PENDING_ADS_PATH, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 async function sendWebhook(ad: ValidatedAdData): Promise<void> {
@@ -66,13 +36,11 @@ async function sendWebhook(ad: ValidatedAdData): Promise<void> {
       }),
     });
   } catch {
-    // Silencioso - não falha a submissão se webhook falhar
     console.warn('[ads] Webhook notification failed');
   }
 }
 
 export async function submitAdAction(formData: FormData): Promise<SubmitResult> {
-  // Extrai dados do FormData
   const rawData: AdFormData = {
     kind: formData.get('kind') as AdFormData['kind'],
     businessName: formData.get('businessName') as string,
@@ -87,21 +55,38 @@ export async function submitAdAction(formData: FormData): Promise<SubmitResult> 
     website: formData.get('website') as string || undefined, // honeypot
   };
 
-  // Valida
   const validation = validateAdFormData(rawData);
   if (!validation.success) {
     return { success: false, errors: validation.errors };
   }
 
-  // Lê pendentes atuais e adiciona novo
-  const pending = readPendingAds();
-  pending.unshift(validation.data); // mais recente primeiro
-  writePendingAds(pending);
+  const ad = validation.data;
 
-  // Notifica via webhook (se configurado)
-  await sendWebhook(validation.data);
+  try {
+    await savePendingAd({
+      id: ad.id,
+      kind: ad.kind,
+      businessName: ad.businessName,
+      category: ad.category,
+      description: ad.description,
+      neighborhood: ad.neighborhood,
+      phone: ad.phone ?? undefined,
+      whatsapp: ad.whatsapp ?? undefined,
+      url: ad.url ?? undefined,
+      hours: ad.hours ?? undefined,
+      contactEmail: ad.contactEmail,
+      status: 'pendente',
+      submittedAt: ad.submittedAt,
+    });
+  } catch (error) {
+    console.error('[ads] Falha ao salvar anúncio pendente:', error);
+    return {
+      success: false,
+      message: 'Não foi possível enviar seu anúncio agora. Tente novamente em instantes.',
+    };
+  }
 
-  // Revalida a página de anúncios (se necessário)
+  await sendWebhook(ad);
   revalidatePath('/anuncie');
 
   return {

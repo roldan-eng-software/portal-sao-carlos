@@ -1,6 +1,7 @@
-import type { AdSubmission, AdPublished, AdSubmissionStatus } from './types';
-import { loadAds, saveAds } from '@/modules/ads/loader';
-import { loadPendingAds, updatePendingAd } from './loader';
+import type { AdSubmission, AdPublished } from './types';
+import { approveSubmission, rejectSubmission, ModerationError } from './loader';
+
+const ANUNCIE_URL = 'https://www.meubairro.dev.br/anuncie';
 
 /**
  * Gera link WhatsApp (wa.me) com mensagem pré-formatada.
@@ -27,8 +28,8 @@ export function generateMailtoLink(email: string, subject: string, body: string)
  */
 export function approvalMessage(ad: AdSubmission): { subject: string; body: string; whatsapp: string } {
   const subject = `Seu anúncio "${ad.businessName}" foi aprovado no Portal São Carlos`;
-  const body = `Olá!\n\nSeu anúncio gratuito foi aprovado e já está publicado no Portal São Carlos.\n\nDetalhes:\n- Nome: ${ad.businessName}\n- Categoria: ${ad.category}\n- Bairro: ${ad.neighborhood}\n- Descrição: ${ad.description}\n${ad.phone ? `- Telefone: ${ad.phone}\n` : ''}${ad.whatsapp ? `- WhatsApp: ${ad.whatsapp}\n` : ''}${ad.url ? `- Site: ${ad.url}\n` : ''}${ad.hours ? `- Horário: ${ad.hours}\n` : ''}\n\nAcesse: https://www.meubairro.dev.br/anunciar\n\nAtenciosamente,\nEquipe Portal São Carlos`;
-  const whatsapp = `Olá! Seu anúncio "${ad.businessName}" foi aprovado e está publicado no Portal São Carlos. Acesse: https://www.meubairro.dev.br/anunciar`;
+  const body = `Olá!\n\nSeu anúncio gratuito foi aprovado e já está publicado no Portal São Carlos.\n\nDetalhes:\n- Nome: ${ad.businessName}\n- Categoria: ${ad.category}\n- Bairro: ${ad.neighborhood}\n- Descrição: ${ad.description}\n${ad.phone ? `- Telefone: ${ad.phone}\n` : ''}${ad.whatsapp ? `- WhatsApp: ${ad.whatsapp}\n` : ''}${ad.url ? `- Site: ${ad.url}\n` : ''}${ad.hours ? `- Horário: ${ad.hours}\n` : ''}\n\nAcesse: ${ANUNCIE_URL}\n\nAtenciosamente,\nEquipe Portal São Carlos`;
+  const whatsapp = `Olá! Seu anúncio "${ad.businessName}" foi aprovado e está publicado no Portal São Carlos. Acesse: ${ANUNCIE_URL}`;
 
   return { subject, body, whatsapp };
 }
@@ -38,101 +39,40 @@ export function approvalMessage(ad: AdSubmission): { subject: string; body: stri
  */
 export function rejectionMessage(ad: AdSubmission, reason: string): { subject: string; body: string; whatsapp: string } {
   const subject = `Seu anúncio "${ad.businessName}" não foi aprovado no Portal São Carlos`;
-  const body = `Olá!\n\nSeu anúncio gratuito não foi aprovado pela moderação.\n\nMotivo: ${reason}\n\nVocê pode corrigir as informações e enviar novamente em: https://www.meubairro.dev.br/anunciar\n\nAtenciosamente,\nEquipe Portal São Carlos`;
-  const whatsapp = `Olá! Seu anúncio "${ad.businessName}" não foi aprovado. Motivo: ${reason}. Envie novamente corrigido: https://www.meubairro.dev.br/anunciar`;
+  const body = `Olá!\n\nSeu anúncio gratuito não foi aprovado pela moderação.\n\nMotivo: ${reason}\n\nVocê pode corrigir as informações e enviar novamente em: ${ANUNCIE_URL}\n\nAtenciosamente,\nEquipe Portal São Carlos`;
+  const whatsapp = `Olá! Seu anúncio "${ad.businessName}" não foi aprovado. Motivo: ${reason}. Envie novamente corrigido: ${ANUNCIE_URL}`;
 
   return { subject, body, whatsapp };
 }
 
 /**
- * Aprova anúncio pendente: move para ads.json como 'anuncio-gratuito'.
+ * Aprova anúncio pendente. Transação única no Neon (ver loader.approveSubmission).
  */
 export async function approveAdSubmission(
   submissionId: string,
 ): Promise<{ success: boolean; publishedAd?: AdPublished; errors?: string[] }> {
-  const pending = await loadPendingAds();
-  const index = pending.findIndex((ad) => ad.id === submissionId);
-
-  if (index === -1) {
-    return { success: false, errors: ['Anúncio pendente não encontrado.'] };
-  }
-
-  const submission = pending[index];
-  if (submission.status !== 'pendente') {
-    return { success: false, errors: ['Apenas anúncios pendentes podem ser aprovados.'] };
-  }
-
-  // Verifica duplicidade CNPJ novamente (concorrência)
-  if (submission.cnpj) {
-    const published = await loadAds();
-    const publishedAds = Array.isArray(published) ? published : (published as any).data || [];
-    const duplicate = publishedAds.some((ad: AdPublished) => ad.cnpj === submission.cnpj && ad.status === 'publicado');
-    if (duplicate) {
-      return { success: false, errors: ['Já existe anúncio publicado para este CNPJ.'] };
-    }
-  }
-
-  // Cria anúncio publicado
-  const now = new Date().toISOString();
-  const publishedAd: AdPublished = {
-    id: crypto.randomUUID(),
-    businessName: submission.businessName,
-    category: submission.category,
-    description: submission.description,
-    neighborhood: submission.neighborhood,
-    phone: submission.phone,
-    whatsapp: submission.whatsapp,
-    url: submission.url,
-    hours: submission.hours,
-    cnpj: submission.cnpj,
-    kind: 'anuncio-gratuito',
-    status: 'publicado',
-    approvedAt: now,
-    updatedAt: now,
-  };
-
-  // Salva publicado (tenta JSON; em produção Vercel é read-only, então não falha)
   try {
-    const ads = await loadAds();
-    const adsArray = Array.isArray(ads) ? ads : (ads as any).data || [];
-    adsArray.push(publishedAd);
-    await saveAds(adsArray);
-  } catch (e) {
-    console.warn('Não foi possível persistir em ads.json (read-only FS). Anúncio fica apenas no Neon.', e);
+    const publishedAd = await approveSubmission(submissionId);
+    return { success: true, publishedAd };
+  } catch (error) {
+    if (error instanceof ModerationError) return { success: false, errors: [error.message] };
+    throw error;
   }
-
-  // Remove da fila de pendentes (marca como aprovado)
-  const updatedSubmission: AdSubmission = { ...pending[index], status: 'aprovado' as AdSubmissionStatus, reviewedAt: now };
-  await updatePendingAd(updatedSubmission);
-
-  return { success: true, publishedAd };
 }
 
 /**
- * Recusa anúncio pendente.
+ * Recusa anúncio pendente com motivo obrigatório. Retorna o pendente original
+ * para a montagem da notificação.
  */
 export async function rejectAdSubmission(
   submissionId: string,
   reason: string,
-): Promise<{ success: boolean; errors?: string[] }> {
-  const pending = await loadPendingAds();
-  const index = pending.findIndex((ad) => ad.id === submissionId);
-
-  if (index === -1) {
-    return { success: false, errors: ['Anúncio pendente não encontrado.'] };
+): Promise<{ success: boolean; submission?: AdSubmission; errors?: string[] }> {
+  try {
+    const submission = await rejectSubmission(submissionId, reason);
+    return { success: true, submission };
+  } catch (error) {
+    if (error instanceof ModerationError) return { success: false, errors: [error.message] };
+    throw error;
   }
-
-  const submission = pending[index];
-  if (submission.status !== 'pendente') {
-    return { success: false, errors: ['Apenas anúncios pendentes podem ser recusados.'] };
-  }
-
-  if (!reason.trim()) {
-    return { success: false, errors: ['Motivo da recusa é obrigatório.'] };
-  }
-
-  const updatedSubmission: AdSubmission = { ...pending[index], status: 'recusado' as AdSubmissionStatus, reviewedAt: new Date().toISOString(), rejectionReason: reason.trim() };
-  await updatePendingAd(updatedSubmission);
-
-  return { success: true };
 }

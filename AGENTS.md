@@ -3,8 +3,24 @@
 Documento de contexto para agentes/IA e colaboradores que forem trabalhar neste
 repositório. Descreve **como está a implementação neste momento**, o que já foi
 entregue, o que é proibido pela constituição do projeto e onde estão os pontos
-de atenção. Atualizado em **2026-10-24** a partir de leitura direta do código,
+de atenção. Atualizado em **2026-11-14** a partir de leitura direta do código,
 histórico git e documentação em `specs/`.
+
+---
+
+## 0. Regra obrigatória de manutenção deste documento
+
+Sempre que uma modificação ou desenvolvimento importante for concluído (nova feature
+ou rota, mudança de persistência, auth, variável de ambiente, emenda à constituição,
+fechamento de fase/spec, release), **este arquivo deve ser atualizado no final do
+processo, antes de encerrar a tarefa**, para manter o contexto das próximas LLMs e
+agentes.
+
+Atualize: a data do cabeçalho; as seções afetadas (§1 estado, §3 stack, §4 estrutura,
+§7 rotas, §9 variáveis, §10 restrições, §11 pendências); e marque o que foi resolvido
+ou criado. Registre o estado **verificado** no código, citando arquivos e commits.
+Não registre detalhes temporários. Ajustes pequenos (typos, ajustes visuais menores)
+não exigem atualização.
 
 ---
 
@@ -17,19 +33,21 @@ histórico git e documentação em `specs/`.
 | Domínio canônico de produção | `https://www.meubairro.dev.br` (apex `meubairro.dev.br` redireciona 301 → www, em `next.config.ts`) |
 | Repositório | `https://github.com/roldan-eng-software/portal-sao-carlos` |
 | Deploy | Vercel (ISR/estático; `VERCEL_ENV`/`VERCEL_GIT_COMMIT_SHA` usados no build) |
-| Fase atual | **Fase 2 — Persistência e Captura de Interesse: CONCLUÍDA** (64/64 tasks `[X]` em `specs/002-fase2-persistencia-captura/tasks.md`) |
-| Git | branch `main`, working tree limpo na data desta verificação |
+| Fase atual | **Fase 2 — Persistência e Captura de Interesse: implementada, sem fechamento formal.** Código presente, mas as 64 tasks em `specs/002-fase2-persistencia-captura/tasks.md` continuam `[ ]` (checkboxes não marcados) |
+| Git | branch `main`; 43 commits após a tag `v0.2.0`; último commit verificado `18283b8` (2026-10-29) |
 | Tag | `v0.2.0` (`0f4b794`) publicada e em `origin` (2026-10-08); CHANGELOG em dia |
 | PRD SEO Local | **Fase 2 — Especs 01–08 concluídas** (`docs/prd/feature-seo-local-conteudo.md`, `docs/auditoria-tecnica-seo-2026-10-24.md`, `README.md`) |
 
 Portal local de utilidade pública de São Carlos/SP: previsão do tempo, notícias,
-informativos, telefones úteis, anúncios e políticas — **sem cadastro de usuários,
-sem pagamento, sem banco de dados relacional** (constituição **v1.3.0**, `.specify/memory/constitution.md`
-— emendas v1.1.0/v1.2.0/v1.3.0 formalizaram: GA4 como métrica permitida, política de anúncios gratuitos, nome definitivo, moderador único, retenção LGPD).
+informativos, telefones úteis, anúncios e políticas — **sem cadastro de usuários
+e sem pagamento** (constituição **v1.4.0**, `.specify/memory/constitution.md`; desde a emenda v1.4.0 o Neon PostgreSQL é permitido somente para anúncios, ver §10). v1.1.0 a v1.4.0 formalizaram: GA4 como métrica permitida, política de anúncios gratuitos, nome definitivo, moderador único, retenção LGPD, banco para anúncios).
 
 ---
 
-## 2. Estado de verificação (2026-10-24)
+## 2. Estado de verificação (2026-11-14)
+
+Testes re-executados em 2026-11-14. Build e lint não foram re-executados nessa data; os
+resultados abaixo de build e lint são da última verificação registrada (2026-10-24).
 
 | Verificação | Resultado |
 | --- | --- |
@@ -47,12 +65,12 @@ sem pagamento, sem banco de dados relacional** (constituição **v1.3.0**, `.spe
 - **Estilo**: Tailwind CSS 4 — tokens `@theme` em `src/app/globals.css` derivados do design **Civic Vanguard** (`docs/modelo/DESIGN.md`)
 - **Fontes**: Plus Jakarta Sans (display) e Inter (corpo) via `next/font/google`; ícones Material Symbols Outlined **auto-hospedados** (subset de 34 ligaduras, ~34 KB, em `src/app/fonts/` — regeneração documentada no README de lá)
 - **Dados externos**: `fast-xml-parser` (RSS/Atom), fetch no servidor com cache
-- **Persistência**: JSON versionado em `src/content/` (news-history.json, ads-pending.json, ads.json) — sem banco de dados relacional
+- **Persistência**: anúncios no Neon PostgreSQL (`src/lib/neon.ts`, pacote `postgres`, `DATABASE_URL`). Schema versionado em `db/migrations/` e aplicado com `npm run db:migrate`; sem ORM. `src/content/ads.json` é só seed da migração (`npm run db:seed:ads`), não é mais lido pela aplicação. Notícias seguem em JSON em `src/content/news-history.json`
 - **Testes**: Vitest + React Testing Library (jsdom), setup em `tests/setup.ts`
 - **Qualidade**: ESLint 9 (`eslint.config.mjs`), Prettier, Husky (`commit-msg` → commitlint conventional), `commit-and-tag-version` (release + CHANGELOG Keep a Changelog)
-- **Autenticação**: Middleware simples com segredo compartilhado (`MODERATOR_SECRET`) para área de moderação
-- **Formulários**: Apenas `/anunciar` (público) — validação Zod-like manual, rate-limit por IP, dedupe CNPJ
-- **Sem**: banco de dados, ORM, autenticação de usuários, cadastro, pagamentos, cache externo (Redis etc.)
+- **Autenticação**: `src/middleware.ts` (rate limit em `/anuncie`) + `src/lib/auth.ts` (`requireModeratorAuth`). Segredo `MODERATOR_SECRET` aceito como `Authorization: Bearer`, query `?secret=` ou cookie `moderator_secret`. Limpeza LGPD: `CRON_SECRET` (Bearer, enviado pelo Vercel Cron). O painel `/admin` e a senha `ADMIN_PASSWORD` foram removidos
+- **Formulários**: `/anuncie` é o formulário oficial (Server Action em `src/app/anuncie/actions.ts`, grava só em `ads_pending`). `/anunciar` redireciona 301 para `/anuncie` (`next.config.ts`). Validação manual, rate limit por IP, dedupe CNPJ
+- **Sem**: ORM, autenticação de usuários, cadastro, pagamentos, cache externo (Redis etc.). O Neon é usado só para anúncios pendentes
 
 ### Comandos
 
@@ -89,7 +107,8 @@ src/
 │   ├── sobre/page.tsx          # Institucional (Spec 03)
 │   ├── contato/page.tsx        # Institucional (Spec 03)
 │   ├── termos-de-uso/page.tsx  # Institucional (Spec 03)
-│   ├── anunciar/page.tsx       # Formulário público de anúncio (Fase 2)
+│   ├── anuncie/               # Formulário público oficial /anuncie (page.tsx, actions.ts → ads_pending)
+│   ├── api/cron/ads-cleanup/route.ts # GET limpeza LGPD (Bearer CRON_SECRET; agendada em vercel.json)
 │   ├── moderacao/              # Área de moderação protegida (Fase 2)
 │   │   ├── layout.tsx          # Wrapper com autenticação
 │   │   ├── page.tsx            # Server component carrega dados
@@ -100,6 +119,7 @@ src/
 │   │   ├── approve/route.ts    # POST /api/ads/approve
 │   │   ├── reject/route.ts     # POST /api/ads/reject
 │   │   └── manage/route.ts     # PATCH /api/ads/manage (edit/suspend/reactivate/remove)
+│   ├── api/cron/ads-cleanup/route.ts # GET limpeza LGPD (Bearer CRON_SECRET)
 │   ├── robots.ts, sitemap.ts   # SEO local (dinâmico, incl. /empresas, /noticias)
 │   ├── globals.css             # Tokens do design system (@theme)
 │   └── icon.png, apple-icon.png
@@ -123,7 +143,7 @@ src/
 │   ├── contacts/  # loader.ts (content/contacts.json) — CONTACT_CATEGORIES exportadas
 │   ├── promo/     # loader.ts (content/promo.json)
 │   ├── ads-pending/            # Fase 2: fila de moderação
-│   │   ├── loader.ts           # load/save pending ads (src/content/ads-pending.json)
+│   │   ├── loader.ts           # pending (ads_pending), approveSubmission/rejectSubmission em transação, log
 │   │   ├── submit.ts           # Validação, sanitização, rate-limit, dedupe CNPJ
 │   │   ├── notify.ts           # Aprovação/recusa + notificações WhatsApp/e-mail
 │   │   └── types.ts            # AdSubmission, AdPublished, ManageActionData
@@ -142,6 +162,8 @@ src/
 │   ├── contact-links.ts   # Links WhatsApp
 │   ├── date.ts            # dateToFormat (pt-BR, America/Sao_Paulo)
 │   ├── auth.ts            # Middleware requireModeratorAuth (MODERATOR_SECRET)
+│   ├── neon.ts            # Cliente postgres (DATABASE_URL)
+│   ├── cron-auth.ts       # isCronAuthorized (Bearer CRON_SECRET)
 │   ├── cnpj.ts            # Validação/formatação CNPJ (modulo 11)
 │   └── rate-limit.ts      # Rate limit por IP (memória in-process, 10 req/10 min)
 ├── config/
@@ -150,7 +172,8 @@ src/
 │   └── version.ts         # APP_VERSION, DEPLOY_ENV, BUILD_COMMIT, BUILD_DATE (rodapé)
 └── content/               # Conteúdo curado manualmente (moderação = revisão de git)
     ├── ads.json, contacts.json, promo.json, notices.json
-    ├── ads-pending.json    # Fila de moderação (Fase 2)
+    ├── news-history.json   # Histórico persistido de notícias (Fase 2, JSON)
+├── db/                      # Banco Neon: migrations/0001_ads.sql, migrate.mjs (npm run db:migrate), seed-ads-published.mjs (npm run db:seed:ads)
     └── news-history.json   # Histórico persistido de notícias (Fase 2)
 
 tests/
@@ -160,7 +183,7 @@ tests/
 
 specs/
 ├── 001-portal-sao-carlos-fase1/   # Spec Kit Fase 1: spec, plan, tasks (55/55)
-├── 002-fase2-persistencia-captura/ # Spec Kit Fase 2: spec, plan, tasks (64/64)
+├── 002-fase2-persistencia-captura/ # Spec Kit Fase 2: spec, plan, tasks (64 tasks, checkboxes não marcados)
 │   ├── spec.md, plan.md, research.md, data-model.md
 │   ├── contracts/, quickstart.md, tasks.md, checklists/
 docs/
@@ -168,7 +191,7 @@ docs/
 ├── prd/feature-seo-local-conteudo.md # PRD da Fase 2 (Specs 01–08)
 ├── auditoria-tecnica-seo-2026-10-24.md
 └── plano-pontos-atencao.md
-.specify/                            # Constituição v1.3.0 + scripts Spec Kit
+.specify/                            # Constituição v1.4.0 + scripts Spec Kit
 ```
 
 ---
@@ -242,8 +265,11 @@ imagens próprias** além dos assets estáticos em `public/`.
 | `/termos-de-uso` | Página institucional | Spec 03 |
 | `/aviso-editorial` | Transparência editorial | Fase 1 |
 | `/politica-de-privacidade` | Política de privacidade | Fase 1 |
-| `/anunciar` | Formulário público de anúncio (Fase 2) | Fase 2 |
+| `/anunciar` | Redirect 301 para `/anuncie` (`next.config.ts`) | Fase 2 |
+| `/anuncie` | Formulário público oficial de cadastro de anúncio (grava em `ads_pending`) | Fase 2 |
+| `/moderacao` | Área de moderação (protegida, MODERATOR_SECRET; fila, publicados, log) | Fase 2 |
 | `/moderacao` | Área de moderação (protegida, MODERATOR_SECRET) | Fase 2 |
+| `/admin/login`, `/admin/anuncios` | Painel de anúncios protegido por `ADMIN_PASSWORD` (fora da spec 002) | — |
 | `robots.txt`, `sitemap.xml` | SEO local (dinâmico, incl. empresas + noticias) | Fase 1 + Spec 05/06 |
 
 **Ordem da home** (conteúdo público antes de publicidade — FR-009/SC-001):
@@ -301,10 +327,14 @@ com segredo (gate 9):
 | `NEWS_FEEDS` | Sobrescreve feeds de notícias (CSV de URLs) |
 | `NOTICE_FEEDS` | Sobrescreve feeds de informativos (padrão: SAAE) |
 | `CONTACT_WHATSAPP` / `CONTACT_PHONE` / `CONTACT_EMAIL` | Canais das chamadas "Anuncie aqui" (`contactEmail` tem default `contato@portalsaocarlos.com.br`) |
+| `DATABASE_URL` | Conexão Neon PostgreSQL dos anúncios (`src/lib/neon.ts`). Aplique o schema com `npm run db:migrate`. Branch separada para preview/dev; a `main` só para produção |
+| `MODERATOR_SECRET` | Segredo da área `/moderacao` e das rotas `/api/ads/*` |
+| `CRON_SECRET` | Segredo da limpeza LGPD agendada (`/api/cron/ads-cleanup`, Vercel Cron) |
+| `AD_WEBHOOK_URL` / `SPONSORED_EXPIRY_DAYS` | Webhook de novos anúncios pendentes; validade padrão de anúncios patrocinados (90 dias) |
 
 ---
 
-## 10. Restrições da constituição (NÃO VIOLAR — v1.3.0)
+## 10. Restrições da constituição (NÃO VIOLAR — v1.4.0)
 
 Proibido sem emenda formal (`.specify/memory/constitution.md`):
 
@@ -321,8 +351,8 @@ Proibido sem emenda formal (`.specify/memory/constitution.md`):
   viram erro técnico na página (SC-004)
 - ✅ **Permitido com condições** (emendas v1.1.0/v1.2.0/v1.3.0):
   - Google Analytics 4 — só produção, carga adiada, coleta agregada, aviso de cookies publicado
-  - Formulário público `/anunciar` (Fase 2) — validação, rate-limit, dedupe CNPJ, moderação humana
-  - Persistência JSON versionada (`news-history.json`, `ads-pending.json`) — sem banco de dados relacional
+  - Formulário público `/anuncie` (e `/anunciar`, Fase 2) — validação, rate-limit, dedupe CNPJ, moderação humana
+  - Persistência de anúncios no Neon PostgreSQL, somente para pendentes, publicados e log de moderação (emenda v1.4.0). Notícias seguem em JSON versionado. Outro uso de banco exige emenda
   - Área de moderação `/moderacao` — autenticação simples por segredo compartilhado (`MODERATOR_SECRET`)
   - Qualquer ampliação de coleta/formulário exige emenda
 
@@ -332,7 +362,7 @@ escalabilidade só quando necessário.
 
 ---
 
-## 11. Pontos de atenção — situação (atualizado em 2026-10-24)
+## 11. Pontos de atenção — situação (atualizado em 2026-11-14)
 
 Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 e Fase 2:
 
@@ -383,22 +413,30 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
 21. ✅ **Pergunta 5 da constituição**: política de retenção LGPD definida na
    emenda v1.3.0 → **legítimo interesse (ativo + 12 meses), consentimento
    (30 dias pendente), GA4 14 meses, cookies 12 meses**.
-22. ✅ **Fase 2 — Persistência e Captura de Interesse: CONCLUÍDA** (64/64 tasks):
-   - ✅ Spec Kit completo: spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md, tasks.md (64 tasks)
+22. 🟡 **Fase 2 — Persistência e Captura de Interesse: implementada, sem fechamento formal.** As 64 tasks de `tasks.md` seguem com `[ ]`, então o checklist não reflete o código:
+   - ✅ Spec Kit: spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md, tasks.md
    - ✅ User Story 1: Histórico de notícias (`/noticias` paginado, ItemList JSON-LD, retenção 12 meses, `news-history.json`)
-   - ✅ User Story 2: Formulário público (`/anunciar` — validação, rate-limit 10req/10min, dedupe CNPJ, `ads-pending.json`)
+   - ✅ User Story 2: Formulário público (`/anuncie`; `/anunciar` redireciona 301; fila em Neon PostgreSQL)
+   - ➕ Implementação do PRD `docs/prd/feature-armazenamento-anuncios.md` (2026-11-14, código): schema versionado (`db/`), aprovação/recusa atômicas com log (`ads_moderation_log`), gestão de publicados no Neon, remoção de `/admin` e dos JSON de fila, limpeza LGPD via Vercel Cron (`vercel.json`, 06:00 UTC). Testes: 22 arquivos, 150 testes passando. Build de produção não validado neste ambiente (falha ao buscar fontes do Google)
    - ✅ User Story 3: Área de moderação (`/moderacao` — auth por `MODERATOR_SECRET`, tabs Pendentes/Publicados, aprovar/recusar/editar/suspender/reativar/remover)
    - ✅ User Story 4: Verificação GA4 (`NEXT_PUBLIC_GSC_VERIFICATION` condicional apenas produção)
    - ✅ 144 testes passando (incl. novos testes de listagem, moderação, formulário)
    - ✅ Build OK (Turbopack), Lint 0 erros
    - ✅ Deploy em produção realizado
 
-**Pendências atuais:** Nenhuma — Fase 1 e Fase 2 concluídas.
+**Pendências atuais (2026-11-14):**
+- Aplicar `npm run db:migrate` em produção **antes** do deploy do código (não aplicado ainda), depois `npm run db:seed:ads` (sem `--dry-run`) para migrar `ads.json`. Sem isso, a vitrine de anúncios fica vazia.
+- Emenda v1.4.0 aprovada pelo proprietário em 2026-11-14 e registrada na constituição (Spec 10 do PRD). Conflito de banco resolvido.
+- Esclarecer com o proprietário: o `/anuncie` não tem campo CNPJ, então a dedupe por CNPJ (R3) só vale para os registros que o tiverem.
+- Validar o build de produção em ambiente com acesso ao Google Fonts.
+- Criar as branches Neon de preview/dev (Spec 09) e configurar `DATABASE_URL`, `CRON_SECRET` e `MODERATOR_SECRET` nos ambientes.
+- Atualizar `package.json` e tag quando houver release (hoje `0.2.0`).
 
 ---
 
 ## 12. Convenções para quem for contribuir
 
+- **Manutenção deste arquivo**: atualizar o AGENTS.md no fim de cada modificação importante (regra completa em §0).
 - Commits **conventionais em pt-BR** (`feat:`, `fix:`, `chore:`…) — validados
   por commitlint no hook `commit-msg`; terminar com
   `Co-Authored-By: Claude Code <noreply@anthropic.com>` quando o commit for

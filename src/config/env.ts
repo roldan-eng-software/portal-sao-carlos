@@ -51,6 +51,8 @@ export const env = {
   gscVerification: optional('NEXT_PUBLIC_GSC_VERIFICATION'),
   /** Segredo do moderador para rotas protegidas (apenas produção). */
   moderatorSecret: optional('MODERATOR_SECRET'),
+  /** Segredo da limpeza LGPD agendada (Vercel Cron envia Authorization: Bearer). */
+  cronSecret: optional('CRON_SECRET'),
   /** Retenção de notícias em dias (default: 365). */
   newsHistoryRetentionDays: parseInt(optional('NEWS_HISTORY_RETENTION_DAYS') ?? '365', 10),
 } as const;

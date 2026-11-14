@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * Middleware para:
- * 1. Rate limiting em /anuncie (Server Actions POST)
- * 2. Autenticação simples para /admin/*
+ * Middleware para rate limiting em /anuncie (Server Actions POST).
  *
  * Armazenamento em memória (Map global) - suficiente para porte atual.
  * Em produção na Vercel, considerar @vercel/kv ou Redis para persistência cross-instance.
@@ -56,26 +54,6 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
   return { allowed: true };
 }
 
-// ============ ADMIN AUTH ============
-const ADMIN_COOKIE_NAME = 'admin_session';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
-
-function verifyAdminPassword(password: string): boolean {
-  return ADMIN_PASSWORD.length > 0 && password === ADMIN_PASSWORD;
-}
-
-function getSessionCookie(request: NextRequest): string | undefined {
-  return request.cookies.get(ADMIN_COOKIE_NAME)?.value;
-}
-
-function isAdminRoute(pathname: string): boolean {
-  return pathname.startsWith('/admin');
-}
-
-function isLoginRoute(pathname: string): boolean {
-  return pathname === '/admin/login';
-}
-
 function isAnuncieAction(pathname: string): boolean {
   // Server Actions em /anuncie fazem POST para a própria rota
   return pathname === '/anuncie';
@@ -107,19 +85,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 2. Proteção de rotas /admin/*
-  if (isAdminRoute(pathname) && !isLoginRoute(pathname)) {
-    const session = getSessionCookie(request);
-
-    if (!session || !verifyAdminPassword(session)) {
-      // Redireciona para login
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  // 3. Headers de segurança básicos
+  // 2. Headers de segurança básicos
   const response = NextResponse.next();
 
   // CSP básico (já temos via next.config.ts headers, mas reforça)
@@ -133,6 +99,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/anuncie',           // rate limiting no formulário
-    '/admin/:path*',      // proteção admin
   ],
 };

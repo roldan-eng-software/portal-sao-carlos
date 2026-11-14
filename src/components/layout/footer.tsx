@@ -169,7 +169,7 @@ export function Footer() {
               comércio e serviços.
             </p>
             <Link
-              href="/anunciar"
+              href="/anuncie"
               className="block w-full rounded-lg bg-accent-amber px-4 py-2.5 text-center text-label-lg text-primary shadow-sm transition-all hover:bg-accent-amber/90"
             >
               Quero Anunciar Agora

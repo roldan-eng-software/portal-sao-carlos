@@ -72,6 +72,30 @@ Removed sections: nenhuma.
 Follow-up TODOs: nenhuma pergunta em aberto restante — constituição completa para Fase 2.
 -->
 
+<!-- Sync Impact Report — emenda de 2026-11-14 (decisão de armazenamento de
+     anúncios: Neon PostgreSQL + LGPD operacional)
+Version change: 1.3.0 → 1.4.0
+Bump type: MINOR (expansão material de orientação em Arquitetura e
+  Tecnologia e em Privacidade e Segurança; sem remoção de princípios)
+Modified sections:
+  - "Arquitetura e Tecnologia": Neon PostgreSQL autorizado SOMENTE para
+    anúncios (pendentes, publicados e log de moderação); notícias seguem em
+    JSON versionado; schema versionado no repositório; sem ORM.
+  - "Privacidade e Segurança" / "Segurança": armazenamento de anúncios passa
+    a ser o banco Neon (com controle de acesso por variável de ambiente);
+    exclusão de pendentes após 30 dias passa a ser executada por tarefa
+    agendada protegida por segredo.
+  - "Moderador designado" e "Política de Anúncios Gratuitos": trilha de
+    auditoria passa a ser o log de moderação no banco, não mais o histórico
+    de commits de `content/ads.json`.
+Added sections: nenhuma.
+Removed sections: nenhuma.
+Follow-up TODOs: a implementação segue o PRD
+  docs/prd/feature-armazenamento-anuncios.md (migração do seed, remoção do
+  painel /admin e dos arquivos de fila JSON). Pendente: confirmar a dedupe
+  por CNPJ no formulário público (campo ausente em /anuncie).
+-->
+
 # Meu Bairro - Portal São Carlos Constitution
 
 Nome definitivo do projeto: **Meu Bairro - Portal São Carlos** (definido em 2026-10-24, emenda v1.3.0).
@@ -346,7 +370,7 @@ ou pagamentos de anúncios.
 - **Moderador designado (decisão 2026-10-24):** o proprietário do portal
   (responsável legal) é o moderador único. Não há equipe de moderação
   separada nesta fase. Decisões de moderação são finais e documentadas
-  via histórico de commits no `content/ads.json`.
+  via log de moderação (`ads_moderation_log`, no Neon).
 
 ### Política de Anúncios Gratuitos (decisão D4 — 2026-10-24)
 
@@ -373,7 +397,7 @@ ou pagamentos de anúncios.
    horário de atendimento).
 2. Submissão entra em **fila de moderação** (status: pendente).
 3. Moderador valida elegibilidade, regras editoriais e duplicidade (CNPJ).
-4. Se aprovado → publicação no `content/ads.json` com `kind: "anuncio-gratuito"`.
+4. Se aprovado → publicação em `ads_published` (Neon) com `kind: "anuncio-gratuito"`, na mesma transação que remove o pendente.
 5. Se recusado → notificação ao comerciante com motivo (via WhatsApp/e-mail).
 6. O proprietário do portal PODE editar, suspender ou remover anúncios a
    qualquer momento.
@@ -423,10 +447,14 @@ para formulário público de captação.
 - Procedimento: verificação de identidade mínima (e-mail/telefone do
   cadastro) → ação no prazo legal.
 
-**Segurança:** dados armazenados apenas em `content/ads.json` versionado
-no Git (acesso restrito ao repositório privado). Nenhum banco de dados
-externo, nenhum processamento por terceiros além do GA4 (anônimo) e
-Vercel (logs de acesso padrão).
+**Segurança:** os anúncios (pendentes, publicados e log de moderação) ficam
+no banco Neon PostgreSQL, acessado apenas no servidor pela variável
+`DATABASE_URL`. Preview e desenvolvimento usam branch separada da produção.
+O schema é versionado no repositório. Notícias e demais conteúdos seguem em
+JSON versionado no Git (acesso restrito ao repositório privado). Processadores
+de dados: Neon (anúncios), GA4 (anônimo) e Vercel (logs de acesso padrão e
+Cron da limpeza LGPD). A exclusão de pendentes não aprovados após 30 dias é
+executada por tarefa agendada protegida por segredo (`CRON_SECRET`).
 
 **Registro de operações de tratamento (art. 37 LGPD):** mantido em
 `docs/lgpd/registro-tratamento.md` (atualizado a cada mudança de
@@ -489,7 +517,11 @@ Antes de integrar, DEVE ser avaliado:
 
 - Next.js, TypeScript, React e Tailwind CSS.
 - PostgreSQL, Supabase ou Neon SOMENTE SE houver necessidade real de
-  persistência.
+  persistência. **Decisão 2026-11-14 (emenda v1.4.0):** Neon PostgreSQL está
+  autorizado para os dados de anúncios (pendentes, publicados e log de
+  moderação), sem ORM e com schema versionado em `db/migrations/`. Notícias e
+  demais conteúdos permanecem em JSON versionado. Qualquer outro uso de banco
+  EXIGE emenda prévia.
 - Vercel para deploy, se fizer sentido.
 - APIs externas acessadas no servidor; RSS e fontes públicas normalizados no
   backend.
@@ -644,7 +676,7 @@ Esta constituição é considerada válida e aplicável quando:
 - A data de ratificação é a data da adoção inicial; a data de última alteração
   DEVE ser atualizada a cada emenda.
 
-**Version**: 1.3.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-10-24
+**Version**: 1.4.0 | **Ratified**: 2026-09-28 | **Last Amended**: 2026-11-14
 
 ## Perguntas em Aberto
 

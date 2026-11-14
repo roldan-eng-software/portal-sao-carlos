@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { editPublishedAd, updateAdStatus } from '@/modules/ads/manage';
+import { editPublishedAd, updateAdStatus, removeAd } from '@/modules/ads/manage';
 import { requireModeratorAuth } from '@/lib/auth';
 
 export async function PATCH(request: NextRequest) {
@@ -18,8 +18,7 @@ export async function PATCH(request: NextRequest) {
 
     switch (action) {
       case 'edit':
-        const editResult = await editPublishedAd(adId, data);
-        return NextResponse.json(editResult);
+        return NextResponse.json(await editPublishedAd(adId, data));
 
       case 'suspend':
         return NextResponse.json(await updateAdStatus(adId, 'suspenso'));
@@ -28,7 +27,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json(await updateAdStatus(adId, 'publicado'));
 
       case 'remove':
-        return NextResponse.json(await updateAdStatus(adId, 'removido'));
+        return NextResponse.json(await removeAd(adId));
 
       default:
         return NextResponse.json(

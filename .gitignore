@@ -33,3 +33,5 @@ Thumbs.db
 
 # Artefatos do Playwright MCP (validação visual)
 .playwright-mcp/
+
+.vercel

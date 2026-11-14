@@ -17,7 +17,9 @@
     "release:patch": "commit-and-tag-version --release-as patch",
     "release:dry": "commit-and-tag-version --dry-run",
     "cleanup:news-history": "node -e \"require('./src/modules/news-history/loader').updateHistory().then(r => console.log('Histórico atualizado:', r))\"",
-    "cleanup:ads-pending": "node -e \"require('./src/modules/ads-pending/loader').cleanupExpiredPending().then(r => console.log('Pendentes expirados removidos:', r))\""
+    "cleanup:ads-pending": "node -e \"require('./src/modules/ads-pending/loader').cleanupExpiredPending().then(r => console.log('Pendentes expirados removidos:', r))\"",
+    "db:migrate": "node --env-file-if-exists=.env.local db/migrate.mjs",
+    "db:seed:ads": "node --env-file-if-exists=.env.local db/seed-ads-published.mjs"
   },
   "dependencies": {
     "fast-xml-parser": "^4.5.1",

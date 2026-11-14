@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Formulário oficial de anúncios é /anuncie (PRD armazenamento-anuncios, R8).
+      {
+        source: '/anunciar',
+        destination: '/anuncie',
+        permanent: true,
+      },
       // Domínio apex → www canônico (301 permanente; SEO: evita conteúdo duplicado
       // entre meubairro.dev.br e www.meubairro.dev.br).
       {

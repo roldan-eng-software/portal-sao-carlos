@@ -1,7 +1,7 @@
 import { sanitizeText, sanitizeUrl, sanitizePhone } from '@/lib/sanitize';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { isValidCnpj as validateCNPJ, formatCnpj as formatCNPJ } from '@/lib/cnpj';
-import { savePendingAd, checkPendingCNPJDuplicate } from './loader';
+import { savePendingAd, checkCNPJInUse } from './loader';
 import type { AdSubmission } from './types';
 import { isValidCategory } from './types';
 
@@ -122,11 +122,10 @@ export function validateAndSanitizeAdForm(
 }
 
 /**
- * Verifica duplicidade de CNPJ pendente apenas.
- * Publicados ainda são consultados via ads.json (arquivo versionado).
+ * Verifica se o CNPJ já tem anúncio pendente ou publicado.
  */
 export async function checkCNPJDuplicate(cnpj: string): Promise<boolean> {
-  return await checkPendingCNPJDuplicate(cnpj);
+  return await checkCNPJInUse(cnpj);
 }
 
 /**

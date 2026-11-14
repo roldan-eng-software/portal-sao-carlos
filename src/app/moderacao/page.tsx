@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { loadPendingAds } from '@/modules/ads-pending/loader';
-import { loadAds } from '@/modules/ads/loader';
-import type { AdPublished } from '@/modules/ads-pending/types';
+import { loadManagedPublished } from '@/modules/ads/manage';
 import { ModerationClient } from './moderation-client';
 import { env } from '@/config/env';
 
@@ -16,18 +15,8 @@ export const metadata: Metadata = {
 
 // Carrega dados no servidor (sem cache)
 async function getModerationData() {
-  const pending = await loadPendingAds();
-  const publishedResult = await loadAds();
-
-  const publishedAds = Array.isArray(publishedResult) 
-    ? publishedResult 
-    : (publishedResult as any).data || [];
-
-  const freeAds = publishedAds.filter(
-    (ad: any) => ad.kind === 'anuncio-gratuito'
-  ) as AdPublished[];
-
-  return { pending, published: freeAds };
+  const [pending, published] = await Promise.all([loadPendingAds(), loadManagedPublished()]);
+  return { pending, published };
 }
 
 export default async function ModerationPage() {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rejectAdSubmission } from '@/modules/ads-pending/notify';
 import { generateWhatsAppLink, generateMailtoLink, rejectionMessage } from '@/modules/ads-pending/notify';
-import { loadPendingAds } from '@/modules/ads-pending/loader';
 import { requireModeratorAuth } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -25,10 +24,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Busca submissão original para gerar notificação
-    const pending = await loadPendingAds();
-    const submission = pending.find((ad) => ad.id === submissionId);
-
     const result = await rejectAdSubmission(submissionId, reason.trim());
 
     if (!result.success) {
@@ -38,8 +33,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Gera links de notificação se houver submissão original
+    // Gera links de notificação a partir do pendente recusado
     let notificationLinks = { whatsapp: null as string | null, email: null as string | null };
+    const submission = result.submission;
     if (submission) {
       const rejection = rejectionMessage(submission, reason.trim());
       notificationLinks = {

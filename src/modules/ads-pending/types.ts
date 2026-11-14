@@ -7,6 +7,7 @@ export type AdSubmissionStatus = 'pendente' | 'aprovado' | 'recusado';
 
 export interface AdSubmission {
   id: string;
+  kind?: 'anuncio-gratuito' | 'anuncio-patrocinado';
   businessName: string;
   category: string;
   description: string;
@@ -16,6 +17,7 @@ export interface AdSubmission {
   url?: string;
   hours?: string;
   cnpj?: string;
+  contactEmail?: string;
   status: AdSubmissionStatus;
   submittedAt: string;
   reviewedAt?: string;
@@ -23,7 +25,7 @@ export interface AdSubmission {
   sourceIp?: string;
 }
 
-export type AdPublishedStatus = 'publicado' | 'suspenso' | 'removido';
+export type AdPublishedStatus = 'publicado' | 'suspenso';
 
 export interface AdPublished {
   id: string;
@@ -40,7 +42,6 @@ export interface AdPublished {
   status: AdPublishedStatus;
   approvedAt: string;
   suspendedAt?: string;
-  removedAt?: string;
   updatedAt: string;
 }
 
