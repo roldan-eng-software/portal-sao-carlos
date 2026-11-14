@@ -1,106 +1,167 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-type ToastType = 'success' | 'error' | 'info';
+export type ToastType = 'success' | 'error' | 'info';
 
-interface ToastProps {
+interface ToastItem {
+  id: number;
   type: ToastType;
   message: string;
-  onClose: () => void;
 }
 
-function ToastContent({ type, message, onClose }: ToastProps) {
-  const icons = {
-    success: 'check_circle',
-    error: 'error',
-    info: 'info',
-  };
+/** Tempo que o aviso fica na tela antes de sumir sozinho. */
+const AUTO_DISMISS_MS = 6000;
+/** Empilhamento máximo — avisos mais antigos saem primeiro. */
+const MAX_VISIBLE = 3;
 
-  const styles = {
-    success: 'bg-badge-success text-on-success border-success',
-    error: 'bg-error text-on-error border-error',
-    info: 'bg-secondary text-on-secondary border-secondary',
-  };
+const ACCENT: Record<ToastType, string> = {
+  success: 'border-l-badge-success',
+  error: 'border-l-error',
+  info: 'border-l-secondary',
+};
+
+/**
+ * Dispara um aviso flutuante de qualquer componente cliente.
+ * O `ToastProvider` (montado no layout raiz) escuta o evento `toast` e renderiza a fila.
+ */
+export function showToast(type: ToastType, message: string): void {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('toast', { detail: { type, message } }));
+}
+
+/**
+ * Ícones disponíveis no subset auto-hospedado: `check_circle` e `info` existem;
+ * `error` e `close` não — por isso o "!" e o "×" são desenhados com CSS/texto,
+ * evitando a ligadura crua aparecendo como texto (ver src/app/fonts/README.md).
+ */
+function ToastIcon({ type }: { type: ToastType }) {
+  if (type === 'success') {
+    return (
+      <span
+        className="material-symbols-outlined icon-filled mt-0.5 text-[22px] text-badge-success"
+        aria-hidden="true"
+      >
+        check_circle
+      </span>
+    );
+  }
+
+  if (type === 'info') {
+    return (
+      <span
+        className="material-symbols-outlined mt-0.5 text-[22px] text-secondary"
+        aria-hidden="true"
+      >
+        info
+      </span>
+    );
+  }
 
   return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-xl border px-4 py-3 shadow-lg min-w-[280px] max-w-md animate-slide-up ${styles[type]}`}
-      role="alert"
-      aria-live="polite"
+    <span
+      aria-hidden="true"
+      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-error text-[13px] font-bold leading-none text-on-error"
     >
-      <span className="material-symbols-outlined text-[24px]" aria-hidden="true">
-        {icons[type]}
-      </span>
-      <p className="flex-1 text-body-md">{message}</p>
+      !
+    </span>
+  );
+}
+
+function ToastCard({ toast, onClose }: { toast: ToastItem; onClose: () => void }) {
+  return (
+    <div
+      role={toast.type === 'error' ? 'alert' : 'status'}
+      aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
+      className={`animate-toast-in pointer-events-auto flex w-full items-start gap-3 rounded-xl border border-l-4 border-border-subtle bg-surface-card p-4 text-on-surface shadow-lead sm:w-auto sm:min-w-[320px] sm:max-w-md ${ACCENT[toast.type]}`}
+    >
+      <ToastIcon type={toast.type} />
+      <p className="flex-1 text-body-md leading-snug">{toast.message}</p>
       <button
+        type="button"
         onClick={onClose}
-        className="flex-shrink-0 rounded-lg p-1 text-current opacity-70 hover:opacity-100 transition-opacity"
-        aria-label="Fechar"
+        aria-label="Fechar aviso"
+        className="-m-1 shrink-0 rounded-lg p-1 text-outline transition-colors hover:bg-surface-container hover:text-on-surface"
       >
-        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
-          close
+        <span aria-hidden="true" className="block text-lg leading-none">
+          ×
         </span>
       </button>
     </div>
   );
 }
 
-interface ToastProviderProps {
-  children?: React.ReactNode;
-}
+/**
+ * Fila global de avisos flutuantes (canto inferior direito no desktop, largura
+ * total no mobile). Recebe mensagens via `showToast()` / evento `toast`.
+ */
+export function ToastProvider() {
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const nextIdRef = useRef(1);
+  const timersRef = useRef(new Map<number, ReturnType<typeof setTimeout>>());
 
-export function ToastProvider({ children }: ToastProviderProps) {
-  const [toasts, setToasts] = useState<Array<{ id: number; type: ToastType; message: string }>>([]);
-
-  const removeToast = (id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  return (
-    <>
-      {children}
-      <div className="fixed bottom-4 right-4 z-50 pointer-events-none">
-        {toasts.map((toast) => (
-          <ToastContent
-            key={toast.id}
-            type={toast.type}
-            message={toast.message}
-            onClose={() => removeToast(toast.id)}
-          />
-        ))}
-      </div>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              window.showToast = function(type, message) {
-                window.dispatchEvent(new CustomEvent('toast', { detail: { type, message } }));
-              };
-            })();
-          `,
-        }}
-      />
-    </>
-  );
-}
-
-export function useToast() {
-  const [toasts, setToasts] = useState<Array<{ id: number; type: ToastType; message: string }>>([]);
-
-  useEffect(() => {
-    const handler = (e: CustomEvent) => {
-      const { type, message } = e.detail;
-      const id = Date.now();
-      setToasts((prev) => [...prev, { id, type, message }]);
-      // Auto-remove after 5 seconds
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, 5000);
-    };
-    window.addEventListener('toast', handler as EventListener);
-    return () => window.removeEventListener('toast', handler as EventListener);
+  const dismiss = useCallback((id: number) => {
+    const timer = timersRef.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      timersRef.current.delete(id);
+    }
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  return { toasts, setToasts };
+  useEffect(() => {
+    const timers = timersRef.current;
+
+    function handleToast(event: Event) {
+      const detail = (event as CustomEvent<{ type?: ToastType; message?: string }>).detail;
+      const message = detail?.message?.trim();
+      if (!message) return;
+
+      const type: ToastType =
+        detail?.type === 'error' || detail?.type === 'info' ? detail.type : 'success';
+      const id = nextIdRef.current++;
+
+      setToasts((prev) => {
+        const next = [...prev, { id, type, message }];
+        // Descarta os excedentes junto com o timer deles.
+        while (next.length > MAX_VISIBLE) {
+          const removed = next.shift();
+          const timer = removed ? timers.get(removed.id) : undefined;
+          if (removed && timer) {
+            clearTimeout(timer);
+            timers.delete(removed.id);
+          }
+        }
+        return next;
+      });
+
+      timers.set(
+        id,
+        setTimeout(() => {
+          timers.delete(id);
+          setToasts((prev) => prev.filter((toast) => toast.id !== id));
+        }, AUTO_DISMISS_MS),
+      );
+    }
+
+    window.addEventListener('toast', handleToast);
+    return () => {
+      window.removeEventListener('toast', handleToast);
+      timers.forEach((timer) => clearTimeout(timer));
+      timers.clear();
+    };
+  }, []);
+
+  if (toasts.length === 0) return null;
+
+  return (
+    <div
+      className="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex flex-col items-stretch gap-2 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:items-end"
+      data-testid="toast-region"
+    >
+      {toasts.map((toast) => (
+        <ToastCard key={toast.id} toast={toast} onClose={() => dismiss(toast.id)} />
+      ))}
+    </div>
+  );
 }

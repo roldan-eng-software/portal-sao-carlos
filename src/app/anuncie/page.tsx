@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { showToast } from '@/components/ui/Toast';
 import { AD_CATEGORIES } from '@/lib/ads-validation';
 import { submitAdAction } from './actions';
 
@@ -15,12 +16,10 @@ const KIND_OPTIONS = [
 
 const CATEGORY_OPTIONS = AD_CATEGORIES.map((cat) => ({ value: cat, label: cat }));
 
-export default function AnunciePage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const [formData, setFormData] = useState({
-    kind: 'anuncio-gratuito' as const,
+/** Estado inicial limpo — reutilizado no reset após envio bem-sucedido. */
+function createEmptyForm() {
+  return {
+    kind: 'anuncio-gratuito',
     businessName: '',
     category: '',
     description: '',
@@ -31,7 +30,13 @@ export default function AnunciePage() {
     hours: '',
     contactEmail: '',
     website: '', // honeypot
-  });
+  };
+}
+
+export default function AnunciePage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState(createEmptyForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -54,36 +59,38 @@ export default function AnunciePage() {
       }
     });
 
-    const result = await submitAdAction(formDataToSend);
+    try {
+      const result = await submitAdAction(formDataToSend);
 
-    if (result.success) {
-      // Toast de sucesso via event
-      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'success', message: result.message } }));
-      // Reset form
-      setFormData({
-        kind: 'anuncio-gratuito',
-        businessName: '',
-        category: '',
-        description: '',
-        neighborhood: '',
-        phone: '',
-        whatsapp: '',
-        url: '',
-        hours: '',
-        contactEmail: '',
-        website: '',
-      });
-    } else {
-      // Erros de validação
-      const fieldErrors: Record<string, string> = {};
-      result.errors?.forEach((err) => {
-        fieldErrors[err.field] = err.message;
-      });
-      setErrors(fieldErrors);
-      window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: 'Por favor, corrija os erros abaixo.' } }));
+      if (result.success) {
+        // Aviso flutuante global (ToastProvider no layout raiz) antes de limpar o formulário.
+        showToast(
+          'success',
+          result.message ?? 'Anúncio enviado com sucesso! Vamos revisar e responder no contato informado.',
+        );
+        // Limpa tudo para um novo pedido de outro comércio.
+        setFormData(createEmptyForm());
+      } else {
+        // Erros de validação
+        const fieldErrors: Record<string, string> = {};
+        result.errors?.forEach((err) => {
+          fieldErrors[err.field] = err.message;
+        });
+        setErrors(fieldErrors);
+        // Nunca falhar em silêncio: mostra a mensagem do servidor (ex.: banco
+        // indisponível) ou o primeiro erro de campo.
+        showToast(
+          'error',
+          result.message ??
+            result.errors?.[0]?.message ??
+            'Não foi possível enviar o anúncio. Revise os campos e tente novamente.',
+        );
+      }
+    } catch {
+      showToast('error', 'Erro de conexão. Verifique sua internet e tente novamente.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -246,6 +253,11 @@ export default function AnunciePage() {
         {/* Erro genérico de contatos */}
         {errors.contacts && (
           <p className="text-body-sm text-error" role="alert">{errors.contacts}</p>
+        )}
+
+        {/* Erro da submissão como um todo (ex.: honeypot acionado, falha no envio) */}
+        {errors.form && (
+          <p className="text-body-sm text-error" role="alert">{errors.form}</p>
         )}
 
         {/* Botão de envio */}

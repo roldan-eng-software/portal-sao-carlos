@@ -51,7 +51,7 @@ resultados abaixo de build e lint são da última verificação registrada (2026
 
 | Verificação | Resultado |
 | --- | --- |
-| `npm run test` | ✅ 24 arquivos, **156 testes passando** (2026-11-14) |
+| `npm run test` | ✅ 26 arquivos, **164 testes passando** (2026-11-14) |
 | `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), rotas estáticas + dinâmicas, home com `revalidate 15m` |
 | `npm run lint` | ✅ 0 erros e **0 warnings** (Material Symbols auto-hospedada desde a Etapa 1 — ver §6) |
 | Gates da constituição | 17/17 PASS conforme `specs/001-portal-sao-carlos-fase1/plan.md` |
@@ -173,7 +173,7 @@ src/
 └── content/               # Conteúdo curado manualmente (moderação = revisão de git)
     ├── ads.json, contacts.json, promo.json, notices.json
     ├── news-history.json   # Histórico persistido de notícias (Fase 2, JSON)
-├── db/                      # Banco Neon: migrations/0001_ads.sql, migrate.mjs (npm run db:migrate), seed-ads-published.mjs (npm run db:seed:ads)
+├── db/                      # Banco Neon: migrations/0001_ads.sql, 0002_ads_defaults.sql, 0003_ads_pending_id_text.sql; migrate.mjs (npm run db:migrate), seed-ads-published.mjs (npm run db:seed:ads)
     └── news-history.json   # Histórico persistido de notícias (Fase 2)
 
 tests/
@@ -447,11 +447,47 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    `scroll-mt-20 xl:scroll-mt-24`. Implementação em `src/components/layout/header.tsx`
    e `src/components/ui/section.tsx`; cobertura em `tests/unit/header.test.tsx`
    (4 testes). Suíte: 24 arquivos, 156 testes.
+25. ✅ **Aviso flutuante de sucesso no `/anuncie`** (2026-11-14): o **`ToastProvider` nunca
+   escutava o evento `toast`** — `window.dispatchEvent(new CustomEvent('toast'))` não
+   renderizava nada, então o envio limpava o formulário sem nenhum retorno visual.
+   `src/components/ui/Toast.tsx` foi reescrito: fila de avisos (máx. 3, auto-dismiss de 6s,
+   botão "Fechar aviso"), `showToast(type, message)` exportado para uso nos client
+   components, `role="status"`/`"alert"`, posição `fixed` acima do header (`z-[60]`),
+   largura total no mobile e canto inferior direito no desktop, animação
+   `animate-toast-in` em `globals.css`. O `<script dangerouslySetInnerHTML>` que criava
+   `window.showToast` foi removido e os ícones passaram a usar só ligaduras existentes
+   (`check_circle`, `info`; "!" e "×" desenhados) — `error`/`close` não estão no subset.
+   No `src/app/anuncie/page.tsx` o envio passou a usar `showToast`, resetar o formulário
+   com `createEmptyForm()` após sucesso e tratar exceções no `finally`. Mensagem do
+   Server Action em `actions.ts` agora inicia com "Anúncio enviado com sucesso!".
+   Cobertura em `tests/unit/toast.test.tsx` e `tests/unit/anuncie-submit.test.tsx`
+   (8 testes). Suíte: 26 arquivos, 164 testes.
+26. ✅ **Envio do `/anuncie` não chegava à moderação — coluna `ads_pending.id` era `uuid`**
+   (2026-11-14): diagnóstico no banco de produção (projeto Neon
+   `summer-meadow-97554696`). O formulário passou a usar `generateAdId()`
+   (`slug-do-negocio-timestamp`, `src/lib/ads-validation.ts:73`), mas em produção a
+   coluna era `uuid NOT NULL` sem default — a tabela foi criada manualmente, e o
+   `0001_ads.sql` só a alterava com `IF NOT EXISTS`, que não muda o tipo de tabela
+   existente. Todo INSERT do Server Action falhava com **SQLSTATE 22P02**
+   (`invalid input syntax for type uuid`) e `actions.ts` engolia o erro, devolvendo
+   sucesso — daí "os dados não aparecem na área do moderador". A rota legada
+   `src/modules/ads-pending/submit.ts` usava `crypto.randomUUID()` e por isso
+   gravava (é a origem da única linha antiga, de 2026-10-24).
+   **Correção**: `db/migrations/0003_ads_pending_id_text.sql`
+   (`ALTER TABLE ads_pending ALTER COLUMN id TYPE text USING id::text`), alinhando a
+   fila ao `ads_published.id` (já `text`). Aplicada em produção em 2026-11-14 via Neon
+   `run_sql` e registrada em `schema_migrations`; validada com um INSERT de teste com
+   id slug, que passou a aparecer em `SELECT * FROM ads_pending WHERE status='pendente'`.
+   **Blindagem da UI**: `/anuncie` agora exibe no aviso flutuante a mensagem real do
+   servidor quando o envio falha (nunca em silêncio) e renderiza `errors.form`
+   (honeypot/erro geral) na página. Teste novo cobre o caminho de falha do servidor.
 
 **Pendências atuais (2026-11-14):**
 - `MODERATOR_SECRET` rotacionado em 2026-11-14 pelo proprietário (o valor anterior ficou exposto no HTML de `/moderacao` desde 2026-10-24). A variável é Sensitive na Vercel: não pode ser lida por `vercel env pull`; guarde a senha fora do repositório.
 - Verificar a primeira execução do cron `/api/cron/ads-cleanup` (06:00 UTC) nos logs da Vercel. O teste autorizado não pôde ser feito porque `CRON_SECRET` é Sensitive e não é exportado.
 - O pendente real de `ads_pending` (criado em 2026-10-25) expira em 2026-11-24 pela limpeza LGPD se não for decidido.
+- **Remover o registro de teste** `teste-verificacao-moderacao-mfa1b2c3` ("Teste de Verificação — Moderação", status `pendente`) da fila de `/moderacao` — foi inserido em 2026-11-14 para validar a migração `0003`. A limpeza LGPD não o remove porque ela filtra por `status='pendente'` e `submitted_at` > 30 dias; ele sairia sozinho em 2026-12-14.
+- Existe uma linha órfã em `ads_pending` com `id 1355672f-...` e status `aprovado` (2026-10-24): a limpeza só apaga `status='pendente'`, então ela fica para sempre. Decidir se deve ser apagada manualmente.
 - Esclarecer com o proprietário: o `/anuncie` não tem campo CNPJ, então a dedupe por CNPJ (R3) só vale para os registros que o tiverem.
 - Validar o build de produção em ambiente com acesso ao Google Fonts (o deploy da Vercel passou).
 - Criar branch Neon de preview/dev (Spec 09). Hoje só a produção tem `DATABASE_URL`, então previews não acessam anúncios.

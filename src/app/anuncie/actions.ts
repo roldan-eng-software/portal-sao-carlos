@@ -91,6 +91,6 @@ export async function submitAdAction(formData: FormData): Promise<SubmitResult> 
 
   return {
     success: true,
-    message: 'Anúncio enviado para análise! Entraremos em contato pelo e-mail informado.',
+    message: 'Anúncio enviado com sucesso! Vamos revisar e responder no e-mail informado.',
   };
 }
