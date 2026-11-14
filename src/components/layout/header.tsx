@@ -27,7 +27,7 @@ function NavLinks({ className = '' }: { className?: string }) {
         <a
           key={item.href}
           href={item.href}
-          className={`shrink-0 text-label-lg text-on-surface-variant transition-colors hover:text-secondary ${className}`}
+          className={`shrink-0 font-body text-body-sm font-semibold text-on-surface-variant transition-colors hover:text-secondary ${className}`}
         >
           {item.label}
         </a>
@@ -175,16 +175,19 @@ function InstitutionalDropdown({ fullWidth = false }: { fullWidth?: boolean }) {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls="institutional-menu"
-        className={`flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-2 ${
+        className={`flex shrink-0 items-center gap-2 font-body text-body-sm font-semibold text-on-surface-variant transition-colors hover:text-secondary focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-2 ${
           fullWidth
-            ? 'w-full justify-between rounded-lg bg-surface-card px-3 py-2 shadow-card'
+            ? 'w-full justify-between rounded-lg bg-surface-card px-3 py-2 text-body-md shadow-card'
             : 'rounded-lg px-1'
         }`}
       >
         <span>Institucional</span>
-        <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
-          {open ? 'expand_less' : 'expand_more'}
-        </span>
+        <span
+          aria-hidden="true"
+          className={`h-2 w-2 shrink-0 border-b-2 border-r-2 border-current transition-transform ${
+            open ? '-rotate-[135deg]' : 'rotate-45 -translate-y-0.5'
+          }`}
+        />
       </button>
       {open && (
         <div
@@ -238,14 +241,14 @@ export function Header() {
             priority
             className="h-9 w-auto sm:h-10"
           />
-          <span className="hidden self-end text-label-sm text-on-surface-variant sm:block" aria-hidden="true">
+          <span className="hidden self-end text-label-sm text-on-surface-variant 2xl:block" aria-hidden="true">
             <strong className="text-secondary">Meu Bairro</strong> · São Carlos
           </span>
         </Link>
 
         <nav
           aria-label="Navegação principal"
-          className="hidden min-w-0 flex-1 items-center justify-center gap-6 xl:flex"
+          className="hidden min-w-0 flex-1 items-center justify-center gap-4 2xl:gap-6 xl:flex"
         >
           <NavLinks />
           <InstitutionalDropdown />
@@ -269,7 +272,7 @@ export function Header() {
         className="border-t border-border-subtle xl:hidden"
       >
         <div className="mx-auto grid w-full max-w-[1200px] grid-cols-2 gap-2 px-4 py-3 sm:px-6">
-          <NavLinks className="w-full rounded-lg bg-surface-card px-3 py-2 text-center shadow-card" />
+          <NavLinks className="w-full rounded-lg bg-surface-card px-3 py-2 text-center text-body-md shadow-card" />
           <InstitutionalDropdown fullWidth />
         </div>
       </nav>
