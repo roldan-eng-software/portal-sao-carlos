@@ -170,27 +170,45 @@ export function AdsSection({ result }: AdsSectionProps) {
               arrow_forward
             </span>
           </Link>
-          <a
-            href="#anuncie"
+          <Link
+            href="/anuncie"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary px-4 py-2.5 text-label-md text-on-secondary shadow-sm transition-colors hover:bg-primary"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
               add_business
             </span>
             Cadastrar Meu Negócio
-          </a>
+          </Link>
         </div>
       </div>
 
       {items.length === 0 ? (
         <div className="rounded-2xl bg-surface-card p-6 shadow-card">
           <p className="text-body-md text-on-surface-variant">
-            Nenhum anúncio publicado no momento.{' '}
-            <a href="#anuncie" className="text-secondary hover:underline">
-              Anuncie aqui
-            </a>
-            .
+            {result.status === 'error'
+              ? 'O Guia Comercial está temporariamente indisponível.'
+              : 'Ainda não há negócios publicados no Guia Comercial.'}
           </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              href="/empresas"
+              className="inline-flex items-center gap-1 text-label-lg text-secondary hover:underline"
+            >
+              Ver guia completo
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+                arrow_forward
+              </span>
+            </Link>
+            <Link
+              href="/anuncie"
+              className="inline-flex items-center gap-1 text-label-lg text-secondary hover:underline"
+            >
+              Cadastrar o primeiro negócio
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+                arrow_forward
+              </span>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
@@ -221,9 +239,11 @@ export function AdsSection({ result }: AdsSectionProps) {
         </div>
       )}
 
-      <div className="mt-4">
-        <StatusMessage result={result} />
-      </div>
+      {result.status !== 'error' && (
+        <div className="mt-4">
+          <StatusMessage result={result} />
+        </div>
+      )}
     </Section>
   );
 }

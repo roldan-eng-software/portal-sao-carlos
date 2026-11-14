@@ -423,6 +423,14 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    - ✅ 144 testes passando (incl. novos testes de listagem, moderação, formulário)
    - ✅ Build OK (Turbopack), Lint 0 erros
    - ✅ Deploy em produção realizado
+23. ✅ **Correções da crítica Impeccable da landing** (2026-11-14): a home agora prioriza
+   clima, notícias e telefones úteis no hero; removeu métricas e alegações não verificáveis;
+   o cadastro comercial explica elegibilidade, dados necessários e revisão humana; o estado
+   vazio/erro do Guia Comercial oferece links de recuperação para `/empresas` e `/anuncie`;
+   a navegação mobile exibe todos os destinos sem rolagem horizontal. Implementação em
+   `src/components/sections/hero-section.tsx`, `ads-section.tsx`,
+   `layout/header.tsx`, `layout/announce-cta.tsx` e `src/app/anuncie/page.tsx`;
+   cobertura em `tests/unit/homepage-recovery.test.tsx`.
 
 **Pendências atuais (2026-11-14):**
 - `MODERATOR_SECRET` rotacionado em 2026-11-14 pelo proprietário (o valor anterior ficou exposto no HTML de `/moderacao` desde 2026-10-24). A variável é Sensitive na Vercel: não pode ser lida por `vercel env pull`; guarde a senha fora do repositório.

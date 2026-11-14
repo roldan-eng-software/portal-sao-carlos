@@ -96,6 +96,29 @@ export default function AnunciePage() {
         </p>
       </header>
 
+      <section
+        aria-labelledby="como-funciona-titulo"
+        className="mb-8 rounded-2xl border border-border-subtle bg-surface-container-low p-6"
+      >
+        <h2 id="como-funciona-titulo" className="font-display text-headline-md text-primary">
+          Antes de enviar
+        </h2>
+        <ul className="mt-4 grid gap-4 text-body-sm text-on-surface-variant sm:grid-cols-3">
+          <li>
+            <strong className="block text-on-surface">Quem pode cadastrar</strong>
+            Comércio ou serviço local, com uma solicitação por negócio.
+          </li>
+          <li>
+            <strong className="block text-on-surface">O que informar</strong>
+            Nome, categoria, descrição, bairro e ao menos um canal de contato.
+          </li>
+          <li>
+            <strong className="block text-on-surface">O que acontece depois</strong>
+            O portal revisa a solicitação e responde pelo e-mail informado.
+          </li>
+        </ul>
+      </section>
+
       {/* Formulário */}
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {/* Honeypot - campo oculto anti-bot */}

@@ -36,7 +36,7 @@ function NavLinks({ className = '' }: { className?: string }) {
   );
 }
 
-function InstitutionalDropdown() {
+function InstitutionalDropdown({ fullWidth = false }: { fullWidth?: boolean }) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -175,7 +175,11 @@ function InstitutionalDropdown() {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls="institutional-menu"
-        className="flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-2 rounded-lg px-1"
+        className={`flex shrink-0 items-center gap-1.5 text-label-lg text-on-surface-variant transition-colors hover:text-secondary focus-visible:outline-3 focus-visible:outline-secondary focus-visible:outline-offset-2 ${
+          fullWidth
+            ? 'w-full justify-between rounded-lg bg-surface-card px-3 py-2 shadow-card'
+            : 'rounded-lg px-1'
+        }`}
       >
         <span>Institucional</span>
         <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
@@ -223,7 +227,7 @@ export function Header() {
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2"
-          aria-label="Portal São Carlos — página inicial"
+          aria-label="Meu Bairro — Portal São Carlos, página inicial"
         >
           <Image
             src="/logo.png"
@@ -235,7 +239,7 @@ export function Header() {
             className="h-9 w-auto sm:h-10"
           />
           <span className="hidden self-end text-label-sm text-on-surface-variant sm:block" aria-hidden="true">
-            Portal do <strong className="text-secondary">MeuBairro</strong>
+            <strong className="text-secondary">Meu Bairro</strong> · São Carlos
           </span>
         </Link>
 
@@ -248,28 +252,25 @@ export function Header() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">
-          <a
-            href="https://wa.me/5516981442301?text=Para%20o%20cadastro%20gratuito%20escreva%20abaixo%20os%20seguintes%20dados...%0ANome%20do%20Comercio:%0ABreve%20descri%C3%A7%C3%A3o:%0AHor%C3%A1rio%20de%20atendimento:%0AEndere%C3%A7o:%0ANumero%20do%20seu%20WhatsApp:%0ASite%20de%20sua%20empresa:"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/anuncie"
             className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-4 py-2.5 text-label-lg text-on-secondary shadow-[0_2px_8px_rgba(2,102,255,0.25)] transition-all hover:bg-primary-container"
           >
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
               storefront
             </span>
             <span>Anuncie Aqui</span>
-          </a>
+          </Link>
         </div>
       </div>
 
-      {/* Navegação horizontal (mobile/tablet) — sem JS, apenas rolagem. */}
       <nav
         aria-label="Navegação principal (mobile)"
         className="border-t border-border-subtle xl:hidden"
       >
-        <div className="mx-auto flex w-full max-w-[1200px] gap-5 overflow-x-auto px-4 py-2.5 sm:px-6">
-          <NavLinks />
-          <InstitutionalDropdown />
+        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-2 gap-2 px-4 py-3 sm:px-6">
+          <NavLinks className="w-full rounded-lg bg-surface-card px-3 py-2 text-center shadow-card" />
+          <InstitutionalDropdown fullWidth />
         </div>
       </nav>
     </header>
