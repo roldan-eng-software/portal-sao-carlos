@@ -17,7 +17,7 @@ interface SectionProps {
  */
 export function Section({ id, band = '', className = '', children, ...rest }: SectionProps) {
   return (
-    <section id={id} className={`w-full scroll-mt-32 xl:scroll-mt-24 ${band}`} {...rest}>
+    <section id={id} className={`w-full scroll-mt-20 xl:scroll-mt-24 ${band}`} {...rest}>
       <div
         className={`relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8 ${className}`}
       >

@@ -51,7 +51,7 @@ resultados abaixo de build e lint são da última verificação registrada (2026
 
 | Verificação | Resultado |
 | --- | --- |
-| `npm run test` | ✅ 20 arquivos, **144 testes passando** |
+| `npm run test` | ✅ 24 arquivos, **156 testes passando** (2026-11-14) |
 | `npm run build` | ✅ exit 0 — Next.js 16.3.6 (Turbopack), rotas estáticas + dinâmicas, home com `revalidate 15m` |
 | `npm run lint` | ✅ 0 erros e **0 warnings** (Material Symbols auto-hospedada desde a Etapa 1 — ver §6) |
 | Gates da constituição | 17/17 PASS conforme `specs/001-portal-sao-carlos-fase1/plan.md` |
@@ -276,11 +276,17 @@ imagens próprias** além dos assets estáticos em `public/`.
 `JsonLd` → `HeroSection` → `WeatherSection` → `NewsSection` (usa `NewsBento` grid)
 → `NoticesSection` → `ContactsSection` → `AdsSection` → `PromoSection`.
 
-**Layout global**: `Header` sticky (logo oficial, nav por âncoras `#noticias`,
-`#clima`, `#informativos`, `#contatos`, `#anuncios` + botão "Anuncie Aqui" →
-`#anuncie`) → `main#conteudo` → `AnnounceCTA` (`id="anuncie"`, em todas as
-páginas) → `Footer` (versão/deploy, telefones de emergência, links de política,
-contato do responsável) → `GoogleAnalytics`.
+**Layout global**: `Header` sticky (logo oficial + CTA "Anuncie Aqui" → `/anuncie`) → `main#conteudo`
+→ `AnnounceCTA` (`id="anuncie"`, em todas as páginas) → `Footer` (versão/deploy,
+telefones de emergência, links de política, contato do responsável) → `GoogleAnalytics`.
+O header tem dois modos: **≥1280px (`xl`)** exibe a nav inline por âncoras
+(`#noticias`, `#clima`, `#informativos`, `#contatos`, `#anuncios`) + dropdown
+"Institucional"; **<1280px** mantém só a marca, o CTA curto "Anuncie" e um botão
+hambúrguer (desenhado em CSS — o subset de ícones não tem `menu`/`close`) que abre
+um painel recolhível com os mesmos destinos em 2 colunas + bloco "Institucional".
+Esse painel fecha ao navegar, com `Escape` (devolvendo o foco ao botão) e ao
+atingir o breakpoint `xl`; fechado, o header ocupa 64px no mobile (era uma grade
+fixa de ~230px). `Section` usa `scroll-mt-20 xl:scroll-mt-24` para compensar.
 
 **Rótulos obrigatórios** (`components/ui/content-label.tsx`, FR-008): os 6
 valores de `ContentKind` — `noticia`, `informativo`, `servico-publico`,
@@ -431,6 +437,16 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    `src/components/sections/hero-section.tsx`, `ads-section.tsx`,
    `layout/header.tsx`, `layout/announce-cta.tsx` e `src/app/anuncie/page.tsx`;
    cobertura em `tests/unit/homepage-recovery.test.tsx`.
+24. ✅ **Responsividade do header no mobile** (2026-11-14): a grade fixa de 6 cartões
+   (2 colunas) que ficava sempre aberta abaixo da marca — ~230px de header sticky —
+   foi substituída por um **menu recolhível**. Fechado, o header tem 64px
+   (`h-16`, `sm:h-20`) com marca, CTA curto "Anuncie" (`sm`+) e hambúrguer em CSS;
+   aberto, um painel mostra âncoras e páginas institucionais em 2 colunas com alvos
+   de toque ≥44px e rolagem interna (`max-h-[calc(100dvh-4rem)]`). Fecha ao navegar,
+   com `Escape` (foco volta ao botão) e no breakpoint `xl`. `Section` passou a usar
+   `scroll-mt-20 xl:scroll-mt-24`. Implementação em `src/components/layout/header.tsx`
+   e `src/components/ui/section.tsx`; cobertura em `tests/unit/header.test.tsx`
+   (4 testes). Suíte: 24 arquivos, 156 testes.
 
 **Pendências atuais (2026-11-14):**
 - `MODERATOR_SECRET` rotacionado em 2026-11-14 pelo proprietário (o valor anterior ficou exposto no HTML de `/moderacao` desde 2026-10-24). A variável é Sensitive na Vercel: não pode ser lida por `vercel env pull`; guarde a senha fora do repositório.
