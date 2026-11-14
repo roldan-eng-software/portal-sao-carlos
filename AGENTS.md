@@ -267,7 +267,7 @@ imagens próprias** além dos assets estáticos em `public/`.
 | `/politica-de-privacidade` | Política de privacidade | Fase 1 |
 | `/anunciar` | Redirect 301 para `/anuncie` (`next.config.ts`) | Fase 2 |
 | `/anuncie` | Formulário público oficial de cadastro de anúncio (grava em `ads_pending`) | Fase 2 |
-| `/moderacao` | Área de moderação (protegida, MODERATOR_SECRET; fila, publicados, log) | Fase 2 |
+| `/moderacao` | Área de moderação: login por senha (`MODERATOR_SECRET`) grava cookie httpOnly; sem cookie só aparece o formulário de login | Fase 2 |
 | `/moderacao` | Área de moderação (protegida, MODERATOR_SECRET) | Fase 2 |
 | `/admin/login`, `/admin/anuncios` | Painel de anúncios protegido por `ADMIN_PASSWORD` (fora da spec 002) | — |
 | `robots.txt`, `sitemap.xml` | SEO local (dinâmico, incl. empresas + noticias) | Fase 1 + Spec 05/06 |
@@ -425,11 +425,12 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    - ✅ Deploy em produção realizado
 
 **Pendências atuais (2026-11-14):**
-- Aplicar `npm run db:migrate` em produção **antes** do deploy do código (não aplicado ainda), depois `npm run db:seed:ads` (sem `--dry-run`) para migrar `ads.json`. Sem isso, a vitrine de anúncios fica vazia.
-- Emenda v1.4.0 aprovada pelo proprietário em 2026-11-14 e registrada na constituição (Spec 10 do PRD). Conflito de banco resolvido.
+- Rotacionar `MODERATOR_SECRET`: o valor ficou exposto no HTML de `/moderacao` desde 2026-10-24 (corrigido no commit `16fbb01`). Exige nova senha definida pelo proprietário na Vercel.
+- Verificar a primeira execução do cron `/api/cron/ads-cleanup` (06:00 UTC) nos logs da Vercel. O teste autorizado não pôde ser feito porque `CRON_SECRET` é Sensitive e não é exportado.
+- O pendente real de `ads_pending` (criado em 2026-10-25) expira em 2026-11-24 pela limpeza LGPD se não for decidido.
 - Esclarecer com o proprietário: o `/anuncie` não tem campo CNPJ, então a dedupe por CNPJ (R3) só vale para os registros que o tiverem.
-- Validar o build de produção em ambiente com acesso ao Google Fonts.
-- Criar as branches Neon de preview/dev (Spec 09) e configurar `DATABASE_URL`, `CRON_SECRET` e `MODERATOR_SECRET` nos ambientes.
+- Validar o build de produção em ambiente com acesso ao Google Fonts (o deploy da Vercel passou).
+- Criar branch Neon de preview/dev (Spec 09). Hoje só a produção tem `DATABASE_URL`, então previews não acessam anúncios.
 - Atualizar `package.json` e tag quando houver release (hoje `0.2.0`).
 
 ---
