@@ -425,7 +425,7 @@ Plano original: `docs/plano-pontos-atencao.md`. Situação pós-Etapas 1–3, 5 
    - ✅ Deploy em produção realizado
 
 **Pendências atuais (2026-11-14):**
-- Rotacionar `MODERATOR_SECRET`: o valor ficou exposto no HTML de `/moderacao` desde 2026-10-24 (corrigido no commit `16fbb01`). Exige nova senha definida pelo proprietário na Vercel.
+- `MODERATOR_SECRET` rotacionado em 2026-11-14 pelo proprietário (o valor anterior ficou exposto no HTML de `/moderacao` desde 2026-10-24). A variável é Sensitive na Vercel: não pode ser lida por `vercel env pull`; guarde a senha fora do repositório.
 - Verificar a primeira execução do cron `/api/cron/ads-cleanup` (06:00 UTC) nos logs da Vercel. O teste autorizado não pôde ser feito porque `CRON_SECRET` é Sensitive e não é exportado.
 - O pendente real de `ads_pending` (criado em 2026-10-25) expira em 2026-11-24 pela limpeza LGPD se não for decidido.
 - Esclarecer com o proprietário: o `/anuncie` não tem campo CNPJ, então a dedupe por CNPJ (R3) só vale para os registros que o tiverem.
